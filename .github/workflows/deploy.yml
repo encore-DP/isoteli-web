@@ -1,0 +1,41 @@
+name: Deploy Astro a cPanel
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-deploy:
+    name: Compilar y desplegar a cPanel
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar proyecto Astro
+        env:
+          WORDPRESS_API_URL: "https://cms.isoteli.com/graphql"
+          PUBLIC_WORDPRESS_API_URL: "https://cms.isoteli.com/graphql"
+        run: npm run build
+
+      - name: Subir dist/ a cPanel vía FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./
+          dangerous-clean-slate: false
+

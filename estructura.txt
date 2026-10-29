@@ -62,3 +62,9 @@ Saneamiento, Seguridad y Verificación de Compilación (astro build)
 
 Se eliminaron todas las marcas residuales [cite: ...], se corrigió en contacto.astro el número de WhatsApp erróneo del prototipo (51955230604 → +51 904 803 219) y la opción de recojo presencial para respetar la modalidad 100% virtual + oficina de eventos en Urb. Santa María de Lambramani A15.
 npm run build compiló las 17 rutas estáticas sin errores, verificando 0 imágenes sin alt y 0 enlaces externos target="_blank" sin rel="noopener noreferrer".
+
+Ejecutar tras cambios en consola
+
+git add .
+git commit -m "Actualización web"
+git push origin main
