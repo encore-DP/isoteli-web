@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductDetailView from '../../components/ProductDetailView.astro';
+import { getCatalogProducts, type CatalogProduct } from '../../lib/wp-graphql';
+
+export async function getStaticPaths() {
+  const { products } = await getCatalogProducts();
+
+  return products.map((product) => {
+    const sameCategory = products.filter(
+      (item) => item.slug !== product.slug && item.categorySlug === product.categorySlug,
+    );
+    const otherCategories = products.filter(
+      (item) => item.slug !== product.slug && item.categorySlug !== product.categorySlug,
+    );
+    const relatedProducts = [...sameCategory, ...otherCategories].slice(0, 4);
+
+    return {
+      params: { slug: product.slug },
+      props: { product, relatedProducts },
+    };
+  });
+}
+
+interface Props {
+  product: CatalogProduct;
+  relatedProducts: readonly CatalogProduct[];
+}
+
+const { product, relatedProducts } = Astro.props;
+---
+
+<!-- ================= PÁGINA DINÁMICA DE DETALLE DE PRODUCTO (WPGRAPHQL) ================= -->
+<Layout
+  title={`${product.name} | ${product.categoryLabel}`}
+  description={product.shortDescription}
+  ogImage={product.imageUrl}
+>
+  <ProductDetailView product={product} relatedProducts={relatedProducts} />
+</Layout>
+

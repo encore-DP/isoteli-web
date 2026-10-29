@@ -1,0 +1,524 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { ISOTELI_VALUES, buildWhatsAppUrl } from '../data/business';
+import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+import { getCatalogProducts } from '../lib/wp-graphql';
+
+const { products } = await getCatalogProducts();
+
+// Selección sin duplicados priorizando los productos reales publicados en WordPress
+function pickUniqueProducts(preferred: readonly (typeof products)[number][], limit = 4) {
+  const seen = new Set<string>();
+  const result: (typeof products)[number][] = [];
+  for (const item of [...preferred, ...products]) {
+    if (item && !seen.has(item.slug)) {
+      seen.add(item.slug);
+      result.push(item);
+      if (result.length >= limit) break;
+    }
+  }
+  return result;
+}
+
+const wpOriginProducts = products.filter((p) => !p.id.startsWith('fb-'));
+
+const collectionHighlights = pickUniqueProducts([
+  ...wpOriginProducts,
+  ...products.filter((p) => p.featuredOnHome === 'collection' || p.featuredOnHome === 'both'),
+]);
+
+const bestSellers = pickUniqueProducts([
+  ...wpOriginProducts,
+  ...products.filter((p) => p.featuredOnHome === 'bestseller' || p.featuredOnHome === 'both'),
+]);
+
+const trustItems = ISOTELI_VALUES.map((val) => ({
+  icon: val.icon,
+  title: val.title,
+  subtitle: val.shortSubtitle,
+}));
+
+const occasions = [
+  {
+    title: 'Cumpleaños',
+    subtitle: 'Alegría & Color',
+    icon: 'cake',
+    circleBg: 'bg-primary-fixed/60 group-hover:bg-primary-fixed text-primary',
+    message: 'Hola ISOTELI, busco un arreglo para Cumpleaños',
+  },
+  {
+    title: 'Aniversario',
+    subtitle: 'Romance Puro',
+    icon: 'favorite',
+    circleBg: 'bg-[#fde3d6] group-hover:bg-[#fbd0bc] text-primary',
+    message: 'Hola ISOTELI, busco un arreglo para Aniversario',
+  },
+  {
+    title: 'Felicitaciones',
+    subtitle: 'Logros & Grados',
+    icon: 'workspace_premium',
+    circleBg: 'bg-[#fcf0db] group-hover:bg-[#f8e2bc] text-primary',
+    message: 'Hola ISOTELI, busco un arreglo de Felicitaciones o Grado',
+  },
+  {
+    title: 'Agradecimiento',
+    subtitle: 'Gratitud Sincera',
+    icon: 'volunteer_activism',
+    circleBg: 'bg-secondary-container group-hover:bg-secondary-fixed-dim/70 text-primary',
+    message: 'Hola ISOTELI, busco un arreglo de Agradecimiento',
+  },
+  {
+    title: 'Condolencias',
+    subtitle: 'Paz & Memoria',
+    icon: 'spa',
+    circleBg: 'bg-surface-container-high group-hover:bg-surface-container-highest text-on-surface-variant',
+    message: 'Hola ISOTELI, busco un arreglo de Condolencias o Fúnebre',
+  },
+  {
+    title: 'Nuevo Bebé',
+    subtitle: 'Tierna Llegada',
+    icon: 'child_care',
+    circleBg: 'bg-[#faebe1] group-hover:bg-[#f7d9c6] text-primary',
+    message: 'Hola ISOTELI, busco un arreglo para Nacimiento o Baby Shower',
+  },
+] as const;
+
+const testimonials = [
+  {
+    initials: 'VG',
+    name: 'Valeria Guzmán',
+    district: 'Cayma, Arequipa',
+    avatarBg: 'bg-primary-fixed text-primary',
+    quote:
+      'El ramo para el aniversario de mis padres superó todas las expectativas. La frescura de las rosas y el empaque en terracota cálido con sello lacrado fue pura elegancia. Llegó puntualísimo a Cayma.',
+  },
+  {
+    initials: 'MR',
+    name: 'Mauricio Rivera',
+    district: 'Yanahuara, Arequipa',
+    avatarBg: 'bg-primary-fixed-dim/60 text-primary',
+    quote:
+      'Pedí a las 11:30 AM para el cumpleaños de mi novia y a las 2:00 PM ya estaba en su oficina en Yanahuara con los chocolates La Ibérica. La atención por WhatsApp al 904 803 219 fue impecable.',
+  },
+  {
+    initials: 'CP',
+    name: 'Claudia Paredes',
+    district: 'J.L.B. y Rivero, Arequipa',
+    avatarBg: 'bg-primary-fixed text-primary',
+    quote:
+      'Hicieron los centros de mesa para mi matrimonio civil. Tienen una sensibilidad botánica única, nada tradicional aburrido, todo súper silvestre, contemporáneo y con inspiración en el sillar arequipeño.',
+  },
+] as const;
+---
+
+<Layout
+  title="ISOTELI Florería & Decoración | Arequipa"
+  description="Arreglos florales exclusivos, cajas de rosas, girasoles, chocolates La Ibérica y decoración integral de eventos en Arequipa. Delivery gratis desde S/ 99.90."
+>
+  <div class="flex flex-col w-full">
+    <!-- ================= SECCIÓN HERO ================= -->
+    <section class="relative w-full px-margin-mobile md:px-margin pt-4 pb-space-lg overflow-hidden">
+      <div class="relative w-full bg-gradient-to-br from-[#fae7db] via-[#f7eee2] to-[#ede3d5] rounded-xl lg:rounded-3xl p-6 sm:p-10 lg:p-16 overflow-hidden shadow-[0_8px_30px_rgba(194,101,42,0.12)]">
+        <!-- Formas Orgánicas Curvas en Paleta Terracota Cálido -->
+        <div class="absolute -top-16 -right-16 w-96 h-96 rounded-full bg-primary-fixed/50 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-primary-container/20 blur-3xl pointer-events-none"></div>
+
+        <!-- Detalle Botánico Minimalista en SVG -->
+        <svg
+          class="absolute top-8 right-12 w-28 h-28 text-primary/15 hidden md:block"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 100 100"
+          aria-hidden="true"
+        >
+          <path d="M50 20 C50 35 30 35 30 50 C30 65 50 65 50 80 C50 65 70 65 70 50 C70 35 50 35 50 20 Z"></path>
+          <path d="M20 50 C35 50 35 30 50 30 C65 30 65 50 80 50 C65 50 65 70 50 70 C35 70 35 50 20 50 Z"></path>
+        </svg>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+          <!-- Columna Izquierda: Mensaje Principal y Llamadas a la Acción -->
+          <div class="lg:col-span-6 flex flex-col items-start gap-5 max-w-xl">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-md text-label-md uppercase tracking-widest shadow-sm">
+              <span class="material-symbols-outlined text-[15px]" aria-hidden="true">filter_vintage</span>
+              <span>Atelier Floral en Arequipa</span>
+            </div>
+
+            <div class="flex flex-col">
+              <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary font-bold tracking-tight leading-[1.08]">
+                MÁS GRANDE. <br />
+                <span class="text-primary-container italic font-normal">MÁS VIBRANTE.</span> <br />
+                INOLVIDABLE.
+              </h1>
+            </div>
+
+            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg leading-relaxed">
+              Arreglos florales y decoraciones exclusivas pensadas para celebrar el amor, la vida y cada momento memorable bajo el cielo arequipeño.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2 w-full sm:w-auto">
+              <a
+                class="inline-flex items-center justify-center gap-2.5 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-full font-label-lg text-label-lg shadow-[0_8px_20px_rgba(194,101,42,0.28)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                href="/catalogo"
+              >
+                <span>Ver Colección</span>
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">local_florist</span>
+              </a>
+
+              <a
+                class="inline-flex items-center justify-center gap-2 bg-secondary-container hover:bg-secondary text-secondary hover:text-on-secondary px-6 py-3.5 rounded-full font-label-lg text-label-lg shadow-sm hover:shadow-md transition-all"
+                href={buildWhatsAppUrl('Hola ISOTELI, quisiera consultar por un arreglo personalizado')}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
+                <span>Cotizar al WhatsApp</span>
+              </a>
+            </div>
+
+            <div class="flex items-center gap-2 pt-4" aria-hidden="true">
+              <span class="w-7 h-2 rounded-full bg-primary transition-all"></span>
+              <span class="w-2 h-2 rounded-full bg-on-surface-variant/30"></span>
+              <span class="w-2 h-2 rounded-full bg-on-surface-variant/30"></span>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Composición Floral Destacada -->
+          <div class="lg:col-span-6 relative flex justify-center lg:justify-end">
+            <div class="relative w-full max-w-lg aspect-[4/4.8] sm:aspect-[4/4.5] rounded-3xl overflow-hidden shadow-2xl bg-surface-container">
+              <img
+                class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
+                alt="Ramo silvestre Amanecer Misti con rosas durazno, ranúnculos crema, gerberas coral y eucalipto fresco en papel artesanal ISOTELI"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJURc8yWFkGU4yVxjvcxQw_--Berh-BocPFih3LineN5r3SCoF5velUvsU5VIDF-MRWMRNVz41THocRCoW_UpnCALcuRyokcXRMvoynWOqyJ_7c6xP7BJnTFAUJdomVuyQs8sI64QfGrz5D7SwQRjyPgRAc4RgGo4ksjLegWGMaZL-vw8maYHIi701EuxM8XVJIiZrPPLfWp6krLaEYVRX4guDY8Epk1y0deNzIZKRkJqGa9477K-Qdw"
+                onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+              />
+
+              <!-- Etiqueta Flotante de Producto Signature -->
+              <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-xs bg-surface-container-lowest/95 backdrop-blur-md p-4 rounded-2xl shadow-lg flex items-center justify-between gap-4">
+                <div class="flex flex-col">
+                  <span class="font-label-md text-label-md uppercase tracking-wider text-primary">
+                    Ramo Silvestre
+                  </span>
+                  <span class="font-headline-sm text-headline-sm text-primary font-bold">Amanecer Misti</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">
+                    Con rosas de exportación &amp; follaje fino
+                  </span>
+                </div>
+                <a
+                  aria-label="Pedir Ramo Amanecer Misti por WhatsApp"
+                  class="h-10 w-10 rounded-full bg-primary hover:bg-primary-container text-on-primary flex items-center justify-center shrink-0 transition-colors"
+                  href={buildWhatsAppUrl('Hola ISOTELI, quisiera el Ramo Amanecer Misti')}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_forward</span>
+                </a>
+              </div>
+
+              <!-- Insignia de Frescura -->
+              <div class="absolute top-5 right-5 bg-surface-container-lowest/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-primary font-label-md text-label-md shadow-sm flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span>100% Flores Frescas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BARRA DE CONFIANZA Y VALORES ================= -->
+    <TrustStrip items={trustItems} variant="values" />
+
+    <!-- ================= SECCIÓN NUESTRAS COLECCIONES ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pt-space-lg pb-space-md" id="colecciones">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-1">
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">filter_vintage</span>
+            <span>Catálogo Exclusivo</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Nuestras Colecciones</h2>
+        </div>
+
+        <a
+          class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-secondary-container hover:bg-secondary text-secondary hover:text-on-secondary font-label-md text-label-md tracking-wider transition-colors shadow-sm"
+          href="/catalogo"
+        >
+          <span>VER TODO EL CATÁLOGO</span>
+          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chevron_right</span>
+        </a>
+      </div>
+
+      <div id="homeCollectionsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {
+          collectionHighlights.map((item, idx) => (
+            <div class="group relative bg-surface-container-low hover:bg-surface-container-lowest transition-all duration-300 rounded-3xl p-3 flex flex-col shadow-sm hover:shadow-xl">
+              <a
+                href={`/producto/${item.slug}`}
+                class="relative w-full aspect-square rounded-2xl overflow-hidden bg-surface-container block"
+              >
+                <img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  alt={item.imageAlt}
+                  loading="lazy"
+                  src={item.imageUrl || PLACEHOLDER_IMAGE}
+                  onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+                />
+                {item.badge && (
+                  <span
+                    class:list={[
+                      'absolute top-3 left-3 font-label-md text-label-md px-3 py-1 rounded-full uppercase tracking-wider font-semibold',
+                      idx === 1
+                        ? 'bg-primary text-on-primary'
+                        : 'bg-surface-container-lowest/90 backdrop-blur-sm text-primary',
+                    ]}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </a>
+
+              <div class="pt-4 pb-2 px-3 flex items-center justify-between gap-2">
+                <div class="flex flex-col min-w-0">
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors truncate">
+                    <a href={`/producto/${item.slug}`}>{item.name}</a>
+                  </h3>
+                  <span class="font-body-md text-body-md text-on-surface-variant">
+                    {item.pricePrefix ? `${item.pricePrefix} ${item.formattedPrice}` : item.formattedPrice}
+                  </span>
+                </div>
+
+                <a
+                  aria-label={`Pedir ${item.name} por WhatsApp`}
+                  class="w-10 h-10 rounded-full bg-secondary-container hover:bg-secondary text-secondary hover:text-on-secondary flex items-center justify-center transition-colors shadow-sm shrink-0"
+                  href={buildWhatsAppUrl(`Hola ISOTELI, quisiera pedir: ${item.name} (${item.formattedPrice})`)}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ================= BANNER EDITORIAL ASIMÉTRICO ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-md">
+      <div class="w-full bg-[#fae7db]/80 rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-sm">
+        <div class="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-center items-start gap-4">
+          <div class="flex items-center gap-2 text-primary font-semibold">
+            <span class="material-symbols-outlined text-[22px]" aria-hidden="true">auto_stories</span>
+            <span class="font-label-md text-label-md uppercase tracking-wider">Atelier Arequipeño</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-primary font-bold tracking-tight leading-snug">
+            Flores que cuentan historias inolvidables
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Seleccionamos con esmero las mejores flores de cultivo nacional e internacional, entrelazando la textura del sillar y el encanto silvestre para llevar emoción, calidez y arte botánico a los hogares de Arequipa.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <a
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md tracking-wider transition-colors shadow-sm"
+              href="/nosotros"
+            >
+              <span>Conocer Nuestra Historia</span>
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">nature_people</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 relative min-h-[300px] lg:min-h-full">
+          <img
+            class="w-full h-full object-cover object-center"
+            alt="Maestra florista en delantal preparando un arreglo de rosas coral y follaje fresco en el taller ISOTELI de Arequipa"
+            loading="lazy"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdobg16JAxwKpxEpp8qgVSD-s12M7sMxYVZ9jS8vnmxW1ZD-_Z6u5gBodCKCosWUFmq_bg_01Pn2Ifdq_bjKP7XA-TR1YyrLsnG4F42O1x4WX5JpKyOI4XteZCDgoJ1SM5jNDZFMfkuniUhbvtWmKezqwyXPf3sxK0zx97j28Gv6eTsCW_V2-7dpXBXZ9jLsP18iTr1hPvgQ1Blp4aMrzTaURKJwg4TnlP69ADuj5o16IBbp8OVKuLfA"
+            onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#fae7db] via-transparent to-transparent opacity-80 lg:w-32"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECCIÓN COMPRAR POR OCASIÓN ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-lg">
+      <div class="text-center max-w-xl mx-auto mb-10">
+        <div class="inline-flex items-center justify-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-2">
+          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">celebration</span>
+          <span>Momentos Especiales</span>
+        </div>
+        <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Comprar por Ocasión</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+          Encuentra el arreglo perfecto confeccionado específicamente para el sentimiento que deseas transmitir.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+        {
+          occasions.map((occ) => (
+            <a
+              class="group flex flex-col items-center text-center p-4 rounded-2xl hover:bg-surface-container-low transition-all"
+              href={buildWhatsAppUrl(occ.message)}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class:list={[
+                  'w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-colors mb-3 shadow-sm group-hover:scale-105 duration-300',
+                  occ.circleBg,
+                ]}
+              >
+                <span class="material-symbols-outlined text-[36px]" aria-hidden="true">{occ.icon}</span>
+              </div>
+              <span class="font-headline-sm text-headline-sm text-on-surface font-medium group-hover:text-primary text-[17px]">
+                {occ.title}
+              </span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">{occ.subtitle}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ================= BANNER DE SUSCRIPCIÓN Y CUPÓN 10% ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-sm">
+      <div class="w-full bg-secondary text-on-secondary rounded-3xl p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-md relative overflow-hidden">
+        <div class="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-8" aria-hidden="true">
+          <span class="material-symbols-outlined text-[180px]">local_florist</span>
+        </div>
+
+        <div class="flex items-center gap-4 text-left z-10">
+          <div class="w-14 h-14 rounded-2xl bg-secondary-container text-secondary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[28px]" aria-hidden="true">redeem</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-headline-sm text-headline-sm font-bold text-on-secondary">
+              10% DE DESCUENTO EN TU PRIMER PEDIDO
+            </span>
+            <span class="font-body-sm text-body-sm text-on-secondary/90">
+              Únete a nuestra lista exclusiva de Arequipa y recibe novedades, fechas especiales y promociones.
+            </span>
+          </div>
+        </div>
+
+        <form id="home-subscribe-form" class="w-full lg:max-w-md z-10 flex flex-col gap-2">
+          <div class="relative flex items-center bg-surface-container-lowest rounded-full p-1.5 shadow-inner">
+            <label for="home-subscribe-email" class="sr-only">Correo electrónico</label>
+            <input
+              id="home-subscribe-email"
+              class="w-full pl-5 pr-28 py-2.5 bg-transparent text-on-surface font-body-md text-body-md focus:outline-none placeholder:text-on-surface-variant/60"
+              placeholder="Ingresa tu correo electrónico..."
+              required
+              type="email"
+            />
+            <button
+              class="absolute right-1.5 bg-secondary hover:bg-secondary-container text-on-secondary hover:text-secondary font-label-md text-label-md px-5 py-2.5 rounded-full uppercase tracking-wider transition-colors shrink-0 cursor-pointer"
+              type="submit"
+            >
+              Suscribir
+            </button>
+          </div>
+          <div
+            id="home-subscribe-success"
+            class="hidden text-secondary-container font-label-md text-label-md px-3 items-center gap-1.5"
+          >
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">check_circle</span>
+            <span>¡Gracias! Usa el cupón <strong>BIENVENIDOISOTELI</strong> al pedir por WhatsApp.</span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= SECCIÓN FAVORITOS DE AREQUIPA (MÁS VENDIDOS) ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pt-space-xl pb-space-xl">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-1">
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">stars</span>
+            <span>Los Más Solicitados</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Favoritos de Arequipa</h2>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md tracking-wider shadow-sm hover:scale-105 transition-all"
+            href={buildWhatsAppUrl('Hola ISOTELI, deseo hacer un pedido urgente para hoy')}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">bolt</span>
+            <span>Entrega Hoy Mismo</span>
+          </a>
+        </div>
+      </div>
+
+      <div id="homeBestSellersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {bestSellers.map((prod) => <ProductCard product={prod} variant="featured" />)}
+      </div>
+    </section>
+
+    <!-- ================= RESEÑAS DE CLIENTES EN AREQUIPA ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pb-space-xl">
+      <div class="bg-surface-container-low rounded-3xl p-8 sm:p-12">
+        <div class="text-center max-w-xl mx-auto mb-10">
+          <div class="flex items-center justify-center gap-1 text-primary mb-2" aria-label="Calificación de 5 estrellas">
+            <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
+            <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
+            <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
+            <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
+            <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Voces de Nuestra Comunidad</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            Entregas puntuales, frescura garantizada y sonrisas compartidas en toda la Ciudad Blanca.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {
+            testimonials.map((rev) => (
+              <div class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between gap-4 shadow-sm">
+                <p class="font-body-md text-body-md text-on-surface italic">"{rev.quote}"</p>
+                <div class="flex items-center gap-3">
+                  <div
+                    class:list={[
+                      'w-10 h-10 rounded-full flex items-center justify-center font-bold font-headline-sm',
+                      rev.avatarBg,
+                    ]}
+                  >
+                    {rev.initials}
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-label-lg text-label-lg font-semibold text-on-surface">{rev.name}</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">{rev.district}</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  import { syncHomePage } from '../lib/live-cms-sync';
+
+  void syncHomePage();
+
+  const subForm = document.getElementById('home-subscribe-form');
+  const subSuccess = document.getElementById('home-subscribe-success');
+  if (subForm && subSuccess) {
+    subForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      subSuccess.classList.remove('hidden');
+      subSuccess.classList.add('flex');
+    });
+  }
+</script>

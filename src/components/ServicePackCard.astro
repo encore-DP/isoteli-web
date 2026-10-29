@@ -1,0 +1,194 @@
+---
+import { buildWhatsAppUrl } from '../data/business';
+import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+import type { ServicePack } from '../lib/wp-graphql';
+
+export interface Props {
+  pack: ServicePack;
+}
+
+const { pack } = Astro.props;
+
+const whatsappHref = buildWhatsAppUrl(
+  `Hola ISOTELI, deseo reservar el ${pack.name} - ${pack.lineLabel} (${pack.formattedPrice}, ${pack.backingSize}).`
+);
+
+const safeImage = pack.imageUrl || PLACEHOLDER_IMAGE;
+const isPanoramic = pack.variant === 'panoramic';
+const isPopular = pack.variant === 'popular';
+---
+
+<!-- ================= TARJETA DE PAQUETE DE DECORACIÓN (COLLAGE STITCH) ================= -->
+{
+  isPanoramic ? (
+    <article
+      class:list={[
+        pack.gridColClass,
+        'relative rounded-2xl overflow-hidden min-h-[260px] md:min-h-[290px] group shadow-md flex flex-col justify-end border-2 border-secondary',
+      ]}
+      data-line={pack.lineSlug}
+    >
+      <img
+        src={safeImage}
+        alt={pack.imageAlt}
+        loading="lazy"
+        decoding="async"
+        onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#181e00]/95 via-[#30312a]/80 to-transparent" />
+      <div class="relative z-10 p-6 md:p-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="px-3.5 py-1 rounded-full bg-secondary text-on-secondary font-label-md text-label-md font-bold uppercase tracking-wider">
+              {pack.topBadge}
+            </span>
+            <span class="px-3 py-1 rounded-full bg-surface-container-lowest/90 text-primary font-bold text-[12px]">
+              {pack.backingSize}
+            </span>
+          </div>
+          <h3 class="font-headline-sm text-[28px] text-white font-bold">{pack.name}</h3>
+          <p class="font-body-sm text-body-sm text-gray-200 mt-1 max-w-xl">{pack.shortDescription}</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-baseline sm:items-center gap-4 shrink-0">
+          <div class="flex flex-col text-left sm:text-right">
+            <span class="text-gray-300 text-[11px] uppercase tracking-wider">Inversión Total</span>
+            <span class="text-[32px] font-extrabold text-[#dee8ad]">{pack.formattedPrice}</span>
+          </div>
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="py-3 px-6 rounded-full bg-secondary hover:bg-secondary/90 text-on-secondary transition-all font-label-md text-label-md tracking-wider flex items-center justify-center gap-2 font-bold shadow-lg hover:scale-105"
+          >
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>
+            <span>{pack.ctaLabel}</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  ) : (
+    <article
+      class:list={[
+        pack.gridColClass,
+        'relative rounded-2xl overflow-hidden min-h-[300px] md:min-h-[340px] group flex flex-col justify-end',
+        isPopular
+          ? 'shadow-md border-2 border-primary-fixed'
+          : 'shadow-sm border border-outline-variant/30',
+      ]}
+      data-line={pack.lineSlug}
+    >
+      <img
+        src={safeImage}
+        alt={pack.imageAlt}
+        loading="lazy"
+        decoding="async"
+        onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+      />
+      <div
+        class:list={[
+          'absolute inset-0 bg-gradient-to-t to-transparent',
+          isPopular
+            ? 'from-[#3f0300]/95 via-[#3f0300]/55'
+            : pack.variant === 'thematic-gold'
+              ? 'from-[#2c160c]/95 via-[#2c160c]/55'
+              : 'from-[#1b1c16]/95 via-[#1b1c16]/50',
+        ]}
+      />
+
+      <div class:list={['relative z-10 flex flex-col justify-between h-full', isPopular ? 'p-6' : 'p-5 sm:p-6']}>
+        <!-- Etiquetas Superiores: Categoría / Popularidad + Medida del Backing -->
+        <div class="flex items-start justify-between gap-2">
+          {isPopular ? (
+            <span class="px-3.5 py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold uppercase tracking-wider shadow-sm flex items-center gap-1">
+              <span class="material-symbols-outlined icon-filled text-[14px]" aria-hidden="true">star</span>
+              <span>{pack.topBadge}</span>
+            </span>
+          ) : pack.variant === 'deluxe-classic' ? (
+            <span class="px-3 py-1 rounded-full bg-secondary text-on-secondary font-label-md text-label-md font-bold uppercase tracking-wider">
+              {pack.topBadge}
+            </span>
+          ) : pack.variant === 'thematic-petit' ? (
+            <span class="px-3 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md font-bold uppercase tracking-wider">
+              {pack.topBadge}
+            </span>
+          ) : (
+            <span class="px-3 py-1 rounded-full bg-secondary-container/95 text-on-secondary-container font-label-md text-label-md font-bold uppercase tracking-wider backdrop-blur-sm">
+              {pack.topBadge}
+            </span>
+          )}
+
+          <span
+            class:list={[
+              'px-3 py-1 rounded-full font-bold text-[12px] shrink-0',
+              isPopular
+                ? 'bg-primary-fixed text-primary'
+                : 'bg-surface-container-lowest/90 text-primary',
+            ]}
+          >
+            {pack.backingSize}
+          </span>
+        </div>
+
+        <!-- Información del Paquete, Precio y Reserva por WhatsApp -->
+        <div class="pt-8">
+          <div class="flex items-baseline justify-between gap-2 mb-1.5">
+            <div>
+              {isPopular && (
+                <span class="text-white/80 font-label-md text-[11px] uppercase block tracking-wider">
+                  {pack.lineLabel}
+                </span>
+              )}
+              <h3
+                class:list={[
+                  'font-headline-sm text-white font-bold',
+                  isPopular || pack.variant === 'thematic-gold' ? 'text-[26px]' : 'text-headline-sm',
+                ]}
+              >
+                {pack.name}
+              </h3>
+            </div>
+            <span
+              class:list={[
+                'font-extrabold shrink-0',
+                isPopular
+                  ? 'text-[28px] text-[#ffdad3]'
+                  : pack.variant === 'thematic-gold'
+                    ? 'text-[26px] text-[#ffdbce]'
+                    : 'text-[23px] text-[#ffdad3]',
+              ]}
+            >
+              {pack.formattedPrice}
+            </span>
+          </div>
+
+          <p class="font-body-sm text-body-sm text-gray-200 mb-3.5 line-clamp-2">
+            {pack.shortDescription}
+          </p>
+
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class:list={[
+              'w-full py-2.5 px-4 rounded-full transition-all font-label-md text-label-md tracking-wider flex items-center justify-center gap-2 font-bold shadow-md hover:scale-[1.02]',
+              isPopular
+                ? 'py-3 bg-primary-fixed hover:bg-primary-fixed-dim text-primary shadow-lg'
+                : pack.variant === 'thematic-gold'
+                  ? 'bg-primary hover:bg-primary-container text-on-primary'
+                  : pack.variant === 'deluxe-classic' || pack.variant === 'thematic-petit'
+                    ? 'bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-on-secondary'
+                    : 'bg-surface-container-lowest/95 hover:bg-white text-primary',
+            ]}
+          >
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">send</span>
+            <span>{pack.ctaLabel}</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  )
+}
+

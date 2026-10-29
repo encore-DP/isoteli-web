@@ -1,0 +1,193 @@
+---
+import { Image } from 'astro:assets';
+import logoImg from '../assets/logo/logo.png';
+import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+
+const currentYear = new Date().getFullYear();
+const footerWhatsappUrl = buildWhatsAppUrl('Hola ISOTELI, deseo realizar una consulta sobre sus arreglos o eventos.');
+---
+
+<!-- ================= PIE DE PÁGINA INSTITUCIONAL (FOOTER) ================= -->
+<footer class="w-full bg-surface-container-low text-on-surface pt-space-xl pb-space-lg border-t border-outline-variant/40">
+  <div class="w-full px-margin-mobile md:px-margin">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-space-xl">
+      <!-- Columna 1: Identidad de Marca, Tienda 100% Virtual y Oficina de Coordinación -->
+      <div class="flex flex-col gap-space-sm">
+        <div class="flex items-center gap-space-xs">
+          <a href="/" class="flex items-center" aria-label="Inicio ISOTELI">
+            <Image
+              src={logoImg}
+              alt="Logotipo ISOTELI Flores y Detalles"
+              width={130}
+              height={91}
+              class="h-11 w-auto object-contain"
+            />
+          </a>
+        </div>
+        <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Atelier floral boutique y ambientación estética en Arequipa, Perú. Tienda 100% virtual especializada en flores frescas, detalles personalizados y decoración integral de eventos.
+        </p>
+        <div class="flex flex-col gap-1 text-body-sm font-body-sm text-on-surface-variant">
+          <div class="flex items-start gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">location_on</span>
+            <span>
+              Oficina de coordinación: <strong class="text-on-surface">{ISOTELI_CONTACT.officeShortAddress}</strong>
+            </span>
+          </div>
+          <p class="italic text-[11px] text-outline">
+            *Operamos como tienda 100% virtual (asesoría y videollamadas en línea) con oficina exclusiva para coordinación de eventos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Columna 2: Correos Oficiales y Métodos de Pago -->
+      <div class="flex flex-col gap-space-xs">
+        <h4 class="font-headline-sm text-headline-sm text-primary font-semibold mb-space-xs">
+          Contacto &amp; Métodos de Pago
+        </h4>
+        <ul class="flex flex-col gap-2 font-body-md text-body-md text-on-surface-variant">
+          <li>
+            <a
+              class="hover:text-primary transition-colors flex items-center gap-2"
+              href={`mailto:${ISOTELI_CONTACT.emails.ventas}`}
+            >
+              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">mail</span>
+              <span>{ISOTELI_CONTACT.emails.ventas}</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:text-primary transition-colors flex items-center gap-2"
+              href={`mailto:${ISOTELI_CONTACT.emails.eventos}`}
+            >
+              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">mail</span>
+              <span>{ISOTELI_CONTACT.emails.eventos}</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:text-primary transition-colors flex items-center gap-2"
+              href={`mailto:${ISOTELI_CONTACT.emails.administracion}`}
+            >
+              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">mail</span>
+              <span>{ISOTELI_CONTACT.emails.administracion}</span>
+            </a>
+          </li>
+        </ul>
+        <div class="mt-2 pt-3 border-t border-outline-variant/30">
+          <p class="font-label-md text-label-md uppercase text-primary mb-1 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[15px]" aria-hidden="true">payments</span>
+            <span>Métodos de Pago</span>
+          </p>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">
+            Transferencia bancaria, <strong class="text-on-surface">Yape</strong> y <strong class="text-on-surface">Plin</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Columna 3: Navegación Rápida de Catálogo y Servicios -->
+      <div class="flex flex-col gap-space-xs">
+        <h4 class="font-headline-sm text-headline-sm text-primary font-semibold mb-space-xs">
+          Catálogo &amp; Servicios
+        </h4>
+        <ul class="flex flex-col gap-2 font-body-md text-body-md text-on-surface-variant">
+          <li>
+            <a class="hover:text-primary transition-colors" href="/catalogo">
+              Ramos de Rosas &amp; Ramos Buchones
+            </a>
+          </li>
+          <li>
+            <a class="hover:text-primary transition-colors" href="/catalogo">
+              Cajas ISOTELI, Girasoles &amp; Boxes Mixtos
+            </a>
+          </li>
+          <li>
+            <a class="hover:text-primary transition-colors" href="/catalogo">
+              Globos, Chocolates La Ibérica &amp; Peluches
+            </a>
+          </li>
+          <li>
+            <a class="hover:text-primary transition-colors" href="/servicios#paquetes-decoracion">
+              Paquetes de Decoración (Clásicos &amp; Temáticos)
+            </a>
+          </li>
+          <li>
+            <a class="hover:text-primary transition-colors" href="/servicios#alquiler-mobiliario">
+              Alquiler de Mobiliario y Accesorios
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Columna 4: Horarios, Políticas de Envío y Comunidad -->
+      <div class="flex flex-col gap-space-xs">
+        <h4 class="font-headline-sm text-headline-sm text-primary font-semibold mb-space-xs">
+          Atención &amp; Envíos
+        </h4>
+        <div class="font-body-sm text-body-sm text-on-surface-variant flex flex-col gap-2 mb-space-sm">
+          <div class="flex items-start gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">schedule</span>
+            <div>
+              <p class="font-semibold text-on-surface">{ISOTELI_CONTACT.schedule.weekdays}</p>
+              <p>{ISOTELI_CONTACT.schedule.sundays}</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">timer</span>
+            <p>
+              <span class="font-semibold text-on-surface">Anticipación:</span> {ISOTELI_CONTACT.schedule.leadTime}
+            </p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">local_shipping</span>
+            <p>{ISOTELI_CONTACT.deliveryPolicy.topBarText} (periféricos: S/15).</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-space-xs">
+          <a
+            aria-label="Instagram oficial de ISOTELI"
+            class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">photo_camera</span>
+          </a>
+          <a
+            aria-label="WhatsApp oficial de ISOTELI"
+            class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
+            href={footerWhatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
+          </a>
+          <a
+            aria-label="Ubicación de oficina en Google Maps"
+            class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-colors"
+            href={ISOTELI_CONTACT.googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">pin_drop</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra Inferior de Derechos Reservados -->
+    <div class="pt-space-md border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+      <p>© {currentYear} ISOTELI Flores y Detalles. Todos los derechos reservados. Arequipa, Perú.</p>
+      <div class="flex items-center gap-space-md">
+        <a class="hover:text-primary transition-colors" href="/nosotros#cobertura-distrital">
+          Cobertura &amp; Límites Distritales
+        </a>
+        <a class="hover:text-primary transition-colors" href="/contacto">
+          Atención al Cliente
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+

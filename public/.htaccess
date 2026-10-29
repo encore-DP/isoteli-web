@@ -1,0 +1,29 @@
+# ==========================================================================
+# CONFIGURACIÓN APACHE / LITESPEED PARA CPANEL COMPARTIDO - ISOTELI
+# Permite rutas dinámicas /producto/<nuevo-slug> para productos creados en
+# WordPress Headless después de ejecutar `npm run build` sin errores 404.
+# ==========================================================================
+
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Si el producto fue creado en WordPress después del build estático,
+  # sirve internamente la plantilla /detalle-producto/index.html conservando la URL
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^producto/([^/]+)/?$ /detalle-producto/index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Asegura que el navegador valide siempre el HTML principal mientras cachea assets versionados
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(webp|png|jpg|jpeg|svg|woff2|css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+

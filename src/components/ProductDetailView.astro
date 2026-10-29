@@ -1,0 +1,901 @@
+---
+import { AREQUIPA_DISTRICTS, ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+import type { CatalogProduct, ProductVariationOption } from '../lib/wp-graphql';
+import ProductCard from './ProductCard.astro';
+
+export interface Props {
+  product: CatalogProduct;
+  relatedProducts: readonly CatalogProduct[];
+}
+
+const { product, relatedProducts } = Astro.props;
+
+const formatOptions: readonly ProductVariationOption[] =
+  product.variations.length > 0
+    ? product.variations
+    : [
+        {
+          id: 'std-option',
+          label: 'Presentación Clásica',
+          subtitle: product.categoryLabel,
+          formattedPrice: product.formattedPrice,
+          numericPrice: product.numericPrice,
+          badge: 'Estándar',
+        },
+      ];
+
+const defaultOption =
+  formatOptions.find((opt) => opt.badge) ?? formatOptions[Math.min(1, formatOptions.length - 1)]!;
+
+const galleryItems =
+  product.gallery.length > 0
+    ? product.gallery
+    : [{ url: product.imageUrl || PLACEHOLDER_IMAGE, alt: product.imageAlt }];
+
+const botanicalList = product.botanicalItems ?? [
+  'Flores frescas seleccionadas del día en punto óptimo de apertura',
+  'Follaje aromático natural de eucalipto y verdes de estación',
+  'Hidratación profesional para mayor longevidad floral',
+  'Tarjeta caligrafiada a mano y empaque exclusivo ISOTELI',
+];
+
+const colorPalettes = [
+  { name: 'Rosas Pastel & Nude', short: 'Pastel & Nude', swatchClass: 'bg-[#E5B5A1]' },
+  { name: 'Rosas Rojas de Pasión', short: 'Rojas Pasión', swatchClass: 'bg-[#B22222]' },
+  {
+    name: 'Rosas Blancas Puras',
+    short: 'Blancas Puras',
+    swatchClass: 'bg-[#FAF9F6] border border-outline/30',
+  },
+  {
+    name: 'Mix Silvestre Andino',
+    short: 'Mix Silvestre',
+    swatchClass: 'bg-gradient-to-tr from-amber-600 to-[#c2652a]',
+  },
+] as const;
+
+const addonsList = [
+  { id: 'addon-iberica-35', name: 'La Ibérica Corazón 35g', subtitle: 'Chocolate arequipeño', price: 9 },
+  { id: 'addon-iberica-80', name: 'Trufas La Ibérica 80g', subtitle: 'Caja de lujo surtida', price: 48 },
+  { id: 'addon-globo-helio', name: 'Globo Helio Frase Dorada', subtitle: '18" inflado con helio puro', price: 35 },
+  { id: 'addon-peluche-15', name: 'Peluche Suave 15cm', subtitle: 'Oso tierno importado', price: 20 },
+] as const;
+
+const supportWhatsappUrl = buildWhatsAppUrl(
+  `Hola ISOTELI, tengo una consulta sobre el producto: ${product.name}.`
+);
+---
+
+<div
+  class="relative w-full overflow-hidden"
+  id="product-detail-root"
+  data-product-name={product.name}
+  data-base-price={String(defaultOption.numericPrice)}
+  data-base-format={defaultOption.label}
+  data-phone={ISOTELI_CONTACT.phoneRaw}
+>
+  <!-- Elementos Ambientales Orgánicos de Fondo -->
+  <div class="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute top-1/2 -left-32 w-80 h-80 bg-tertiary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin py-6 md:py-10">
+    <!-- ================= 1. RUTA DE NAVEGACIÓN (BREADCRUMB) ================= -->
+    <nav
+      aria-label="Ruta de navegación"
+      class="mb-8 flex items-center text-body-sm text-on-surface-variant flex-wrap gap-2"
+    >
+      <a class="hover:text-primary transition-colors flex items-center gap-1" href="/">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">home</span>
+        <span>Inicio</span>
+      </a>
+      <span class="text-outline/40">/</span>
+      <a class="hover:text-primary transition-colors" href="/catalogo">Catálogo Floral</a>
+      <span class="text-outline/40">/</span>
+      <a
+        id="detail-breadcrumb-cat"
+        class="hover:text-primary transition-colors"
+        href={`/catalogo#${product.categorySlug}`}
+      >
+        {product.categoryLabel}
+      </a>
+      <span class="text-outline/40">/</span>
+      <span id="detail-breadcrumb-name" class="text-on-surface font-medium truncate max-w-xs md:max-w-none">
+        {product.name}
+      </span>
+    </nav>
+
+    <!-- ================= 2. GALERÍA Y CONFIGURADOR DE COMPRA (2 COLUMNAS) ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <!-- Columna Izquierda: Galería Visual (6 cols) -->
+      <div class="lg:col-span-6 flex flex-col gap-5 lg:sticky lg:top-28">
+        <div class="relative w-full rounded-2xl overflow-hidden bg-surface-container shadow-md group">
+          <div class="aspect-[4/5] w-full relative">
+            <img
+              id="main-product-img"
+              src={product.imageUrl || PLACEHOLDER_IMAGE}
+              alt={product.imageAlt}
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+            <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-on-secondary font-label text-body-sm font-medium shadow-sm">
+                <span class="material-symbols-outlined text-[15px]" aria-hidden="true">eco</span>
+                <span>100% Flores Frescas del Día</span>
+              </span>
+            </div>
+            <div class="absolute bottom-4 right-4 bg-surface/85 backdrop-blur-md px-3 py-1.5 rounded-full text-on-surface-variant font-label text-[11px] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="material-symbols-outlined text-[14px]" aria-hidden="true">zoom_in</span>
+              <span>Vista de Atelier</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Miniaturas de Galería -->
+        <div
+          id="detail-thumbs-container"
+          class:list={['grid grid-cols-4 gap-3 sm:gap-4', galleryItems.length <= 1 && 'hidden']}
+        >
+          {
+            galleryItems.length > 1 &&
+              galleryItems.slice(0, 4).map((thumb, idx) => (
+                <button
+                  type="button"
+                  data-thumb-btn
+                  data-thumb-src={thumb.url}
+                  data-thumb-alt={thumb.alt}
+                  aria-label={`Ver imagen ${idx + 1}: ${thumb.alt}`}
+                  class:list={[
+                    'relative aspect-square rounded-xl overflow-hidden bg-surface-container p-0.5 shadow-sm transition-all focus:outline-none cursor-pointer',
+                    idx === 0 ? 'ring-2 ring-primary' : 'hover:opacity-90',
+                  ]}
+                >
+                  <img
+                    src={thumb.url}
+                    alt={thumb.alt}
+                    loading="lazy"
+                    onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+                    class="w-full h-full object-cover rounded-lg"
+                  />
+                </button>
+              ))
+          }
+        </div>
+
+        <!-- Sello de Garantía Fotográfica Previa -->
+        <div class="rounded-xl p-4 bg-surface-container-low flex items-center gap-3.5 shadow-sm border border-outline-variant/50">
+          <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[22px]" aria-hidden="true">photo_camera</span>
+          </div>
+          <div class="text-body-sm leading-snug">
+            <p class="font-semibold text-on-surface">Foto previa garantizada</p>
+            <p class="text-on-surface-variant">
+              Te enviamos foto y video en tiempo real de tu arreglo terminado por WhatsApp antes del despacho.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Personalización y Pedido Directo (6 cols) -->
+      <div class="lg:col-span-6 flex flex-col gap-7">
+        <!-- Encabezado y Calificación -->
+        <div>
+          <div class="flex items-center gap-2 mb-2 flex-wrap">
+            <span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary font-label text-body-sm font-semibold tracking-wide uppercase border border-primary/20">
+              Colección Signature ISOTELI
+            </span>
+            <span id="detail-cat-label" class="text-on-surface-variant text-body-sm">
+              • {product.categoryLabel}
+            </span>
+          </div>
+
+          <h1
+            id="detail-title"
+            class="font-headline text-3xl sm:text-4xl lg:text-5xl font-semibold text-on-surface tracking-tight leading-tight"
+          >
+            {product.name}
+          </h1>
+
+          <p id="detail-short-desc" class="mt-2 text-on-surface-variant text-body-lg leading-relaxed">
+            {product.shortDescription}
+          </p>
+
+          <div class="mt-4 flex items-center gap-3 flex-wrap">
+            <div class="flex items-center text-primary" aria-label={`Valoración ${product.rating} de 5 estrellas`}>
+              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+            </div>
+            <span class="font-semibold text-on-surface text-body-sm">{product.rating.toFixed(1)}</span>
+            <span class="text-outline text-body-sm">/ 5.0</span>
+            <span class="text-on-surface-variant text-body-sm">
+              ({product.reviewCount} valoraciones verificadas en Arequipa)
+            </span>
+          </div>
+        </div>
+
+        <!-- Indicador Dinámico de Precio -->
+        <div class="bg-surface-container rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm border border-outline-variant/60">
+          <div>
+            <span class="text-body-sm text-on-surface-variant block">Precio final de confección:</span>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span id="price-display" class="font-headline text-4xl sm:text-5xl font-bold text-primary">
+                {defaultOption.formattedPrice}
+              </span>
+              <span class="text-body-sm text-on-surface-variant font-medium">PEN</span>
+            </div>
+          </div>
+          <div class="flex flex-col sm:items-end">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-body-sm font-medium">
+              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">location_on</span>
+              <span>Tarifa oficial Arequipa</span>
+            </span>
+            <span class="text-body-sm text-outline mt-1">Stock fresco garantizado hoy</span>
+          </div>
+        </div>
+
+        <!-- Paso 1: Selector de Formato / Variación -->
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-on-surface text-body-md">1. Selecciona el Formato:</span>
+            <span id="size-hint" class="text-body-sm text-primary font-medium">{defaultOption.label}</span>
+          </div>
+          <div
+            id="detail-format-grid"
+            class:list={[
+              'grid grid-cols-1 gap-3',
+              formatOptions.length >= 3
+                ? 'sm:grid-cols-3'
+                : formatOptions.length === 2
+                  ? 'sm:grid-cols-2'
+                  : 'sm:grid-cols-1',
+            ]}
+          >
+            {
+              formatOptions.map((opt) => {
+                const selected = opt.id === defaultOption.id;
+                return (
+                  <button
+                    type="button"
+                    data-size-card
+                    data-size-name={opt.label}
+                    data-size-price={String(opt.numericPrice)}
+                    class:list={[
+                      'flex flex-col p-4 rounded-xl text-left transition-all cursor-pointer shadow-sm border',
+                      selected
+                        ? 'bg-primary-fixed/40 ring-2 ring-primary border-primary/40'
+                        : 'bg-surface-container-low hover:bg-surface-container border-outline-variant/50',
+                    ]}
+                  >
+                    <div class="flex items-center justify-between gap-1">
+                      <span class="font-semibold text-on-surface text-body-md">{opt.label}</span>
+                      {opt.badge && (
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-secondary text-on-secondary">
+                          {opt.badge}
+                        </span>
+                      )}
+                    </div>
+                    {opt.subtitle && (
+                      <span class="text-body-sm text-on-surface-variant mt-0.5">{opt.subtitle}</span>
+                    )}
+                    <span class="mt-3 font-bold text-primary text-body-md">{opt.formattedPrice}</span>
+                  </button>
+                );
+              })
+            }
+          </div>
+        </div>
+
+        <!-- Paso 2: Paleta de Flores -->
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-on-surface text-body-md">2. Paleta de Flores:</span>
+            <span id="color-label" class="text-body-sm text-primary font-medium">
+              {colorPalettes[0].name}
+            </span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {
+              colorPalettes.map((palette, idx) => (
+                <button
+                  type="button"
+                  data-color-btn
+                  data-color-name={palette.name}
+                  class:list={[
+                    'flex items-center gap-2.5 p-3 rounded-xl bg-surface-container hover:bg-surface-container-high transition-all text-left cursor-pointer',
+                    idx === 0 && 'ring-2 ring-primary',
+                  ]}
+                >
+                  <span class:list={['w-4 h-4 rounded-full shrink-0 shadow-inner', palette.swatchClass]} />
+                  <span class="text-body-sm font-medium text-on-surface truncate">{palette.short}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Paso 3: Complementos Adicionales (Cross-selling) -->
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-on-surface text-body-md">3. Complementos Especiales:</span>
+            <span class="text-body-sm text-outline">Puedes marcar varios</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {
+              addonsList.map((addon) => (
+                <label class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors shadow-sm border border-outline-variant/40">
+                  <input
+                    type="checkbox"
+                    data-addon-checkbox
+                    data-addon-price={String(addon.price)}
+                    data-addon-name={addon.name}
+                    class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary"
+                  />
+                  <div class="flex-1 min-w-0">
+                    <div class="text-body-sm font-semibold text-on-surface truncate">{addon.name}</div>
+                    <div class="text-body-sm text-outline truncate">{addon.subtitle}</div>
+                  </div>
+                  <span class="font-semibold text-primary text-body-sm shrink-0">
+                    +S/ {addon.price.toFixed(2)}
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+
+          <!-- Destacado de Tarjeta Caligrafiada Incluida -->
+          <div class="mt-1 flex items-center justify-between p-3 rounded-xl bg-secondary-container border border-secondary/20 text-body-sm">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px] text-secondary" aria-hidden="true">draw</span>
+              <span class="font-medium text-on-surface">Tarjeta Caligrafiada en Tinta Sepia</span>
+            </div>
+            <span class="font-bold text-secondary uppercase text-[11px] tracking-wider bg-surface-container-lowest px-2.5 py-0.5 rounded-full shadow-xs border border-secondary/20">
+              ¡Gratis! Incluida
+            </span>
+          </div>
+        </div>
+
+        <!-- Paso 4: Dedicatoria -->
+        <div class="flex flex-col gap-2">
+          <label
+            for="dedication-text"
+            class="font-semibold text-on-surface text-body-md flex items-center justify-between"
+          >
+            <span>4. Dedicatoria para la Tarjeta de Obsequio:</span>
+            <span class="text-body-sm text-outline font-normal">Máx. 250 caracteres</span>
+          </label>
+          <textarea
+            id="dedication-text"
+            maxlength="250"
+            rows="3"
+            placeholder="Ej: Para el amor de mi vida en nuestro aniversario. Gracias por cada sonrisa compartida. Con todo mi corazón..."
+            class="w-full rounded-xl bg-surface-container-lowest p-3.5 text-on-surface placeholder:text-outline text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary border border-outline-variant/60 resize-none transition-shadow"
+          ></textarea>
+        </div>
+
+        <!-- Paso 5: Distrito de Arequipa y Fecha de Entrega -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div class="flex flex-col gap-1.5">
+            <label for="delivery-district" class="font-semibold text-on-surface text-body-sm">
+              Distrito de Entrega (Arequipa):
+            </label>
+            <div class="relative">
+              <select
+                id="delivery-district"
+                class="w-full appearance-none rounded-xl bg-surface-container-lowest py-3 pl-3.5 pr-10 text-on-surface text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary border border-outline-variant/60 cursor-pointer"
+              >
+                {
+                  AREQUIPA_DISTRICTS.map((dist) => (
+                    <option
+                      value={dist.name}
+                      selected={dist.name === 'José Luis Bustamante y Rivero'}
+                    >
+                      {dist.name}
+                    </option>
+                  ))
+                }
+                <option value="Cercado de Arequipa">Cercado de Arequipa</option>
+                <option value="Sachaca (Periférico S/15)">Sachaca (Tarifa S/ 15)</option>
+                <option value="Tiabaya (Periférico S/15)">Tiabaya (Tarifa S/ 15)</option>
+                <option value="Otro Distrito (Consultar)">Otro Distrito (Consultar)</option>
+              </select>
+              <span
+                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-[20px]"
+                aria-hidden="true"
+              >
+                expand_more
+              </span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="delivery-date" class="font-semibold text-on-surface text-body-sm">
+              Fecha Deseada de Entrega:
+            </label>
+            <input
+              id="delivery-date"
+              type="date"
+              class="w-full rounded-xl bg-surface-container-lowest py-2.5 px-3.5 text-on-surface text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary border border-outline-variant/60"
+            />
+          </div>
+        </div>
+
+        <!-- Botones Principales de Pedido por WhatsApp -->
+        <div class="pt-3 flex flex-col gap-3">
+          <button
+            id="btn-send-wa-order"
+            type="button"
+            class="w-full bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label font-semibold text-body-md shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-3 cursor-pointer active:scale-[0.99]"
+          >
+            <span class="material-symbols-outlined text-[24px]" aria-hidden="true">chat</span>
+            <span class="tracking-wide">Pedir por WhatsApp al {ISOTELI_CONTACT.phoneShort}</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-on-primary/60"></span>
+            <span id="cta-total-pill" class="font-bold">Total: {defaultOption.formattedPrice}</span>
+          </button>
+
+          <button
+            id="btn-custom-wa-quote"
+            type="button"
+            class="w-full bg-surface-container hover:bg-surface-container-high text-on-surface border border-outline-variant/60 py-3.5 px-6 rounded-xl font-label font-medium text-body-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">palette</span>
+            <span>¿Deseas personalizar flores o colores? Cotizar Arreglo a Medida</span>
+          </button>
+        </div>
+
+        <!-- Micro-Beneficios Operativos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-3">
+          <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">bolt</span>
+            <div class="text-body-sm">
+              <p class="font-semibold text-on-surface">Envío Express hoy (1 a 3h)</p>
+              <p class="text-on-surface-variant">Llegamos puntual a Yanahuara, Cayma, JLByR y todo Arequipa.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">local_shipping</span>
+            <div class="text-body-sm">
+              <p class="font-semibold text-on-surface">Delivery GRATIS &gt; S/99.90</p>
+              <p class="text-on-surface-variant">En pedidos menores, tarifa plana de S/ 10 en cobertura principal.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">qr_code_2</span>
+            <div class="text-body-sm">
+              <p class="font-semibold text-on-surface">Yape, Plin &amp; Transferencia</p>
+              <p class="text-on-surface-variant">Pagos instantáneos con confirmación directa vía WhatsApp.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">storefront</span>
+            <div class="text-body-sm">
+              <p class="font-semibold text-on-surface">Oficina en Lambramani A15</p>
+              <p class="text-on-surface-variant">Tienda 100% virtual con oficina de coordinación en J.L.B. y Rivero.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 3. PESTAÑAS DE INFORMACIÓN DETALLADA ================= -->
+    <div class="mt-16 sm:mt-24">
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected="true"
+          data-tab-trigger="tab-desc"
+          class="px-6 py-3 rounded-full font-label font-semibold text-body-sm bg-primary text-on-primary shadow-sm transition-all whitespace-nowrap cursor-pointer"
+        >
+          Descripción &amp; Composición Botánica
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-tab-trigger="tab-delivery"
+          class="px-6 py-3 rounded-full font-label font-semibold text-body-sm bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all whitespace-nowrap cursor-pointer"
+        >
+          Delivery &amp; Cobertura en Arequipa
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-tab-trigger="tab-garantia"
+          class="px-6 py-3 rounded-full font-label font-semibold text-body-sm bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all whitespace-nowrap cursor-pointer"
+        >
+          Garantía de Satisfacción ISOTELI
+        </button>
+      </div>
+
+      <!-- Pestaña 1: Descripción -->
+      <div
+        id="tab-desc"
+        data-tab-panel
+        class="mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="md:col-span-2 space-y-4">
+            <h3 class="font-headline text-2xl font-semibold text-on-surface">
+              Arte floral artesanal concebido para emocionar
+            </h3>
+            <p id="detail-full-desc" class="text-on-surface-variant text-body-md leading-relaxed">
+              {product.fullDescription ?? product.shortDescription}
+            </p>
+            <h4 class="font-headline text-lg font-semibold text-on-surface pt-2">Composición Botánica:</h4>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-body-sm text-on-surface-variant">
+              {
+                botanicalList.map((item) => (
+                  <li class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div class="bg-surface-container rounded-xl p-5 flex flex-col justify-between gap-4 border border-outline-variant/40">
+            <div>
+              <h4 class="font-headline text-lg font-semibold text-on-surface mb-3">
+                Cuidados &amp; Durabilidad
+              </h4>
+              <div class="space-y-3 text-body-sm text-on-surface-variant">
+                <div class="flex items-start gap-2.5">
+                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" aria-hidden="true">water_drop</span>
+                  <span><strong class="text-on-surface">Duración:</strong> 4 a 7 días en plenitud fresca.</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" aria-hidden="true">opacity</span>
+                  <span><strong class="text-on-surface">Hidratación:</strong> Renovar o añadir agua fresca cada 2 días.</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" aria-hidden="true">wb_sunny</span>
+                  <span><strong class="text-on-surface">Ubicación:</strong> Evitar luz solar directa y corrientes cálidas.</span>
+                </div>
+              </div>
+            </div>
+            {product.dimensions && (
+              <div class="pt-3 border-t border-outline-variant/60 text-body-sm text-outline">
+                Dimensiones: {product.dimensions}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 2: Delivery y Límites -->
+      <div
+        id="tab-delivery"
+        data-tab-panel
+        class="hidden mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <h3 class="font-headline text-2xl font-semibold text-on-surface">Tiempos y Rangos de Entrega</h3>
+            <p class="text-on-surface-variant text-body-md leading-relaxed">
+              Coordinamos despachos diarios cuidadosos para asegurar que ningún arreglo sufra la radiación solar característica de la Ciudad Blanca.
+            </p>
+            <div class="space-y-3 pt-2">
+              <div class="p-3.5 rounded-xl bg-surface-container flex items-center justify-between text-body-sm">
+                <span class="font-medium text-on-surface">Horario Mañana:</span>
+                <span class="text-primary font-semibold">8:00 AM – 1:00 PM</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-surface-container flex items-center justify-between text-body-sm">
+                <span class="font-medium text-on-surface">Horario Tarde:</span>
+                <span class="text-primary font-semibold">2:00 PM – 8:00 PM</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-surface-container flex items-center justify-between text-body-sm">
+                <span class="font-medium text-on-surface">Pedidos Inmediatos:</span>
+                <span class="text-primary font-semibold">1 a 3 Horas (según movilidad)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h4 class="font-headline text-xl font-semibold text-on-surface">
+              Distritos con Cobertura Estándar (S/ 10):
+            </h4>
+            <p class="text-on-surface-variant text-body-sm leading-relaxed">
+              Yanahuara (Total), José Luis Bustamante y Rivero (Total), Cayma (Av. Bolognesi), Alto Selva Alegre (Piscina P. José Schmidpeter), Mariano Melgar (Av. Argentina), Paucarpata (Parque Backus), Cerro Colorado (Plaza las Américas), Miraflores (Alto Misti) y Socabaya (Comisaría Ciudad Mi Trabajo). Distritos restantes: S/ 15.
+            </p>
+            <div class="p-4 rounded-xl bg-primary-fixed/40 border border-primary/20 flex items-start gap-3">
+              <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" aria-hidden="true">info</span>
+              <p class="text-body-sm text-on-surface">
+                <strong>Delivery GRATIS:</strong> Aplica automáticamente para compras mayores a S/ 99.90 dentro de nuestra cobertura principal.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 3: Garantía ISOTELI -->
+      <div
+        id="tab-garantia"
+        data-tab-panel
+        class="hidden mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
+      >
+        <div class="max-w-3xl space-y-6">
+          <h3 class="font-headline text-2xl font-semibold text-on-surface">La Promesa Floral ISOTELI</h3>
+          <p class="text-on-surface-variant text-body-md leading-relaxed">
+            Sabemos que enviar flores es transmitir un sentimiento íntimo. Para garantizar que tu experiencia sea impecable de principio a fin, aplicamos nuestro protocolo de tres pasos:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            <div class="p-4 rounded-xl bg-surface-container flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-body-sm">
+                1
+              </div>
+              <h5 class="font-semibold text-on-surface text-body-md">Foto Previa al Despacho</h5>
+              <p class="text-body-sm text-on-surface-variant">
+                Te enviamos foto y video del arreglo terminado para tu aprobación por WhatsApp.
+              </p>
+            </div>
+            <div class="p-4 rounded-xl bg-surface-container flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-body-sm">
+                2
+              </div>
+              <h5 class="font-semibold text-on-surface text-body-md">Notificación de Entrega</h5>
+              <p class="text-body-sm text-on-surface-variant">
+                Te avisamos inmediatamente cuando la persona especial recibe su detalle.
+              </p>
+            </div>
+            <div class="p-4 rounded-xl bg-surface-container flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-body-sm">
+                3
+              </div>
+              <h5 class="font-semibold text-on-surface text-body-md">Calidad Seleccionada</h5>
+              <p class="text-body-sm text-on-surface-variant">
+                Trabajamos únicamente con tallos frescos seleccionados cada mañana en Arequipa.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 4. PRODUCTOS RELACIONADOS ("COMBINA PERFECTO CON...") ================= -->
+    {
+      relatedProducts.length > 0 && (
+        <section class="mt-20 sm:mt-28">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-3">
+            <div>
+              <span class="text-body-sm text-primary font-semibold uppercase tracking-wider">
+                Inspiración Adicional
+              </span>
+              <h2 class="font-headline text-3xl sm:text-4xl font-semibold text-on-surface tracking-tight mt-1">
+                Combina Perfecto con...
+              </h2>
+            </div>
+            <a
+              class="inline-flex items-center gap-1.5 text-primary font-semibold text-body-sm hover:underline"
+              href="/catalogo"
+            >
+              <span>Ver todo el catálogo</span>
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
+            </a>
+          </div>
+
+          <div id="detail-related-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {relatedProducts.slice(0, 4).map((rel) => (
+              <ProductCard product={rel} variant="featured" />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- ================= 5. BANNER DE SOPORTE INMEDIATO ================= -->
+    <section class="mt-16 sm:mt-24 mb-6">
+      <div class="rounded-3xl bg-surface-container p-8 sm:p-12 relative overflow-hidden shadow-sm border border-outline-variant/60 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex items-center gap-5 z-10">
+          <div class="w-16 h-16 rounded-2xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-md">
+            <span class="material-symbols-outlined text-[32px]" aria-hidden="true">support_agent</span>
+          </div>
+          <div>
+            <span class="text-body-sm uppercase tracking-wider text-primary font-bold">
+              Atención Inmediata en Arequipa
+            </span>
+            <h3 class="font-headline text-2xl sm:text-3xl font-semibold text-on-surface mt-0.5">
+              ¿Tienes una consulta sobre este arreglo?
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1 max-w-xl">
+              Nuestras floristas atienden en vivo tus pedidos especiales, videollamadas, dedicatorias y requerimientos de entrega.
+            </p>
+          </div>
+        </div>
+        <div class="z-10 flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <a
+            id="detail-support-wa"
+            href={supportWhatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label font-semibold text-body-md shadow-md transition-all flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">chat</span>
+            <span>Hablar al {ISOTELI_CONTACT.phoneShort}</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  import { syncProductDetailPage } from '../lib/live-cms-sync';
+
+  const root = document.getElementById('product-detail-root');
+  if (root) {
+    const phone = root.dataset.phone || '51904803219';
+
+    let basePrice = Number.parseFloat(root.dataset.basePrice || '0');
+    let selectedFormat = root.dataset.baseFormat || 'Clásico';
+    let selectedColor = 'Rosas Pastel & Nude';
+    const addons = new Map<string, number>();
+
+    const dateInput = document.getElementById('delivery-date') as HTMLInputElement | null;
+    if (dateInput) {
+      const today = new Date().toISOString().split('T')[0] || '';
+      dateInput.value = today;
+      dateInput.min = today;
+    }
+
+    const recalcTotal = () => {
+      let addonsSum = 0;
+      addons.forEach((p) => {
+        addonsSum += p;
+      });
+      const total = basePrice + addonsSum;
+      const formatted = `S/ ${total.toFixed(2)}`;
+
+      const priceDisplay = document.getElementById('price-display');
+      const ctaPill = document.getElementById('cta-total-pill');
+      if (priceDisplay) priceDisplay.textContent = formatted;
+      if (ctaPill) ctaPill.textContent = `Total: ${formatted}`;
+    };
+
+    // Delegación de eventos para selector de formato y miniaturas (compatible con hidratación en vivo)
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const sizeBtn = target.closest<HTMLButtonElement>('[data-size-card]');
+      if (sizeBtn) {
+        root.querySelectorAll<HTMLButtonElement>('[data-size-card]').forEach((c) => {
+          c.classList.remove('bg-primary-fixed/40', 'ring-2', 'ring-primary', 'border-primary/40');
+          c.classList.add('bg-surface-container-low', 'border-outline-variant/50');
+        });
+        sizeBtn.classList.add('bg-primary-fixed/40', 'ring-2', 'ring-primary', 'border-primary/40');
+        sizeBtn.classList.remove('bg-surface-container-low', 'border-outline-variant/50');
+
+        basePrice = Number.parseFloat(sizeBtn.dataset.sizePrice || '0');
+        selectedFormat = sizeBtn.dataset.sizeName || '';
+
+        const hint = document.getElementById('size-hint');
+        if (hint) hint.textContent = selectedFormat;
+        recalcTotal();
+        return;
+      }
+
+      const thumbBtn = target.closest<HTMLButtonElement>('[data-thumb-btn]');
+      if (thumbBtn) {
+        const mainImg = document.getElementById('main-product-img') as HTMLImageElement | null;
+        root.querySelectorAll<HTMLButtonElement>('[data-thumb-btn]').forEach((b) =>
+          b.classList.remove('ring-2', 'ring-primary')
+        );
+        thumbBtn.classList.add('ring-2', 'ring-primary');
+        if (mainImg && thumbBtn.dataset.thumbSrc) {
+          mainImg.src = thumbBtn.dataset.thumbSrc;
+          if (thumbBtn.dataset.thumbAlt) mainImg.alt = thumbBtn.dataset.thumbAlt;
+        }
+      }
+    });
+
+    // Selector de paleta de color
+    const colorBtns = root.querySelectorAll<HTMLButtonElement>('[data-color-btn]');
+    colorBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        colorBtns.forEach((b) => b.classList.remove('ring-2', 'ring-primary'));
+        btn.classList.add('ring-2', 'ring-primary');
+        selectedColor = btn.dataset.colorName || '';
+        const lbl = document.getElementById('color-label');
+        if (lbl) lbl.textContent = selectedColor;
+      });
+    });
+
+    // Checkboxes de complementos
+    const addonCheckboxes = root.querySelectorAll<HTMLInputElement>('[data-addon-checkbox]');
+    addonCheckboxes.forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const name = cb.dataset.addonName || '';
+        const price = Number.parseFloat(cb.dataset.addonPrice || '0');
+        if (cb.checked) {
+          addons.set(name, price);
+        } else {
+          addons.delete(name);
+        }
+        recalcTotal();
+      });
+    });
+
+    // Pestañas de información
+    const tabTriggers = root.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
+    const tabPanels = root.querySelectorAll<HTMLElement>('[data-tab-panel]');
+    tabTriggers.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.tabTrigger;
+        tabTriggers.forEach((b) => {
+          b.setAttribute('aria-selected', 'false');
+          b.classList.remove('bg-primary', 'text-on-primary');
+          b.classList.add('bg-surface-container', 'text-on-surface-variant');
+        });
+        btn.setAttribute('aria-selected', 'true');
+        btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        btn.classList.add('bg-primary', 'text-on-primary');
+
+        tabPanels.forEach((panel) => {
+          panel.classList.toggle('hidden', panel.id !== targetId);
+        });
+      });
+    });
+
+    // Botón principal de compra por WhatsApp
+    const sendOrderBtn = document.getElementById('btn-send-wa-order');
+    sendOrderBtn?.addEventListener('click', () => {
+      const currentProductName = root.dataset.productName || 'Arreglo ISOTELI';
+      let addonsSum = 0;
+      const addonEntries: string[] = [];
+      addons.forEach((price, name) => {
+        addonsSum += price;
+        addonEntries.push(`${name} (+S/ ${price.toFixed(2)})`);
+      });
+
+      const total = (basePrice + addonsSum).toFixed(2);
+      const dedication = (
+        (document.getElementById('dedication-text') as HTMLTextAreaElement | null)?.value || ''
+      ).trim();
+      const district =
+        (document.getElementById('delivery-district') as HTMLSelectElement | null)?.value || 'Arequipa';
+      const dateVal = dateInput?.value || 'Hoy';
+
+      let msg =
+        `¡Hola ISOTELI Florería! Deseo realizar el siguiente pedido:\n\n` +
+        `• *Producto:* ${currentProductName}\n` +
+        `• *Formato:* ${selectedFormat}\n` +
+        `• *Paleta Floral:* ${selectedColor}\n` +
+        `• *Complementos:* ${addonEntries.length > 0 ? addonEntries.join(', ') : 'Ninguno'}\n` +
+        `• *Distrito:* ${district}\n` +
+        `• *Fecha:* ${dateVal}\n` +
+        `• *Total Estimado:* S/ ${total}\n\n`;
+
+      if (dedication) {
+        msg += `• *Dedicatoria:* "${dedication}"\n\n`;
+      }
+
+      msg += `¿Me confirman la disponibilidad para procesar el pago vía Yape / Plin / Transferencia? ¡Gracias!`;
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+    });
+
+    // Botón secundario de cotización personalizada
+    const customQuoteBtn = document.getElementById('btn-custom-wa-quote');
+    customQuoteBtn?.addEventListener('click', () => {
+      const currentProductName = root.dataset.productName || 'Arreglo ISOTELI';
+      const msg = `Hola ISOTELI, deseo cotizar una versión personalizada a medida de: ${currentProductName}. ¿Podrían asesorarme?`;
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+    });
+
+    // Sincronización en tiempo real contra WordPress Headless (soporta rutas nuevas vía .htaccess)
+    void syncProductDetailPage((livePrice, liveFormat) => {
+      basePrice = livePrice;
+      selectedFormat = liveFormat;
+      recalcTotal();
+    });
+  }
+</script>
+

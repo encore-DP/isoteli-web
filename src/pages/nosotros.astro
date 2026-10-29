@@ -1,0 +1,491 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import DeliveryCoverageSection from '../components/DeliveryCoverageSection.astro';
+import {
+  ISOTELI_CONTACT,
+  ISOTELI_MISSION,
+  ISOTELI_VALUES,
+  ISOTELI_VISION,
+  buildWhatsAppUrl,
+} from '../data/business';
+import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+
+const assuranceItems = [
+  {
+    icon: 'local_shipping',
+    title: 'Envío Mismo Día',
+    subtitle: 'Pedidos de 1h a 3h previa coordinación',
+  },
+  {
+    icon: 'psychiatry',
+    title: 'Cultivo Seleccionado',
+    subtitle: 'Botánica fresca cada mañana',
+  },
+  {
+    icon: 'draw',
+    title: 'Caligrafía Manual',
+    subtitle: 'Dedicatorias personalizadas',
+  },
+  {
+    icon: 'volunteer_activism',
+    title: 'Garantía ISOTELI',
+    subtitle: 'Confirmación fotográfica previa',
+  },
+] as const;
+
+const teamMembers = [
+  {
+    name: 'Valeria Mendoza',
+    role: 'Directora Floral Creativa',
+    badge: 'Diseño Botánico',
+    bio: 'Especialista en paletas cromáticas orgánicas y floristería botánica de autor. Formada en talleres internacionales y enamorada de las especies silvestres del sur peruano.',
+    favoriteIcon: 'local_florist',
+    favoriteLabel: "Favorita: Rosa O'Hara & Follaje de Chilina",
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAIXj0XYHaRU0P044qk9ZjxA2pT3TqLnx2CLl5AAGuHfod_pCmDB-FuSyXlc_4M_rxNqJEDmVrkgUHCd9Y-AmM30mAHXWqt-6UI0gJ9AexY9VuMHeFVbgS5J6sy-nMKD56OhrRCMRpDuWduvZtSrni5KCAtBmGmK3dbKsvjXjhdp7NdhQB_qtcetfqMxPSac0aT61sW822Cr4zf-7VUbergMzLblfnk5Zo50CbZSzG-p_r1C5-bmQ-QhQ',
+    imageAlt:
+      'Valeria Mendoza, directora floral creativa de ISOTELI, sosteniendo rosas frescas y eucalipto en Arequipa',
+  },
+  {
+    name: 'Mateo Huamán',
+    role: 'Maestro Florista & Montajes',
+    badge: 'Curaduría & Calidad',
+    bio: 'Encargado de la estructura y longevidad de cada arreglo. Con más de 8 años armando centros de mesa y bouquets para las bodas más emblemáticas de Arequipa.',
+    favoriteIcon: 'local_florist',
+    favoriteLabel: 'Favorito: Lisianthus Blanco & Olivo',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDlCbjjRwIDUfiZwdaltJexF5h0Ex21TJVDoxbI0UIsVTp1r1oPtcIWssEdubkc__sK82RimDmBSisySjiKCUeu05KVsXJW3PfyyyP1jQuuqU0jBvcX4c34AynkrxNlEHeyWxNgyReDZbRxSzjNluK3EPZICGx0gioHwizFT5YaocX4HbxXDjm_RsE6L5pSrgcDufGFDDtZF1RPb8a2nmZ9cNNODTy2NEDHJEq3pJQ1zBbd_rWGYsUFZg',
+    imageAlt:
+      'Mateo Huamán, maestro florista de ISOTELI, preparando tallos frescos en mesa de trabajo artesanal',
+  },
+  {
+    name: 'Camila Rodríguez',
+    role: 'Experiencia del Cliente & Caligrafía',
+    badge: 'Detalles & Caligrafía',
+    bio: 'Responsable de plasmar tus mensajes más íntimos con caligrafía tradicional y cuidar los lacres de cera y detalles que convierten cada entrega en un ritual conmovedor.',
+    favoriteIcon: 'edit_note',
+    favoriteLabel: 'Especialidad: Dedicatorias en tinta sepia',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDJOGicI-VnoybYG-bOFZwiKDsA_52_LNb85qfXxi3o2EvHrWmEURgtVdwGUTkhGZhYbIVoWrW2tfOg6CTEfHQFigoGB46x60xXo0EZY2CGh8HezkLSVjgSlODmN88FF0iOXGIpnKIbXpIY07ICWRS9eJBlzOsouYa5imMVCu_EOZZ8cQ3wXJqhvwbsdLJL3c7E0gz3ulcaIcItouAoF3yrZTzOLzMOLRlb7iQSO4tc_nqaujdryFswUQ',
+    imageAlt:
+      'Camila Rodríguez escribiendo a mano una tarjeta de dedicatoria floral con caligrafía artesanal y lacre',
+  },
+] as const;
+
+const occasionQuickLinks = [
+  { label: 'Cumpleaños', icon: 'cake', href: '/catalogo?categoria=cajas-y-boxes' },
+  { label: 'Aniversarios', icon: 'favorite', href: '/catalogo?categoria=ramos-y-buchones' },
+  { label: 'Felicitaciones', icon: 'celebration', href: '/catalogo?categoria=globos-y-bouquets' },
+  { label: 'Agradecimiento', icon: 'sentiment_satisfied', href: '/catalogo?categoria=chocolates' },
+  { label: 'Nacimientos', icon: 'child_friendly', href: '/catalogo?categoria=peluches-y-detalles' },
+  { label: 'Eventos', icon: 'auto_awesome', href: '/servicios' },
+] as const;
+
+const heroImageUrl =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuDYR8mnI9kUixhviUSfU_UJIp-nH8-kBulQYsub77sGWEfxAiFWXK0VmufjsmEZlGLxfs8z9Jpk0TMa7HvdeVZL5CHMDSEtKsoR5NNgpdx3gysmLrii7LnFUeIx_ap_qAN50B_4FJjE1wLMzjU2PnLeGxS0a-3Y4ILrlxEu61ytNDUl-J-wlasn81I5ZlVXTB3GC_jmuPs9TIUwSnuYiXf8EPyZ8TPNfPlAX2eUwrcQ7Cww_7_VjPvkUw';
+
+const studioImageUrl =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuB8Sx9tPxmZq6Bz4x9bgYTBOB02uVtWJqI3vXtC9Cy4tpWg_knvY8I2mgXtKuDH-e-_pe-RU55XH5NOw2RayGPE08T_2idb-ztBoEVe7h1wdFxwznPkggPHa511p5i_5XbNLYrAhgrKWROu44LEr_w4GnpE4ieOvHW6tfWXDjTXjPNtR0lOIcHTWfpHtUugiClDyN6KE97hWjRSqWTq-VWIScAnsdJfhnjJjL6sz8hfMnV_5wkrdKGsUQ';
+---
+
+<Layout
+  title="Nosotros | Historia, Misión, Visión y Valores"
+  description="Conoce la historia, misión, visión y valores de ISOTELI Flores y Detalles en Arequipa: Creatividad, Calidad, Puntualidad y Amabilidad, junto con nuestra cobertura de delivery."
+>
+  <div class="flex flex-col w-full">
+    <!-- ================= SECCIÓN HERO EDITORIAL: MANIFIESTO BOTÁNICO ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pt-4 pb-space-lg">
+      <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-6 md:p-14 lg:p-16 border border-outline-variant/30">
+        <!-- Arco Orgánico Decorativo -->
+        <svg
+          class="absolute -right-16 -top-16 w-80 h-80 text-primary-fixed/50 pointer-events-none"
+          fill="currentColor"
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+        >
+          <path
+            d="M42.7,-62.9C53.9,-54.6,60.8,-40.4,66.8,-25.9C72.8,-11.4,78,3.5,74.9,17.2C71.8,30.9,60.4,43.5,47.4,52.3C34.4,61.1,19.8,66.2,4.8,68.4C-10.2,70.6,-25.7,69.9,-39.2,62.8C-52.7,55.7,-64.2,42.3,-70.6,26.7C-76.9,11.2,-78.2,-6.6,-73.1,-22.3C-67.9,-38.1,-56.3,-51.7,-42.6,-59.4C-28.9,-67.2,-13,-69.1,1.8,-71.9C16.6,-74.6,31.4,-71.2,42.7,-62.9Z"
+            transform="translate(100 100)"></path>
+        </svg>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 flex flex-col gap-4">
+            <div class="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md tracking-wider font-semibold">
+              <span class="material-symbols-outlined icon-filled text-[15px]" aria-hidden="true">spa</span>
+              <span>MANIFIESTO BOTÁNICO AREQUIPEÑO</span>
+            </div>
+
+            <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary tracking-tight">
+              Nuestra Historia &amp; <br class="hidden sm:inline" />
+              <span class="italic font-normal text-on-surface">Pasión Botánica</span>
+            </h1>
+
+            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+              Cultivando momentos inolvidables en el corazón de la Ciudad Blanca. En ISOTELI tejemos la calidez del sillar volcánico, el sol eterno de Arequipa y la sensibilidad floral contemporánea en cada pétalo.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <a
+                class="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-6 py-3 rounded-full font-label-lg text-label-lg shadow-sm transition-all transform hover:-translate-y-0.5"
+                href={buildWhatsAppUrl('Hola ISOTELI, me gustaría hacer un pedido o cotizar un detalle')}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span>Hablemos con un Florista</span>
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
+              </a>
+              <a
+                class="inline-flex items-center gap-2 bg-secondary-container hover:bg-surface text-secondary border border-secondary/30 px-6 py-3 rounded-full font-label-lg text-label-lg shadow-sm transition-colors"
+                href="/catalogo"
+              >
+                <span>Explorar Catálogo</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 relative pb-4 sm:pb-0">
+            <div class="relative mx-auto max-w-md lg:max-w-none">
+              <div class="overflow-hidden rounded-xl bg-surface shadow-md aspect-[4/5] relative">
+                <img
+                  class="w-full h-full object-cover"
+                  src={heroImageUrl}
+                  alt="Atelier floral artesanal en Arequipa con rosas frescas color durazno, eucalipto y arquitectura de sillar iluminada por luz natural"
+                  loading="eager"
+                  onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-transparent to-transparent"></div>
+                <div class="absolute bottom-5 left-5 right-5 text-on-primary">
+                  <p class="font-label-md text-label-md uppercase tracking-wider text-primary-fixed">
+                    Atelier ISOTELI • Valle de Chilina &amp; Arequipa
+                  </p>
+                  <p class="font-headline-sm text-headline-sm font-semibold">
+                    Flores cosechadas con reverencia al paisaje andino.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Tarjeta Métrica Flotante -->
+              <div class="absolute -bottom-6 -left-3 sm:-left-6 bg-surface p-4 rounded-lg shadow-md flex items-center gap-3 border border-outline-variant/30">
+                <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+                  <span class="material-symbols-outlined text-[24px]" aria-hidden="true">verified</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-headline-sm text-headline-sm text-primary font-bold leading-none">+6 Años</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">Elevando celebraciones en Arequipa</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FRANJA DE GARANTÍAS DE SERVICIO ================= -->
+    <TrustStrip items={assuranceItems} variant="strip" />
+
+    <!-- ================= MOSAICO INSTITUCIONAL: MISIÓN Y VISIÓN ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-lg">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+        <!-- Bloque Nuestra Misión -->
+        <article class="lg:col-span-6 flex flex-col justify-between bg-surface-container rounded-xl p-8 md:p-12 relative overflow-hidden border border-outline-variant/30">
+          <div class="flex flex-col gap-4 relative z-10">
+            <div class="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md font-semibold tracking-wider">
+              <span class="material-symbols-outlined text-[15px]" aria-hidden="true">favorite</span>
+              <span>NUESTRA MISIÓN</span>
+            </div>
+            <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
+              Expresar Emociones y Crear Recuerdos
+            </h2>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              {ISOTELI_MISSION}
+            </p>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-outline-variant/30 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">volunteer_activism</span>
+              <span class="font-label-lg text-label-lg text-primary font-semibold">Compromiso, Calidad y Calidez</span>
+            </div>
+            <span class="font-headline-sm text-headline-sm text-secondary italic">Arequipa</span>
+          </div>
+        </article>
+
+        <!-- Bloque Nuestra Visión -->
+        <article class="lg:col-span-6 flex flex-col justify-between bg-secondary-container/40 rounded-xl p-8 md:p-12 relative overflow-hidden border border-secondary/30">
+          <div class="flex flex-col gap-4 relative z-10">
+            <div class="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-secondary text-on-secondary font-label-md text-label-md font-semibold tracking-wider">
+              <span class="material-symbols-outlined text-[15px]" aria-hidden="true">visibility</span>
+              <span>NUESTRA VISIÓN</span>
+            </div>
+            <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-secondary">
+              Florería Reconocida e Innovadora
+            </h2>
+            <blockquote class="font-headline-sm text-headline-sm italic text-on-surface leading-snug">
+              {ISOTELI_VISION.quote}
+            </blockquote>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              {ISOTELI_VISION.body}
+            </p>
+          </div>
+
+          <div class="mt-8 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">language</span>
+            </div>
+            <div>
+              <p class="font-label-lg text-label-lg text-secondary font-bold">Tienda Virtual &amp; Cobertura Digital</p>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Videollamadas personalizadas y despacho seguro</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= MODALIDAD DE ATENCIÓN VIRTUAL Y OFICINA LAMBRAMANI ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-4">
+      <div class="overflow-hidden rounded-xl bg-surface-container-high grid grid-cols-1 lg:grid-cols-12 shadow-sm border border-outline-variant/30">
+        <div class="lg:col-span-6 p-8 md:p-12 flex flex-col justify-center bg-primary-fixed/25">
+          <div class="flex flex-col gap-4">
+            <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md font-semibold uppercase tracking-wider">
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">storefront</span>
+              <span>MODALIDAD DE ATENCIÓN &amp; UBICACIÓN</span>
+            </div>
+
+            <h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
+              Tienda Virtual y Oficina de Coordinación
+            </h3>
+
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Al ser <strong class="text-on-surface">tienda 100% virtual sin local físico</strong> para muestras y ventas, todo el proceso de asesoría y catálogo se realiza en línea con la posibilidad de <strong class="text-on-surface">videollamadas personalizadas</strong> para ver cada detalle antes de tu envío.
+            </p>
+
+            <div class="p-4 rounded-lg bg-surface flex flex-col gap-1 border border-outline-variant/30">
+              <div class="flex items-center gap-2 text-primary font-semibold font-label-md text-label-md">
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">apartment</span>
+                <span>Oficina de Coordinación &amp; Decoración de Eventos:</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">
+                {ISOTELI_CONTACT.officeAddress}.
+              </p>
+            </div>
+
+            <div class="pt-2 flex flex-wrap items-center gap-3">
+              <a
+                class="inline-flex items-center gap-2 bg-primary text-on-primary hover:bg-primary-container px-6 py-2.5 rounded-full font-label-md text-label-md tracking-wider transition-colors shadow-sm"
+                href={buildWhatsAppUrl('Hola ISOTELI, deseo coordinar una videollamada o evento')}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <span>Coordinar por WhatsApp</span>
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chat</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 h-72 lg:h-auto min-h-[320px] relative">
+          <img
+            class="w-full h-full object-cover"
+            src={studioImageUrl}
+            alt="Florista de ISOTELI diseñando un arreglo de rosas frescas, ranúnculos y follaje verde en taller floral de Arequipa"
+            loading="lazy"
+            onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PILARES DE MARCA Y VALORES FUNDAMENTALES ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-xl">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-space-lg">
+        <div class="flex flex-col gap-2">
+          <span class="font-label-md text-label-md text-primary tracking-widest uppercase font-semibold">
+            NUESTROS PILARES
+          </span>
+          <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
+            Nuestros Valores Fundamentales
+          </h2>
+        </div>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+          Pilares que guían cada uno de nuestros ramos, detalles personalizados y eventos en Arequipa.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+        {
+          ISOTELI_VALUES.map((value) => (
+            <article class="bg-surface-container-low rounded-xl p-8 flex flex-col justify-between hover:bg-surface-container transition-all group border border-outline-variant/30">
+              <div class="flex flex-col gap-4">
+                <div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center text-secondary group-hover:scale-105 transition-transform">
+                  <span class="material-symbols-outlined text-[28px]" aria-hidden="true">
+                    {value.nosotrosIcon}
+                  </span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-primary">{value.title}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">{value.description}</p>
+              </div>
+              <div class="mt-6 flex items-center gap-1.5 text-secondary font-label-md text-label-md font-semibold">
+                <span>{value.highlightBadge}</span>
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">check_circle</span>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ================= COBERTURA DE DELIVERY Y LÍMITES DISTRITALES EN AREQUIPA ================= -->
+    <DeliveryCoverageSection id="cobertura-distrital" />
+
+    <!-- ================= EQUIPO DE MAESTROS FLORISTAS Y ARTESANOS ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-lg">
+      <div class="text-center max-w-2xl mx-auto mb-space-lg flex flex-col items-center gap-3">
+        <span class="font-label-md text-label-md text-primary tracking-widest uppercase font-semibold">
+          EL EQUIPO ISOTELI
+        </span>
+        <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
+          Manos que Transforman Sentimientos en Arte
+        </h2>
+        <p class="font-body-md text-body-md text-on-surface-variant">
+          Detrás de cada caja de flores y cada ramo con follaje silvestre hay un equipo apasionado de floristas, artesanas del papel y mensajeros consagrados al detalle.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        {
+          teamMembers.map((member) => (
+            <article class="bg-surface-container-low rounded-xl overflow-hidden group shadow-sm flex flex-col border border-outline-variant/30">
+              <div class="h-80 overflow-hidden relative">
+                <img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  src={member.imageUrl}
+                  alt={member.imageAlt}
+                  loading="lazy"
+                  onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+                />
+                <div class="absolute top-4 right-4 bg-secondary-container/90 backdrop-blur-sm px-3 py-1 rounded-full font-label-md text-label-md text-secondary font-semibold">
+                  {member.badge}
+                </div>
+              </div>
+              <div class="p-6 flex flex-col gap-1.5 flex-1 justify-between">
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-primary">{member.name}</h3>
+                  <p class="font-label-md text-label-md text-secondary uppercase tracking-wider font-semibold">
+                    {member.role}
+                  </p>
+                  <p class="font-body-md text-body-md text-on-surface-variant mt-3">{member.bio}</p>
+                </div>
+                <div class="pt-4 mt-2 border-t border-surface-container-high flex items-center gap-2 text-secondary font-body-sm text-body-sm">
+                  <span class="material-symbols-outlined text-[16px]" aria-hidden="true">
+                    {member.favoriteIcon}
+                  </span>
+                  <span>{member.favoriteLabel}</span>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ================= SELECTOR RÁPIDO DE OCASIONES FLORALES ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-8">
+      <div class="bg-surface-container-low rounded-xl p-8 flex flex-col gap-6 border border-outline-variant/30">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">
+              CREACIONES A MEDIDA
+            </span>
+            <h3 class="font-headline-sm text-headline-sm text-primary">
+              ¿Para qué momento nos necesitas hoy?
+            </h3>
+          </div>
+          <a
+            class="font-label-md text-label-md text-primary font-semibold hover:text-on-surface transition-colors inline-flex items-center gap-1"
+            href="/catalogo"
+          >
+            <span>Ver todas las colecciones</span>
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
+          {
+            occasionQuickLinks.map((occasion) => (
+              <a
+                class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-surface transition-colors group"
+                href={occasion.href}
+              >
+                <div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-[24px]" aria-hidden="true">
+                    {occasion.icon}
+                  </span>
+                </div>
+                <span class="font-label-md text-label-md text-primary font-semibold">{occasion.label}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BANNER DE ATENCIÓN DIRECTA WHATSAPP Y CORREOS ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pt-space-md pb-space-xl">
+      <div class="rounded-xl bg-primary text-on-primary p-8 md:p-14 relative overflow-hidden shadow-xl">
+        <div class="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-primary-container/30 pointer-events-none"></div>
+        <div class="absolute top-0 right-1/3 w-64 h-64 rounded-full bg-inverse-primary/10 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-3xl flex flex-col gap-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md uppercase tracking-wider self-start font-semibold">
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chat</span>
+            <span>Atención Personalizada en Arequipa</span>
+          </div>
+
+          <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold leading-tight text-surface-container-lowest">
+            ¿Tienes consultas sobre arreglos, cobertura de delivery o decoración de eventos?
+          </h2>
+
+          <p class="font-body-lg text-body-lg text-primary-fixed max-w-2xl leading-relaxed">
+            Escríbenos directamente a nuestro WhatsApp oficial o envíanos un correo. Te atenderemos con amabilidad y te asesoraremos en tiempo real con fotos, presupuestos y opciones de videollamada.
+          </p>
+
+          <div class="flex flex-wrap gap-4 text-body-sm text-primary-fixed">
+            <a class="flex items-center gap-1.5 hover:underline" href={`mailto:${ISOTELI_CONTACT.emails.ventas}`}>
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">mail</span>
+              <span>{ISOTELI_CONTACT.emails.ventas}</span>
+            </a>
+            <a class="flex items-center gap-1.5 hover:underline" href={`mailto:${ISOTELI_CONTACT.emails.eventos}`}>
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">mail</span>
+              <span>{ISOTELI_CONTACT.emails.eventos}</span>
+            </a>
+            <a class="flex items-center gap-1.5 hover:underline" href={`mailto:${ISOTELI_CONTACT.emails.administracion}`}>
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">mail</span>
+              <span>{ISOTELI_CONTACT.emails.administracion}</span>
+            </a>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+            <a
+              class="inline-flex items-center justify-center gap-3 bg-surface text-primary hover:bg-surface-container-lowest px-8 py-4 rounded-full font-label-lg text-label-lg tracking-wider font-semibold shadow-lg transition-transform hover:-translate-y-0.5"
+              href={buildWhatsAppUrl('Hola ISOTELI, deseo consultar sobre un pedido o evento')}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span class="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">chat</span>
+              <span>Escríbenos al {ISOTELI_CONTACT.phoneDisplay}</span>
+            </a>
+            <a
+              class="inline-flex items-center justify-center gap-2 bg-primary-container hover:bg-surface/20 text-on-primary px-6 py-4 rounded-full font-label-lg text-label-lg tracking-wider transition-colors border border-on-primary/30"
+              href={`mailto:${ISOTELI_CONTACT.emails.ventas}`}
+            >
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">mail</span>
+              <span>Enviar Correo</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+

@@ -1,0 +1,359 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { FLORIST_CATEGORIES } from '../data/fallback-store';
+import { getCatalogProducts } from '../lib/wp-graphql';
+
+const { products } = await getCatalogProducts();
+
+const catalogTrustItems = [
+  {
+    icon: 'local_shipping',
+    title: 'Envío Express Hoy',
+    subtitle: 'Yanahuara, Cayma, JLByR y Arequipa',
+  },
+  {
+    icon: 'yard',
+    title: 'Flores Frescas del Día',
+    subtitle: 'Selección botánica prémium',
+  },
+  {
+    icon: 'draw',
+    title: 'Tarjeta Caligrafiada',
+    subtitle: 'Dedicatoria fina sin costo',
+  },
+  {
+    icon: 'photo_camera',
+    title: 'Foto Previa al Envío',
+    subtitle: 'Confirmación de calidad 100%',
+  },
+] as const;
+
+const categoryCounts = FLORIST_CATEGORIES.map((cat) => ({
+  ...cat,
+  count: products.filter((p) => p.categorySlug === cat.slug).length,
+}));
+---
+
+<Layout
+  title="Catálogo Floral & Detalles de Autor"
+  description="Explora el catálogo floral de ISOTELI en Arequipa: ramos de rosas y buchones, cajas y boxes florales, globos con helio, chocolates La Ibérica y peluches."
+>
+  <div class="flex flex-col w-full">
+    <!-- ================= FRANJA SUPERIOR DE GARANTÍAS BOTÁNICAS ================= -->
+    <TrustStrip items={catalogTrustItems} variant="strip" />
+
+    <!-- ================= CABECERA EDITORIAL DEL CATÁLOGO ================= -->
+    <section class="w-full px-margin-mobile md:px-margin mb-space-lg">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md">
+        <div class="max-w-2xl flex flex-col gap-space-xs">
+          <div class="inline-flex items-center gap-space-xs text-primary font-label-md text-label-md uppercase tracking-wider font-semibold">
+            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">filter_vintage</span>
+            <span>Colección Botánica &amp; Arte Floral</span>
+          </div>
+          <h1 class="font-headline text-headline-lg text-primary tracking-tight font-bold">
+            Catálogo Floral &amp; Detalles de Autor
+          </h1>
+          <p class="font-body-lg text-body-lg text-on-surface-variant">
+            Explora nuestras creaciones florales frescas, detalles y complementos listos para emocionar y transformar cada instante en la Ciudad Blanca.
+          </p>
+        </div>
+
+        <div class="inline-flex items-center gap-2 bg-primary-fixed px-4 py-2.5 rounded-full text-on-primary-fixed-variant border border-primary/20 self-start lg:self-auto">
+          <span class="material-symbols-outlined text-[18px]" aria-hidden="true">alarm</span>
+          <span class="font-body-sm text-body-sm font-semibold">
+            Pedidos inmediatos: entrega en 1 a 3 horas
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BARRA DE FILTROS, BÚSQUEDA Y ORDENAMIENTO ================= -->
+    <section class="w-full px-margin-mobile md:px-margin mb-space-lg">
+      <div class="bg-surface-container-low p-space-md rounded-xl shadow-sm border border-outline-variant/40 flex flex-col gap-space-md">
+        <!-- Fila de Buscador en Vivo y Ordenamiento -->
+        <div class="flex flex-col sm:flex-row gap-space-sm items-stretch sm:items-center justify-between">
+          <div class="relative flex-1 max-w-md">
+            <span
+              class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]"
+              aria-hidden="true"
+            >
+              search
+            </span>
+            <label for="productSearchInput" class="sr-only">Buscar productos</label>
+            <input
+              id="productSearchInput"
+              type="text"
+              placeholder="Buscar por rosa, chocolate, girasol, caja, peluche..."
+              class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest rounded-full font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary shadow-sm border border-outline-variant/30"
+            />
+          </div>
+
+          <div class="flex items-center gap-space-xs self-end sm:self-auto">
+            <label
+              for="sortSelector"
+              class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider hidden sm:inline"
+            >
+              Ordenar:
+            </label>
+            <div class="relative">
+              <select
+                id="sortSelector"
+                class="appearance-none bg-surface-container-lowest text-on-surface font-body-md text-body-md py-2 pl-4 pr-9 rounded-full shadow-sm border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+              >
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Precio: Menor a Mayor</option>
+                <option value="price-desc">Precio: Mayor a Menor</option>
+                <option value="popular">Más Populares</option>
+              </select>
+              <span
+                class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-[18px]"
+                aria-hidden="true"
+              >
+                expand_more
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Píldoras de Categorías WooCommerce -->
+        <div
+          id="categoryPillContainer"
+          class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none"
+          role="tablist"
+          aria-label="Filtrar catálogo por categoría"
+        >
+          <button
+            type="button"
+            data-category="all"
+            class="category-btn px-4 py-2 rounded-full font-label-md text-label-md transition-colors shrink-0 bg-secondary text-on-secondary shadow-sm cursor-pointer"
+          >
+            Todos ({products.length})
+          </button>
+
+          {
+            categoryCounts.map((cat) => (
+              <button
+                type="button"
+                data-category={cat.slug}
+                class="category-btn px-4 py-2 rounded-full font-label-md text-label-md transition-colors shrink-0 bg-secondary-container text-on-secondary-container hover:bg-secondary hover:text-on-secondary border border-secondary/20 cursor-pointer"
+              >
+                {cat.shortLabel} ({cat.count})
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GRILLA DINÁMICA DE PRODUCTOS (WOOCOMMERCE + FALLBACK) ================= -->
+    <section class="w-full px-margin-mobile md:px-margin mb-space-xl">
+      <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        {products.map((producto) => <ProductCard product={producto} variant="catalog" />)}
+      </div>
+
+      <!-- Estado Vacío para Búsquedas Sin Coincidencias -->
+      <div
+        id="noResultsState"
+        class="hidden flex-col items-center justify-center p-space-xl bg-surface-container-low rounded-xl text-center my-space-md border border-outline-variant/40"
+      >
+        <div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center text-primary mb-space-sm">
+          <span class="material-symbols-outlined text-[32px]" aria-hidden="true">sentiment_dissatisfied</span>
+        </div>
+        <h2 class="font-headline text-2xl font-bold text-primary mb-1">
+          No encontramos arreglos con esa búsqueda
+        </h2>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mb-space-md">
+          Prueba buscando otra palabra clave o háblanos directamente para diseñar un arreglo personalizado a tu gusto.
+        </p>
+        <button
+          id="resetFiltersBtn"
+          type="button"
+          class="bg-primary hover:bg-primary-container text-on-primary px-6 py-2.5 rounded-full font-label-md text-label-md transition-colors cursor-pointer"
+        >
+          Ver todos los productos
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= BANNER CLUB FLORAL 10% DE DESCUENTO ================= -->
+    <section class="w-full px-margin-mobile md:px-margin mb-space-xl">
+      <div class="bg-secondary text-on-secondary rounded-2xl p-space-md sm:p-space-lg flex flex-col lg:flex-row items-center justify-between gap-space-md shadow-md">
+        <div class="flex items-center gap-space-sm max-w-xl">
+          <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-secondary shrink-0 shadow-inner">
+            <span class="material-symbols-outlined text-[26px]" aria-hidden="true">percent</span>
+          </div>
+          <div class="flex flex-col">
+            <h2 class="font-headline text-2xl font-bold text-on-secondary leading-tight">
+              10% de descuento en tu primer pedido
+            </h2>
+            <p class="font-body-sm text-body-sm text-secondary-fixed leading-relaxed">
+              Únete a nuestra membresía floral y recibe novedades estacionales, promociones de San Valentín y Día de la Madre en Arequipa.
+            </p>
+          </div>
+        </div>
+
+        <div class="w-full lg:w-auto flex-1 max-w-md">
+          <form
+            id="catalog-newsletter-form"
+            class="flex flex-col sm:flex-row gap-2 bg-surface-container-lowest/20 p-1.5 rounded-2xl sm:rounded-full backdrop-blur-sm"
+          >
+            <label for="catalog-newsletter-input" class="sr-only">Celular o correo electrónico</label>
+            <input
+              id="catalog-newsletter-input"
+              type="text"
+              required
+              placeholder="Ingresa tu celular o email..."
+              class="flex-1 bg-surface-container-lowest text-on-surface px-4 py-2 rounded-full font-body-md text-body-md placeholder:text-outline focus:outline-none"
+            />
+            <button
+              type="submit"
+              class="bg-secondary-container text-secondary hover:bg-secondary-fixed px-5 py-2 rounded-full font-label-md text-label-md uppercase tracking-wider font-semibold shrink-0 transition-colors shadow-sm cursor-pointer"
+            >
+              Suscribirme
+            </button>
+          </form>
+          <p
+            id="catalog-newsletter-msg"
+            class="hidden mt-2 text-secondary-fixed font-label-md text-label-md px-3"
+          >
+            ¡Gracias por unirte al Club Floral ISOTELI! Menciona el código <strong>BIENVENIDOISOTELI</strong> en WhatsApp.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  import { syncCatalogPage } from '../lib/live-cms-sync';
+
+  const searchInput = document.getElementById('productSearchInput') as HTMLInputElement | null;
+  const sortSelector = document.getElementById('sortSelector') as HTMLSelectElement | null;
+  const categoryButtons = document.querySelectorAll<HTMLButtonElement>('.category-btn');
+  const productGrid = document.getElementById('catalogGrid');
+  let products = Array.from(document.querySelectorAll<HTMLElement>('.product-item'));
+  const noResultsState = document.getElementById('noResultsState');
+  const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+  let currentCategory = 'all';
+  let currentQuery = '';
+
+  function setActiveCategoryPill(targetCat: string) {
+    categoryButtons.forEach((b) => {
+      const isMatch = b.getAttribute('data-category') === targetCat;
+      if (isMatch) {
+        b.classList.add('bg-secondary', 'text-on-secondary', 'shadow-sm');
+        b.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+      } else {
+        b.classList.remove('bg-secondary', 'text-on-secondary', 'shadow-sm');
+        b.classList.add('bg-secondary-container', 'text-on-secondary-container');
+      }
+    });
+  }
+
+  function filterAndSort() {
+    let visibleCount = 0;
+
+    products.forEach((item) => {
+      const itemCategory = item.getAttribute('data-category');
+      const itemTitle = (item.getAttribute('data-title') || '').toLowerCase();
+
+      const matchesCategory = currentCategory === 'all' || itemCategory === currentCategory;
+      const matchesQuery = itemTitle.includes(currentQuery.toLowerCase());
+
+      if (matchesCategory && matchesQuery) {
+        item.classList.remove('hidden');
+        item.classList.add('flex');
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+        item.classList.remove('flex');
+      }
+    });
+
+    if (noResultsState && productGrid) {
+      if (visibleCount === 0) {
+        noResultsState.classList.remove('hidden');
+        noResultsState.classList.add('flex');
+        productGrid.classList.add('hidden');
+      } else {
+        noResultsState.classList.add('hidden');
+        noResultsState.classList.remove('flex');
+        productGrid.classList.remove('hidden');
+      }
+    }
+  }
+
+  function sortProducts(criteria: string) {
+    if (!productGrid) return;
+    const sorted = [...products].sort((a, b) => {
+      const priceA = Number.parseFloat(a.getAttribute('data-price') || '0');
+      const priceB = Number.parseFloat(b.getAttribute('data-price') || '0');
+      const popA = Number.parseInt(a.getAttribute('data-popularity') || '0', 10);
+      const popB = Number.parseInt(b.getAttribute('data-popularity') || '0', 10);
+
+      if (criteria === 'price-asc') return priceA - priceB;
+      if (criteria === 'price-desc') return priceB - priceA;
+      if (criteria === 'popular') return popB - popA;
+      return 0;
+    });
+
+    sorted.forEach((el) => productGrid.appendChild(el));
+  }
+
+  categoryButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      currentCategory = btn.getAttribute('data-category') || 'all';
+      setActiveCategoryPill(currentCategory);
+      filterAndSort();
+    });
+  });
+
+  // Soporte para filtro directo por hash o query (?categoria=...)
+  const initialQueryCat = new URLSearchParams(window.location.search).get('categoria') || '';
+  const initialHash = window.location.hash.replace('#', '') || initialQueryCat;
+  if (
+    initialHash &&
+    Array.from(categoryButtons).some((b) => b.getAttribute('data-category') === initialHash)
+  ) {
+    currentCategory = initialHash;
+    setActiveCategoryPill(currentCategory);
+    filterAndSort();
+  }
+
+  // Sincronización en tiempo real contra WordPress Headless (cms.isoteli.com)
+  void syncCatalogPage(() => {
+    products = Array.from(document.querySelectorAll<HTMLElement>('.product-item'));
+    if (sortSelector && sortSelector.value !== 'featured') {
+      sortProducts(sortSelector.value);
+    }
+    filterAndSort();
+  });
+
+  searchInput?.addEventListener('input', () => {
+    currentQuery = searchInput.value.trim();
+    filterAndSort();
+  });
+
+  sortSelector?.addEventListener('change', () => {
+    sortProducts(sortSelector.value);
+  });
+
+  resetFiltersBtn?.addEventListener('click', () => {
+    currentCategory = 'all';
+    currentQuery = '';
+    if (searchInput) searchInput.value = '';
+    if (sortSelector) sortSelector.value = 'featured';
+    setActiveCategoryPill('all');
+    filterAndSort();
+  });
+
+  const newsletterForm = document.getElementById('catalog-newsletter-form');
+  const newsletterMsg = document.getElementById('catalog-newsletter-msg');
+  newsletterForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    newsletterMsg?.classList.remove('hidden');
+  });
+</script>

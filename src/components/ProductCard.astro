@@ -1,0 +1,209 @@
+---
+import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+import type { CatalogProduct } from '../lib/wp-graphql';
+
+export interface Props {
+  product: CatalogProduct;
+  variant?: 'catalog' | 'featured';
+}
+
+const { product, variant = 'catalog' } = Astro.props;
+
+const defaultVariation =
+  product.productType === 'variable' && product.variations.length > 0
+    ? (product.variations.find((v) => v.badge) ?? product.variations[0]!)
+    : null;
+
+const initialPriceText = defaultVariation
+  ? defaultVariation.formattedPrice
+  : product.pricePrefix
+    ? `${product.pricePrefix} ${product.formattedPrice}`
+    : product.formattedPrice;
+
+const initialNumericPrice = defaultVariation ? defaultVariation.numericPrice : product.numericPrice;
+
+const initialWhatsAppMessage = defaultVariation
+  ? `Hola ISOTELI, deseo ordenar el producto: ${product.name} - Opción: ${defaultVariation.label} (${defaultVariation.formattedPrice})`
+  : `Hola ISOTELI, deseo ordenar el producto: ${product.name} (${product.formattedPrice})`;
+
+const whatsappUrl = buildWhatsAppUrl(initialWhatsAppMessage);
+const productHref = `/producto/${product.slug}`;
+const safeImage = product.imageUrl || PLACEHOLDER_IMAGE;
+---
+
+<!-- ================= TARJETA DE PRODUCTO (SIMPLE / VARIABLE) ================= -->
+<article
+  class:list={[
+    'product-item group flex flex-col bg-surface-container-lowest overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/40',
+    variant === 'featured' ? 'rounded-3xl p-4' : 'rounded-2xl',
+  ]}
+  data-category={product.categorySlug}
+  data-popularity={String(product.popularity)}
+  data-price={String(initialNumericPrice)}
+  data-title={`${product.name} ${product.shortDescription} ${product.categoryLabel}`}
+  data-product-name={product.name}
+  data-whatsapp-phone={ISOTELI_CONTACT.phoneRaw}
+>
+  <!-- Fotografía Dinámica con Placeholder de Respaldo -->
+  <a
+    href={productHref}
+    class:list={[
+      'relative w-full bg-surface-container overflow-hidden block',
+      variant === 'featured' ? 'aspect-[4/4.5] rounded-2xl mb-4' : 'aspect-[4/3]',
+    ]}
+    aria-label={`Ver detalles de ${product.name}`}
+  >
+    <img
+      src={safeImage}
+      alt={product.imageAlt}
+      loading="lazy"
+      decoding="async"
+      onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+
+    {
+      product.badge && (
+        <div class="absolute top-3 left-3 flex gap-2">
+          <span
+            class:list={[
+              'px-3 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider shadow-sm',
+              variant === 'featured' ? 'bg-primary text-on-primary' : 'bg-secondary text-on-secondary',
+            ]}
+          >
+            {product.badge}
+          </span>
+        </div>
+      )
+    }
+
+    <span
+      class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-secondary-container/95 text-secondary flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform"
+      aria-hidden="true"
+    >
+      <span class="material-symbols-outlined text-[18px]">favorite</span>
+    </span>
+  </a>
+
+  <!-- Cuerpo Informativo y Selector de Variaciones -->
+  <div class:list={['flex flex-col flex-1 justify-between gap-space-sm', variant === 'catalog' && 'p-space-md']}>
+    <div>
+      <div class="flex items-center justify-between gap-2 mb-1">
+        <span class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold">
+          {product.categoryLabel}
+        </span>
+        <span class="font-body-sm text-body-sm text-on-surface flex items-center gap-1">
+          <span class="material-symbols-outlined icon-filled text-[14px] text-primary" aria-hidden="true">star</span>
+          {product.rating.toFixed(1)} ({product.reviewCount})
+        </span>
+      </div>
+
+      <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface group-hover:text-primary transition-colors mb-1">
+        <a href={productHref} class="hover:underline focus:outline-none">
+          {product.name}
+        </a>
+      </h3>
+
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+        {product.shortDescription}
+      </p>
+
+      <!-- Opciones de Producto Variable (ej. cantidad de rosas o tamaños de peluche/caja) -->
+      {
+        product.productType === 'variable' && product.variations.length > 0 && (
+          <div class="mt-3 pt-2.5 border-t border-surface-container">
+            <span class="font-label-md text-[10px] uppercase tracking-wider text-outline block mb-1.5">
+              Elige presentación:
+            </span>
+            <div class="flex flex-wrap gap-1.5" role="group" aria-label={`Opciones de ${product.name}`}>
+              {product.variations.map((v) => {
+                const isDefault = defaultVariation?.id === v.id;
+                return (
+                  <button
+                    type="button"
+                    data-var-btn
+                    data-var-label={v.label}
+                    data-var-price={v.formattedPrice}
+                    data-var-numeric={String(v.numericPrice)}
+                    class:list={[
+                      'px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer border',
+                      isDefault
+                        ? 'bg-primary-fixed text-primary border-primary/40 font-semibold'
+                        : 'bg-surface-container-low text-on-surface-variant border-outline-variant/40 hover:bg-surface-container',
+                    ]}
+                  >
+                    {v.label} · {v.formattedPrice}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )
+      }
+    </div>
+
+    <!-- Pie de Tarjeta: Precio y Enlace Dinámico a WhatsApp -->
+    <div class="pt-3 border-t border-surface-container flex items-center justify-between gap-space-sm">
+      <div class="flex flex-col">
+        <span class="font-label-md text-[10px] uppercase tracking-wider text-outline">Precio Arequipa</span>
+        <span data-card-price class="font-headline text-2xl font-bold text-primary">
+          {initialPriceText}
+        </span>
+      </div>
+
+      <a
+        data-card-wa-link
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-container text-on-primary px-4 py-2.5 rounded-full font-label-md text-label-md tracking-wider transition-all shadow-sm hover:scale-[1.02]"
+      >
+        <span class="material-symbols-outlined text-[17px]" aria-hidden="true">chat</span>
+        <span>{variant === 'featured' ? 'Pedir' : 'Pedir por WhatsApp'}</span>
+      </a>
+    </div>
+  </div>
+</article>
+
+<script>
+  // Inicializa la selección interactiva de variaciones en tarjetas de VariableProduct
+  document.querySelectorAll<HTMLElement>('article.product-item').forEach((card) => {
+    if (card.dataset.varBound === 'true') return;
+    card.dataset.varBound = 'true';
+
+    const varBtns = card.querySelectorAll<HTMLButtonElement>('[data-var-btn]');
+    if (varBtns.length === 0) return;
+
+    const priceEl = card.querySelector<HTMLElement>('[data-card-price]');
+    const waLink = card.querySelector<HTMLAnchorElement>('[data-card-wa-link]');
+    const productName = card.dataset.productName || 'Arreglo ISOTELI';
+    const phone = card.dataset.whatsappPhone || '51904803219';
+
+    varBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        varBtns.forEach((b) => {
+          b.classList.remove('bg-primary-fixed', 'text-primary', 'border-primary/40', 'font-semibold');
+          b.classList.add('bg-surface-container-low', 'text-on-surface-variant', 'border-outline-variant/40');
+        });
+
+        btn.classList.add('bg-primary-fixed', 'text-primary', 'border-primary/40', 'font-semibold');
+        btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'border-outline-variant/40');
+
+        const varLabel = btn.dataset.varLabel || '';
+        const varPrice = btn.dataset.varPrice || '';
+        const varNumeric = btn.dataset.varNumeric || '0';
+
+        if (priceEl && varPrice) {
+          priceEl.textContent = varPrice;
+        }
+        card.setAttribute('data-price', varNumeric);
+
+        if (waLink) {
+          const message = `Hola ISOTELI, deseo ordenar el producto: ${productName} - Opción: ${varLabel} (${varPrice})`;
+          waLink.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        }
+      });
+    });
+  });
+</script>

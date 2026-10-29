@@ -1,0 +1,64 @@
+src/
+├── assets/
+│   └── logo/
+│       └── logo.png                       # Logotipo institucional optimizado a WebP (21 kB → 6 kB)
+├── components/
+│   ├── TopBar.astro                       # Cintilla superior fija (Delivery Gratis > S/99.90 / S/10)
+│   ├── Navbar.astro                       # Cabecera responsiva con <Image /> y drawer móvil
+│   ├── Footer.astro                       # Pie de página (tienda 100% virtual, oficina Lambramani A15, pagos y correos)
+│   ├── WhatsAppFloat.astro                # Botón flotante oficial (+51 904 803 219)
+│   ├── ProductCard.astro                  # Tarjeta SimpleProduct / VariableProduct con selector interactivo
+│   ├── ServicePackCard.astro              # Tarjeta de paquetes de decoración (backing 1.5m, 2.5m, 3m)
+│   ├── FurnitureRentalItem.astro          # Tarjeta compacta de alquiler de mobiliario individual
+│   ├── ProductDetailView.astro            # Configurador interactivo completo de detalle de producto
+│   ├── DeliveryCoverageSection.astro      # Bloque reutilizable de tarifas y 9 límites distritales en Arequipa
+│   └── TrustStrip.astro                   # Franja reutilizable de pilares y promesas de marca
+├── data/
+│   ├── business.ts                        # Fuente única de verdad (Misión, Visión, Valores, distritos, contacto)
+│   └── fallback-store.ts                  # Respaldo local tipado fiel al HTML de Stitch (catálogo, packs y alquiler)
+├── layouts/
+│   └── Layout.astro                       # Shell maestro SEO/OG + Google Fonts + Material Symbols
+├── lib/
+│   └── wp-graphql.ts                      # Cliente centralizado WPGraphQL con tipado estricto y fallback híbrido
+├── pages/
+│   ├── index.astro                        # Migración de index.html conectada al catálogo
+│   ├── catalogo.astro                     # Migración de catalogo.html (5 categorías WooCommerce + filtros/búsqueda)
+│   ├── servicios.astro                    # Migración de servicios.html (packs clásicos/temáticos + mobiliario)
+│   ├── nosotros.astro                     # Migración de nosotros.html (Misión, Visión, Valores, equipo y cobertura)
+│   ├── contacto.astro                     # Migración de contacto.html (formulario WhatsApp, mapa, límites y FAQ)
+│   ├── detalle-producto.astro             # Vista directa del configurador insignia (detalle_producto.html)
+│   └── producto/
+│       └── [slug].astro                   # Rutas dinámicas SSG para cada producto del catálogo
+└── styles/
+    └── global.css                         # Sistema de diseño Terracota Sahara nativo en Tailwind CSS v4 (@theme)
+
+
+
+2. Cumplimiento de las 5 Directrices de Ingeniería
+
+Fidelidad Estética, Copy Aprobado y Comentado Semántico
+
+Se migró el sistema de tokens completo a global.css mediante @theme nativo de Tailwind CSS v4, eliminando el script bloqueante cdn.tailwindcss.com de los prototipos.
+Se centralizaron en business.ts los textos institucionales aprobados (ISOTELI_MISSION, ISOTELI_VISION, ISOTELI_VALUES: Creatividad, Calidad, Puntualidad y Amabilidad, AREQUIPA_DISTRICTS y ISOTELI_CONTACT).
+Cada bloque estructural en las páginas (index.astro, catalogo.astro, servicios.astro, nosotros.astro, contacto.astro, detalle-producto.astro y [slug].astro) y en los componentes cuenta con encabezados semánticos (<!-- ================= ... ================= -->).
+
+Componentes Reutilizables (Principio DRY)
+
+Estructura global en Layout.astro integrando TopBar.astro, Navbar.astro, <slot />, Footer.astro y WhatsAppFloat.astro.
+Tarjetas de negocio especializadas: ProductCard.astro (soporta SimpleProduct y VariableProduct actualizando precio y enlace de WhatsApp según la variación elegida), ServicePackCard.astro (Línea Clásica S/150–S/490 y Línea Temática Infantil/Baby S/250–S/550 con medidas 1.5 m, 2.5 m y 3 m) y FurnitureRentalItem.astro, además de ProductDetailView.astro, DeliveryCoverageSection.astro y TrustStrip.astro.
+
+Consumo Headless WooCommerce + WPGraphQL y Respaldo Híbrido
+
+El servicio wp-graphql.ts consulta import.meta.env.WORDPRESS_API_URL mediante getCatalogProducts, getProductBySlug y getServicesAndRentals.
+catalogo.astro filtra las 5 categorías de florería (ramos-y-buchones, cajas-y-boxes, globos-y-bouquets, chocolates, peluches-y-detalles).
+servicios.astro consulta servicios-decoracion (linea-clasica y linea-tematica-infantil) y alquiler-de-mobiliario, conservando al final de la grilla la tarjeta fija de llamado a la acción "¿Deseas combinar mobiliario? Consultar".
+Si una categoría aún no tiene productos publicados en WordPress o el endpoint no responde en desarrollo, se inyectan automáticamente los datos de fallback-store.ts por categoría.
+
+Gestión de Recursos Gráficos
+
+El logotipo oficial (logo.png) se procesa con <Image /> de astro:assets en cabecera y pie de página; se configuraron remotePatterns HTTPS en astro.config.mjs, isotipo vectorial en favicon.svg y placeholder de respaldo en placeholder-floral.svg.
+
+Saneamiento, Seguridad y Verificación de Compilación (astro build)
+
+Se eliminaron todas las marcas residuales [cite: ...], se corrigió en contacto.astro el número de WhatsApp erróneo del prototipo (51955230604 → +51 904 803 219) y la opción de recojo presencial para respetar la modalidad 100% virtual + oficina de eventos en Urb. Santa María de Lambramani A15.
+npm run build compiló las 17 rutas estáticas sin errores, verificando 0 imágenes sin alt y 0 enlaces externos target="_blank" sin rel="noopener noreferrer".

@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   SISTEMA DE TOKENS DE DISEÑO ISOTELI (PALETA TERRACOTA SAHARA & BOTÁNICA)
+   Configuración nativa CSS-first para Tailwind CSS v4
+   ========================================================================== */
+@theme {
+  /* Paleta cromática Material 3 / Terracota Sahara aprobada en Stitch */
+  --color-primary: #500e05;
+  --color-primary-container: #6e2417;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #f48b77;
+  --color-primary-fixed: #ffdad3;
+  --color-primary-fixed-dim: #ffb4a6;
+  --color-on-primary-fixed: #3f0300;
+  --color-on-primary-fixed-variant: #7b2e20;
+  --color-inverse-primary: #ffb4a6;
+
+  --color-secondary: #5a6334;
+  --color-secondary-container: #dee8ad;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #606939;
+  --color-secondary-fixed: #dee8ad;
+  --color-secondary-fixed-dim: #c2cc93;
+  --color-on-secondary-fixed: #181e00;
+  --color-on-secondary-fixed-variant: #424b1f;
+
+  --color-tertiary: #3a2117;
+  --color-tertiary-container: #53362b;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #c79f90;
+  --color-tertiary-fixed: #ffdbce;
+  --color-tertiary-fixed-dim: #e8bdad;
+  --color-on-tertiary-fixed: #2c160c;
+  --color-on-tertiary-fixed-variant: #5e4034;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-background: #fcfaef;
+  --color-on-background: #1b1c16;
+  --color-surface: #fcfaef;
+  --color-surface-dim: #dcdad0;
+  --color-surface-bright: #fcfaef;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f6f4e9;
+  --color-surface-container: #f0eee3;
+  --color-surface-container-high: #eae8de;
+  --color-surface-container-highest: #e4e3d8;
+  --color-surface-variant: #e4e3d8;
+  --color-on-surface: #1b1c16;
+  --color-on-surface-variant: #55423f;
+  --color-inverse-surface: #30312a;
+  --color-inverse-on-surface: #f3f1e6;
+
+  --color-outline: #88726e;
+  --color-outline-variant: #dbc1bc;
+  --color-surface-tint: #9a4435;
+
+  /* Radios de borde compatibles con Stitch */
+  --radius-DEFAULT: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Escala semántica de espaciado editorial */
+  --spacing-space-xs: 0.375rem;
+  --spacing-space-sm: 0.75rem;
+  --spacing-space-md: 1.25rem;
+  --spacing-space-lg: 2rem;
+  --spacing-space-xl: 3.5rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-mobile: 0.75rem;
+  --spacing-margin: 3rem;
+  --spacing-margin-mobile: 1.25rem;
+
+  /* Familias tipográficas editoriales y de interfaz */
+  --font-display-hero: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-display-hero-mobile: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-headline-lg: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-headline-lg-mobile: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-headline-md: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-headline-sm: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-headline: "Playfair Display", "EB Garamond", "Inter", Georgia, serif;
+  --font-display: "Playfair Display", "EB Garamond", "Inter", Georgia, serif;
+  --font-body-lg: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-body-md: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-body-sm: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-label-lg: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-label-md: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-label: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+
+  /* Escala tipográfica con altura de línea, tracking y peso */
+  --text-display-hero: 56px;
+  --text-display-hero--line-height: 64px;
+  --text-display-hero--letter-spacing: -0.02em;
+  --text-display-hero--font-weight: 700;
+
+  --text-display-hero-mobile: 36px;
+  --text-display-hero-mobile--line-height: 44px;
+  --text-display-hero-mobile--letter-spacing: -0.01em;
+  --text-display-hero-mobile--font-weight: 700;
+
+  --text-headline-lg: 36px;
+  --text-headline-lg--line-height: 44px;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-lg-mobile: 26px;
+  --text-headline-lg-mobile--line-height: 34px;
+  --text-headline-lg-mobile--font-weight: 600;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 28px;
+  --text-headline-sm--font-weight: 500;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 26px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 22px;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 12px;
+  --text-body-sm--line-height: 18px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-lg: 13px;
+  --text-label-lg--line-height: 18px;
+  --text-label-lg--letter-spacing: 0.08em;
+  --text-label-lg--font-weight: 600;
+
+  --text-label-md: 11px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--letter-spacing: 0.06em;
+  --text-label-md--font-weight: 600;
+}
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    overscroll-behavior: none;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .icon-filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,46 @@
+---
+import { buildWhatsAppUrl } from '../data/business';
+import type { FurnitureRental } from '../lib/wp-graphql';
+
+export interface Props {
+  item: FurnitureRental;
+}
+
+const { item } = Astro.props;
+
+const priceLabel = item.unitSuffix ? `${item.formattedPrice} ${item.unitSuffix}` : item.formattedPrice;
+const whatsappHref = buildWhatsAppUrl(
+  `Hola ISOTELI, deseo consultar disponibilidad de alquiler de mobiliario: ${item.name} (${priceLabel}).`
+);
+---
+
+<!-- ================= ÍTEM DE ALQUILER DE MOBILIARIO Y ACCESORIOS ================= -->
+<a
+  href={whatsappHref}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`Cotizar alquiler de ${item.name} (${priceLabel}) por WhatsApp`}
+  class="group bg-surface-container-lowest hover:bg-surface-container-low p-4 rounded-lg border border-outline-variant/25 hover:border-primary/30 shadow-sm hover:shadow transition-all flex items-center justify-between gap-3"
+>
+  <div class="flex items-center gap-3 min-w-0">
+    <div class="w-10 h-10 rounded-full bg-surface-container group-hover:bg-primary-fixed flex items-center justify-center text-primary shrink-0 transition-colors">
+      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">{item.icon}</span>
+    </div>
+    <div class="min-w-0">
+      <span class="font-medium text-on-surface group-hover:text-primary transition-colors block text-[15px] truncate">
+        {item.name}
+      </span>
+      <span class="text-body-sm text-on-surface-variant block truncate">{item.subtitle}</span>
+    </div>
+  </div>
+
+  <span class="font-bold text-primary text-[18px] shrink-0">
+    {item.formattedPrice}
+    {
+      item.unitSuffix && (
+        <span class="text-[12px] font-normal text-on-surface-variant"> {item.unitSuffix}</span>
+      )
+    }
+  </span>
+</a>
+

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="800" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FAE7DB" />
+      <stop offset="50%" stop-color="#F7EEE2" />
+      <stop offset="100%" stop-color="#EDE3D5" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgGrad)" />
+  <circle cx="680" cy="110" r="160" fill="#FFDAD3" fill-opacity="0.45" />
+  <circle cx="120" cy="490" r="190" fill="#DEE8AD" fill-opacity="0.35" />
+  <g transform="translate(400, 265)" stroke="#500E05" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 -72 C0 -32 -52 -32 -52 8 C-52 48 0 48 0 88 C0 48 52 48 52 8 C52 -32 0 -32 0 -72 Z" fill="#FFDAD3" fill-opacity="0.6" />
+    <path d="M-72 8 C-32 8 -32 -44 0 -44 C32 -44 32 8 72 8 C32 8 32 60 0 60 C-32 60 -32 8 -72 8 Z" fill="#FFFFFF" fill-opacity="0.55" />
+    <circle cx="0" cy="8" r="10" fill="#500E05" />
+  </g>
+  <text x="400" y="410" text-anchor="middle" fill="#500E05" font-family="Georgia, serif" font-size="28" font-weight="bold" letter-spacing="4">
+    ISOTELI
+  </text>
+  <text x="400" y="442" text-anchor="middle" fill="#55423F" font-family="system-ui, sans-serif" font-size="14" letter-spacing="2">
+    ATELIER FLORAL &amp; DECORACIÓN • AREQUIPA
+  </text>
+</svg>
+

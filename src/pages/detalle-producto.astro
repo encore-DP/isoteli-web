@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductDetailView from '../components/ProductDetailView.astro';
+import { getCatalogProducts, getProductBySlug } from '../lib/wp-graphql';
+
+const { products } = await getCatalogProducts();
+const primarySlug = products[0]?.slug ?? 'caja-isoteli-con-rosas';
+const { product, related } = await getProductBySlug(primarySlug);
+---
+
+<!-- ================= VISTA INSIGNIA DE DETALLE DE PRODUCTO (MIGRACIÓN DIRECTA STITCH) ================= -->
+<Layout
+  title={`${product.name} | Detalle de Producto`}
+  description={product.shortDescription}
+  ogImage={product.imageUrl}
+>
+  <ProductDetailView product={product} relatedProducts={related} />
+</Layout>
+

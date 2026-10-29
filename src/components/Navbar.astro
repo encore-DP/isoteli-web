@@ -1,0 +1,153 @@
+---
+import { Image } from 'astro:assets';
+import logoImg from '../assets/logo/logo.png';
+import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const navLinks = [
+  { label: 'Inicio', href: '/' },
+  { label: 'Catálogo', href: '/catalogo' },
+  { label: 'Servicios', href: '/servicios' },
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Contacto', href: '/contacto' },
+] as const;
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  if (href === '/catalogo' && (currentPath.startsWith('/producto') || currentPath === '/detalle-producto')) {
+    return true;
+  }
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+}
+
+const directWhatsappUrl = buildWhatsAppUrl(
+  'Hola ISOTELI, deseo consultar sobre un arreglo floral o servicio de decoración.'
+);
+---
+
+<!-- ================= BARRA DE NAVEGACIÓN PRINCIPAL ================= -->
+<div class="h-20 w-full px-margin-mobile md:px-margin flex items-center justify-between gap-gutter">
+  <!-- Logotipo oficial optimizado con Astro Assets -->
+  <div class="flex items-center gap-space-sm">
+    <a href="/" class="flex items-center focus:outline-none" aria-label="Ir al inicio de ISOTELI Florería">
+      <Image
+        src={logoImg}
+        alt="Logotipo oficial de ISOTELI Flores y Detalles Arequipa"
+        width={140}
+        height={98}
+        loading="eager"
+        class="h-12 w-auto object-contain"
+      />
+    </a>
+  </div>
+
+  <!-- Navegación Escritorio (5 vistas principales) -->
+  <nav class="hidden lg:flex items-center gap-gutter" aria-label="Navegación principal">
+    {
+      navLinks.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <a
+            href={item.href}
+            aria-current={active ? 'page' : undefined}
+            class:list={[
+              'font-body-md text-body-md transition-colors py-1',
+              active
+                ? 'text-primary font-semibold border-b-2 border-primary'
+                : 'text-on-surface-variant hover:text-primary',
+            ]}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+
+  <!-- Acciones Rápidas y Botón de Menú Móvil -->
+  <div class="flex items-center gap-space-xs sm:gap-space-sm">
+    <a
+      href="/catalogo#productSearchInput"
+      aria-label="Buscar arreglos en el catálogo"
+      class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors"
+    >
+      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">search</span>
+    </a>
+
+    <a
+      href={directWhatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary px-space-md py-2 rounded-full font-label-md text-label-md tracking-wider transition-colors shadow-sm"
+    >
+      <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chat</span>
+      <span>{ISOTELI_CONTACT.phoneDisplay}</span>
+    </a>
+
+    <button
+      id="mobile-menu-toggle"
+      type="button"
+      aria-label="Abrir menú de navegación"
+      aria-expanded="false"
+      aria-controls="mobile-nav-drawer"
+      class="lg:hidden w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors"
+    >
+      <span id="mobile-menu-icon" class="material-symbols-outlined text-[22px]" aria-hidden="true">menu</span>
+    </button>
+  </div>
+</div>
+
+<!-- ================= MENÚ DESPLEGABLE MÓVIL ================= -->
+<div
+  id="mobile-nav-drawer"
+  class="hidden lg:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-space-md shadow-lg"
+>
+  <nav class="flex flex-col gap-2" aria-label="Navegación móvil">
+    {
+      navLinks.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <a
+            href={item.href}
+            aria-current={active ? 'page' : undefined}
+            class:list={[
+              'px-4 py-3 rounded-xl font-body-md text-body-md flex items-center justify-between transition-colors',
+              active
+                ? 'bg-primary-fixed text-primary font-semibold'
+                : 'text-on-surface hover:bg-surface-container-low',
+            ]}
+          >
+            <span>{item.label}</span>
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chevron_right</span>
+          </a>
+        );
+      })
+    }
+    <a
+      href={directWhatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mt-2 w-full inline-flex items-center justify-center gap-2 bg-primary text-on-primary py-3 px-4 rounded-full font-label-md text-label-md tracking-wider shadow-sm"
+    >
+      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
+      <span>Pedidos al {ISOTELI_CONTACT.phoneDisplay}</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const drawer = document.getElementById('mobile-nav-drawer');
+  const icon = document.getElementById('mobile-menu-icon');
+
+  if (toggleBtn && drawer && icon) {
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+      drawer.classList.toggle('hidden', isExpanded);
+      icon.textContent = isExpanded ? 'menu' : 'close';
+    });
+  }
+</script>
+

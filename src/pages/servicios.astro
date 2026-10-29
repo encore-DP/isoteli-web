@@ -1,0 +1,750 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ServicePackCard from '../components/ServicePackCard.astro';
+import FurnitureRentalItem from '../components/FurnitureRentalItem.astro';
+import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+import { getServicesAndRentals } from '../lib/wp-graphql';
+
+const { classicPacks, thematicPacks, rentals } = await getServicesAndRentals();
+
+// Separación visual para el mosaico panorámico de Línea Temática (Fila 2: 2 tarjetas; Fila 3: panorámica)
+const thematicRowPacks = thematicPacks.filter((p) => p.variant !== 'panoramic');
+const thematicPanoramicPacks = thematicPacks.filter((p) => p.variant === 'panoramic');
+
+const serviceTrustItems = [
+  { icon: 'verified', title: '100% Flor Fresca', subtitle: 'Selección diaria prémium' },
+  { icon: 'architecture', title: 'Diseño a Medida', subtitle: 'Moodboard botánico exclusivo' },
+  { icon: 'local_shipping', title: 'Montaje In-Situ', subtitle: 'Cobertura en todo Arequipa' },
+  { icon: 'forum', title: 'Asesoría Directa', subtitle: 'Atención 1 a 1 vía WhatsApp' },
+] as const;
+
+const processSteps = [
+  {
+    step: '01',
+    title: 'Consulta & Moodboard',
+    description:
+      'Escuchamos tus ideas, locación, paleta de color deseada y presupuesto para construir un tablero conceptual visual único.',
+    footerIcon: 'lightbulb',
+    footerLabel: 'Ideación a medida',
+  },
+  {
+    step: '02',
+    title: 'Propuesta Floral',
+    description:
+      'Te entregamos un presupuesto detallado, especificación de flores por variedad y muestra de mobiliario o estructuras accesorias.',
+    footerIcon: 'check',
+    footerLabel: 'Cotización clara',
+  },
+  {
+    step: '03',
+    title: 'Flores Frescas',
+    description:
+      'Selección rigurosa de flores y follajes recién cortados, cuidando la hidratación y punto óptimo de apertura para el día D.',
+    footerIcon: 'eco',
+    footerLabel: 'Frescura garantizada',
+  },
+  {
+    step: '04',
+    title: 'Montaje In-Situ',
+    description:
+      'Nuestro equipo se traslada con horas de anticipación a tu local en Arequipa para supervisar cada arreglo y escenografía.',
+    footerIcon: 'location_on',
+    footerLabel: 'Puntualidad total',
+  },
+] as const;
+
+const occasionServices = [
+  {
+    category: 'cumpleanos',
+    badge: 'Celebración',
+    icon: 'celebration',
+    title: 'Cumpleaños',
+    description:
+      'Decoración integral con backings personalizados, arcos orgánicos de globos, flores naturales y letreros luminosos adaptados a cualquier edad y estilo.',
+    bullets: [
+      'Packs Clásicos desde S/ 150.00',
+      'Packs Temáticos infantiles desde S/ 250.00',
+      'Mobiliario y backing personalizado incluido',
+    ],
+    ctaLabel: 'Cotizar Cumpleaños',
+    waText: 'Hola ISOTELI, quisiera cotizar la decoración para Cumpleaños',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAxvs2M_DTUsTbJw9mQEhU1bApDVNi8dx1LAHh-JPGuzAgvK-t-TWbuwLtRMbfN_xxVLZD5cVvdTXob75yV3W5h-492c_q9ee6-CN5EeIejapcNfVAxfbBpSXOe-p73Vh0qjvmB_WiiJVfkuSoAN-Qlst1fIOpU2yGzpyvRCO85PeYyCeeDnhOl7SpwnGKA39gyutJfhlw-Gd3PKXjMBy9_uqX8NT7llxAJgj_F-_eE1Jm_BQczWZd6iw',
+    alt: 'Decoración floral y arcos orgánicos de globos para cumpleaños en Arequipa',
+  },
+  {
+    category: 'bautizos',
+    badge: 'Ceremonial',
+    icon: 'spa',
+    title: 'Bautizos',
+    description:
+      'Diseño sutil en tonos blanco, marfil y follaje andino. Arreglos para pila bautismal, recepción familiar y detalles botánicos que transmiten paz y elegancia.',
+    bullets: [
+      'Arreglos para iglesia o capilla privada',
+      'Mesa de honor con flores y candelabros',
+      'Recuerdos botánicos para padrinos e invitados',
+    ],
+    ctaLabel: 'Cotizar Bautizo',
+    waText: 'Hola ISOTELI, quisiera cotizar la decoración para Bautizo',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCMJP-jdxndFW-HJqDVt_dtKrB_FeWq_l9y3qHdr0uFTpxUVHWVQRNscyuDNu_RBkFMGI1xt35XWb88DeULr0SCOni8Lu8ZweItJwrPRTRNl23SwkIiFtz65b0GlQFdV1a_qdoK7237V6L2fnl_qr2Mzstg2KfoRzMqSIUoebTk6eIldZIWEns3iq_AMNkucovxe7UhdX0CAGIn2pAiWWMcna1gm8puQqlhnAxDW8nGcrGgEmmvlsWclQ',
+    alt: 'Ambientación de bautizo con flores blancas y detalles ceremoniales en Arequipa',
+  },
+  {
+    category: 'revelacion',
+    badge: 'Maternidad & Familia',
+    icon: 'child_care',
+    title: 'Revelación de Género',
+    description:
+      'Montajes enternecedores en paletas pastel, estructuras cilíndricas, cubos BABY, cajas sorpresa con flores y globos con helio para el momento más esperado.',
+    bullets: [
+      'Estructuras pastel y cilindros temáticos',
+      'Caja o globo gigante para la revelación',
+      'Arreglos botánicos en bases cerámicas',
+    ],
+    ctaLabel: 'Cotizar Revelación de Género',
+    waText: 'Hola ISOTELI, deseo cotizar Revelación de Género',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBwmAKYi-h19ERTOeoAOQexPvQ3uvS_RyRH17Zbta1QN8mafA1WDiLRSvLbPCLsCABVZUVWaQ1ovzqKN6tX3YHR04etP96o06bYBfId2JgLmM3weix92uLRjriuW5tdq9a91792BLvEiwIAKel2sGavVibMljGLqwvc6es6esHQ3AShImpOh83QRNQoeXzKYpIlUgp9LzyzzaQQQRLUVOUdQIwRLmzJe_x-oUWZM4mRDD783Y9DMc_Dqw',
+    alt: 'Escenografía en tonos pastel y cubos decorativos para revelación de género',
+  },
+  {
+    category: 'comunion',
+    badge: 'Primera Comunión',
+    icon: 'verified',
+    title: 'Primera Comunión',
+    description:
+      'Decoración armónica y cálida con flores frescas, detalles en trigo silvestre, eucalipto, velas aromáticas y backdrops naturales para celebrar en familia.',
+    bullets: [
+      'Centros de mesa con espigas y flores blancas',
+      'Mesa de dulces y recuerdos personalizada',
+      'Espacio fotográfico familiar con follaje natural',
+    ],
+    ctaLabel: 'Cotizar Primera Comunión',
+    waText: 'Hola ISOTELI, quisiera cotizar Primera Comunión',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCwTtcABj-oAI3DSAAEnE724neyGExfsJyY2VFDcAzbpqHok_h9ohpSuI81eyn0Wkdobqrtx5V-vEpe6e1OfJmRCnV6F4fdP_JAXRo8jpEo_KNvIrvMtXvvks1AS2CneSMXEs9x4Q-tKHPxkNmRYqhTNmyzmiAj7hbrY5EbDucTnHYgn4JmvhNQ7MUcEqRpEslRjQh2vZMn9wtn6TNEzK4cXvd7uaiNZRXMW96SPlwe0BHDp3jXD28-Vg',
+    alt: 'Decoración campestre elegante con flores frescas para Primera Comunión',
+  },
+  {
+    category: 'pedidas',
+    badge: 'Romance & Pedidas',
+    icon: 'diamond',
+    title: 'Pedidas de Mano',
+    description:
+      'Ambientación íntima a la luz de las velas con caminos de pétalos, rosas prémium, frases LED cálidas y montaje sorpresa para un "Sí" soñado.',
+    bullets: [
+      'Camino guiado con pétalos de rosa y candelabros',
+      'Letrero luminoso "Marry Me" o iniciales LED',
+      'Ramo bouquet de rosas de entrega sorpresa',
+    ],
+    ctaLabel: 'Planear Pedida de Mano',
+    waText: 'Hola ISOTELI, deseo planear una Pedida de Mano',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuANowrAYOkPWH3716QIQ35SreMEuzZjjymf5oLpf8whs1kzINRMwt9COWb7HRB0fu9ry_h6dJupWtbT5aB8b6OaK1na5x6ZL53TvL5Z5pviA33ffbVTpF1hyBjkbdR7SvN2orPVS23dZpaktDgTwOUXLJ5lYVGl4ToPQHEfeClcU502LWBhBAVl_eV0u3WR2MB0AtOEJMygGUSu6YQ7-fSEbTJwV1pWBFvpNwZ7lFNAfgvxc_S0A6WBtg',
+    alt: 'Escenografía romántica con pétalos y velas para pedida de mano en Arequipa',
+  },
+] as const;
+---
+
+<Layout
+  title="Servicios de Decoración & Alquiler de Mobiliario"
+  description="Paquetes de decoración de eventos en Arequipa (Línea Clásica desde S/ 150 y Línea Temática Infantil desde S/ 250) y alquiler de mobiliario y accesorios."
+>
+  <div class="flex flex-col w-full">
+    <!-- ================= FRANJA SUPERIOR DE GARANTÍAS DE EVENTOS ================= -->
+    <TrustStrip items={serviceTrustItems} variant="fullbleed" />
+
+    <!-- ================= SECCIÓN HERO Y CANALES DE COORDINACIÓN DE EVENTOS ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pt-6 pb-space-lg">
+      <div class="max-w-7xl mx-auto bg-surface-container-low rounded-xl p-6 sm:p-10 border border-outline-variant/30 shadow-sm">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 flex flex-col gap-4">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md uppercase tracking-widest w-max">
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">event_available</span>
+              <span>Cotizador &amp; Asesoría Personalizada</span>
+            </div>
+
+            <h1 class="font-headline-lg text-headline-lg text-primary font-bold leading-tight">
+              Cotiza la Ambientación para tu Celebración
+            </h1>
+
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Diseñamos y montamos la escenografía perfecta para nuestros 5 servicios exclusivos: <strong class="text-primary">Cumpleaños, Bautizos, Revelación de Género, Primera Comunión y Pedidas de Mano</strong>.
+            </p>
+
+            <div class="bg-surface-container-lowest p-4 rounded-lg border-l-4 border-primary flex flex-col gap-1 shadow-sm">
+              <div class="flex items-center gap-2 text-primary font-label-md text-label-md font-semibold">
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">storefront</span>
+                <span>Modalidad Virtual y Oficina de Coordinación</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">
+                Al ser tienda 100% virtual sin local físico para muestras y ventas, todo se gestiona en línea (con posibilidad de videollamadas), y la coordinación presencial para eventos se realiza en nuestra oficina: <strong class="text-on-surface">{ISOTELI_CONTACT.officeAddress}</strong>.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div class="flex items-start gap-2 bg-surface-container px-3.5 py-2.5 rounded-DEFAULT">
+                <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5" aria-hidden="true">schedule</span>
+                <div>
+                  <span class="font-label-md text-label-md text-primary block font-semibold">
+                    Tiempos de Coordinación
+                  </span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">
+                    Pedidos inmediatos (mín 1 h, máx 3 h) para detalles; eventos coordinados con anticipación.
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2 bg-surface-container px-3.5 py-2.5 rounded-DEFAULT">
+                <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5" aria-hidden="true">payments</span>
+                <div>
+                  <span class="font-label-md text-label-md text-primary block font-semibold">
+                    Métodos de Pago
+                  </span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">
+                    Transferencia bancaria, Yape y Plin.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-surface-container-lowest p-6 sm:p-8 rounded-xl shadow-md flex flex-col gap-5 border border-outline-variant/30">
+            <h2 class="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">support_agent</span>
+              <span>Canales Oficiales para Eventos</span>
+            </h2>
+
+            <div class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface-variant">
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+                <span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">chat</span>
+                <div>
+                  <span class="font-label-md text-label-md text-secondary uppercase block font-semibold">
+                    WhatsApp de Coordinación
+                  </span>
+                  <a
+                    class="font-semibold text-primary hover:underline text-[15px]"
+                    href={buildWhatsAppUrl('Hola ISOTELI, deseo cotizar un servicio de decoración')}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {ISOTELI_CONTACT.phoneDisplay}
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+                <span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">mail</span>
+                <div>
+                  <span class="font-label-md text-label-md text-secondary uppercase block font-semibold">
+                    Correos de Contacto
+                  </span>
+                  <div class="flex flex-col">
+                    <a
+                      class="hover:text-primary transition-colors font-medium"
+                      href={`mailto:${ISOTELI_CONTACT.emails.eventos}`}
+                    >
+                      {ISOTELI_CONTACT.emails.eventos}
+                    </a>
+                    <a
+                      class="hover:text-primary transition-colors font-medium"
+                      href={`mailto:${ISOTELI_CONTACT.emails.ventas}`}
+                    >
+                      {ISOTELI_CONTACT.emails.ventas}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a
+              class="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-on-primary py-3.5 px-6 rounded-full font-label-lg text-label-lg tracking-wider transition-all duration-300 shadow-md hover:shadow-lg"
+              href={buildWhatsAppUrl('Hola ISOTELI, quisiera agendar una coordinación para un evento')}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>
+              <span>Contactar por WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PACKS DE DECORACIÓN (WOOCOMMERCE: SERVICIOS-DECORACION) ================= -->
+    <section
+      class="w-full py-space-xl bg-surface-container-low/70 border-y border-outline-variant/30"
+      id="paquetes-decoracion"
+    >
+      <div class="w-full px-margin-mobile md:px-margin">
+        <!-- Encabezado y Pestañas de Línea Clásica / Temática -->
+        <div class="max-w-4xl mx-auto text-center mb-10">
+          <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold inline-block mb-1">
+            Paquetes de Ambientación ISOTELI
+          </span>
+          <h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">
+            Planes &amp; Paquetes de Decoración
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl mx-auto">
+            Soluciones completas y escalables para Cumpleaños, Bautizos, Revelación de Género, Primera Comunión y Pedidas de Mano.
+          </p>
+
+          <div class="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30 font-semibold shadow-sm">
+            <span class="material-symbols-outlined text-[17px] text-secondary" aria-hidden="true">info</span>
+            <span>Incluye mobiliario y accesorios • No incluye movilidad</span>
+          </div>
+
+          <!-- Filtro rápido por Línea de Paquetes -->
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
+            <button
+              type="button"
+              data-pack-line-btn="all"
+              class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-colors cursor-pointer"
+            >
+              Todas las Líneas ({classicPacks.length + thematicPacks.length})
+            </button>
+            <button
+              type="button"
+              data-pack-line-btn="linea-clasica"
+              class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            >
+              Línea Clásica ({classicPacks.length})
+            </button>
+            <button
+              type="button"
+              data-pack-line-btn="linea-tematica-infantil"
+              class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            >
+              Línea Temática Infantil / Baby ({thematicPacks.length})
+            </button>
+          </div>
+        </div>
+
+        <!-- Mosaico Modular Dinámico: Línea Clásica y Línea Temática Infantil -->
+        <div class="max-w-7xl mx-auto flex flex-col gap-4">
+          <!-- Subcategoría: linea-clasica -->
+          <div data-pack-group="linea-clasica" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            {classicPacks.map((pack) => <ServicePackCard pack={pack} />)}
+          </div>
+
+          <!-- Subcategoría: linea-tematica-infantil -->
+          <div data-pack-group="linea-tematica-infantil" class="flex flex-col gap-4">
+            {
+              thematicRowPacks.length > 0 && (
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  {thematicRowPacks.map((pack) => (
+                    <ServicePackCard pack={pack} />
+                  ))}
+                </div>
+              )
+            }
+            {
+              thematicPanoramicPacks.length > 0 && (
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  {thematicPanoramicPacks.map((pack) => (
+                    <ServicePackCard pack={pack} />
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        </div>
+
+        <!-- ================= ALQUILER DE MOBILIARIO (WOOCOMMERCE: ALQUILER-DE-MOBILIARIO) ================= -->
+        <div class="mt-14 max-w-7xl mx-auto" id="alquiler-mobiliario">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-2 border-b border-outline-variant/30">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[24px]" aria-hidden="true">chair</span>
+              <h3 class="font-headline-sm text-headline-sm text-primary font-bold">
+                Alquiler de Mobiliario y Accesorios Individuales
+              </h3>
+            </div>
+            <span class="text-body-sm text-on-surface-variant font-medium">
+              Precios unitarios o por juego
+            </span>
+          </div>
+
+          <div id="rentalsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {rentals.map((rental) => <FurnitureRentalItem item={rental} />)}
+
+            <!-- Tarjeta Estática Final de Llamada a la Acción para Combinar Mobiliario -->
+            <div
+              data-static-rental-cta
+              class="bg-primary-fixed/40 p-4 rounded-lg border border-primary/20 flex items-center justify-between gap-3"
+            >
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-[24px] shrink-0" aria-hidden="true">info</span>
+                <div>
+                  <span class="font-semibold text-primary block text-[14px]">
+                    ¿Deseas combinar mobiliario?
+                  </span>
+                  <span class="text-[12px] text-on-surface-variant">
+                    Cotizamos paquetes a medida por WhatsApp
+                  </span>
+                </div>
+              </div>
+              <a
+                class="px-3.5 py-1.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md tracking-wider font-semibold transition-colors shrink-0"
+                href={buildWhatsAppUrl('Hola ISOTELI, deseo alquilar y combinar mobiliario adicional para mi evento')}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Consultar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= METODOLOGÍA ISOTELI EN 4 PASOS ================= -->
+    <section class="w-full bg-surface py-space-xl px-margin-mobile md:px-margin border-b border-outline-variant/30">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
+            Metodología ISOTELI
+          </span>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">
+            Cómo Creamos la Magia de tu Evento
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-3">
+            Un proceso minucioso y transparente desde la primera idea hasta el último pétalo colocado en tu recepción.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          {
+            processSteps.map((st) => (
+              <div class="bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between shadow-sm relative group hover:-translate-y-1 transition-transform border border-outline-variant/30">
+                <div>
+                  <div class="flex items-center justify-between mb-6">
+                    <span class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center font-headline-sm text-headline-sm">
+                      {st.step}
+                    </span>
+                  </div>
+                  <h3 class="font-headline-sm text-headline-sm text-primary font-semibold mb-2">
+                    {st.title}
+                  </h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    {st.description}
+                  </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center text-primary font-label-md text-label-md">
+                  <span class="material-symbols-outlined text-[15px] mr-1" aria-hidden="true">
+                    {st.footerIcon}
+                  </span>
+                  <span>{st.footerLabel}</span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GALERÍA DE MONTAJES REALIZADOS EN AREQUIPA ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-xl">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
+              Galería Botánica
+            </span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">
+              Montajes Realizados en Arequipa
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30">
+              <span class="material-symbols-outlined text-[14px]" aria-hidden="true">pin_drop</span>
+              <span>Yanahuara • Cayma • Sabandía • J.L.B. y Rivero</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[220px]">
+          <div class="md:col-span-2 md:row-span-2 relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Mesa imperial de matrimonio al aire libre en Sabandía con centros de mesa florales altos de rosas y hortensias"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiHBhnWGSmiUDH7pUeMHC1u4ADHRL02BQg4Tr8NtAzMFl-1NfFPgD9cp-jDSDc1Dfon0bRdea2rVkJ8Dt7h18xJqe0qYPsMRc_rHu6VfnUjdLPqKF-qzOwu4qCdhnQZhExlrxxZEIeZTFYk_GKayX0fG3hUWO6XdNczWxVNpFm4yiVMwuIWipXnoHC50j0RRxQQF0L_77wBOXXM99JOw7r7AGMXwb5UHAjZ8nT3Xpe5ZtlojgNvIDkJw"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex flex-col justify-end p-6">
+              <span class="text-on-primary/80 font-label-md text-label-md uppercase tracking-wider">
+                Recepción de Matrimonio
+              </span>
+              <p class="font-headline-sm text-headline-sm text-on-primary font-semibold">
+                Casona &amp; Jardines en Sabandía
+              </p>
+            </div>
+          </div>
+
+          <div class="relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Ramo de novia couture con rosas durazno, ranúnculos blancos, eucalipto y cinta de seda"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbU1HODzU-vpMpr2nEdFjy7rWOheKd4oImzdmFfLvsh-4WsUt9iLMP5R7LKz3hwtEwbRzsTzw4QhPrnhxXal8Dy6FIZMtdPCzq7sSLWKgLaAqN5q5uWZWfxE49vCa-3x8WtBqItviQSgwP20u90hL61zyIVZIvcgNdGfH3W0qRFLlfsRtcrEDNI37Yzdtc7JaptWByBnqB4Qx1HBq7vupv9zcnx7OnIheUd-uqaEz9EuLvKsLR0489CQ"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-4">
+              <span class="text-on-primary font-label-md text-label-md">Ramo de Novia Couture</span>
+            </div>
+          </div>
+
+          <div class="relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Arco circular botánico iluminado con lluvia de luces cálidas y sillar arequipeño de fondo"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEDJ6yCpgvDIVuRqy9eyZ_fGTybo7_J4FvF9DwqMubovq7CWbInObLpc0yBgWWO40ISqPGMAefxcYdEcw_pmYE8itzUhaS62-cUA1VrNJoe0jeOUOJ8_0ZGlEkkwtz0DOidyq-Gvm5-Pp6SkSk08yH7PAa_GdAym2yh_fgxFsya18dwkDjSmFDnAd6r9KqGT3gKHIlcsNOrFfwZLoQDJbS4MgJWKDiAbXCi9MwZHjBAV8WU_P6gJ4scw"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-4">
+              <span class="text-on-primary font-label-md text-label-md">Arco Botánico Iluminado</span>
+            </div>
+          </div>
+
+          <div class="md:col-span-2 relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Escenografía botánica minimalista con pedestales florales asimétricos para evento corporativo en Arequipa"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE5Nwe-8lJcacySJscr4rhJHqCow2KWMf5PxkyC8Ol3Xcm2AYIXPwUmPUh1HUeRd5E3JPx1SXOv8M2IB5ax-ALQRRP7BkDvhriTJE2QQyjNDa7i6D9Hcxo_ewo5454_DZ2mjDq6rrCFqLgzYzogQemI7EhurUChiViuU8EWikZYkSrYJB-8863ikx0OW3CSQz1Ereo5idfAwzCQVWgJdw62LkLiG4vGbIBE7ZX8Txml8ZsNdrSr7LtCg"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-6">
+              <span class="text-on-primary/80 font-label-md text-label-md uppercase tracking-wider">
+                Lanzamiento Corporativo
+              </span>
+              <p class="font-headline-sm text-headline-sm text-on-primary font-semibold">
+                Escenografía Botánica Minimalista
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PORTAFOLIO DE SERVICIOS POR OCASIÓN (5 ESPECIALIDADES) ================= -->
+    <section
+      class="w-full px-margin-mobile md:px-margin py-space-xl bg-surface-container-low border-t border-outline-variant/30"
+      id="catalogo-servicios"
+    >
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div class="flex flex-col">
+          <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold mb-2">
+            Portafolio Especializado
+          </span>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">
+            Servicios de Diseño &amp; Ambientación
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">
+            Estructuras de diseño escalables y personalizadas para cada tipo de celebración. Elige la tipología que mejor se ajuste a tu ocasión soñada.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2" id="service-filter-group">
+          <button
+            class="service-pill-btn px-4 py-2 rounded-full font-label-md text-label-md tracking-wider transition-all bg-secondary text-on-secondary shadow-sm cursor-pointer"
+            data-filter="all"
+            type="button"
+          >
+            Todos los Servicios
+          </button>
+          <button
+            class="service-pill-btn px-4 py-2 rounded-full font-label-md text-label-md tracking-wider transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high cursor-pointer"
+            data-filter="cumpleanos"
+            type="button"
+          >
+            Cumpleaños
+          </button>
+          <button
+            class="service-pill-btn px-4 py-2 rounded-full font-label-md text-label-md tracking-wider transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high cursor-pointer"
+            data-filter="bautizos"
+            type="button"
+          >
+            Bautizos
+          </button>
+          <button
+            class="service-pill-btn px-4 py-2 rounded-full font-label-md text-label-md tracking-wider transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high cursor-pointer"
+            data-filter="revelacion"
+            type="button"
+          >
+            Revelación de Género
+          </button>
+          <button
+            class="service-pill-btn px-4 py-2 rounded-full font-label-md text-label-md tracking-wider transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high cursor-pointer"
+            data-filter="comunion"
+            type="button"
+          >
+            Primera Comunión
+          </button>
+          <button
+            class="service-pill-btn px-4 py-2 rounded-full font-label-md text-label-md tracking-wider transition-all bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high cursor-pointer"
+            data-filter="pedidas"
+            type="button"
+          >
+            Pedidas de Mano
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter" id="services-grid">
+        {
+          occasionServices.map((srv) => (
+            <article
+              class="service-card group bg-surface-container-lowest rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 shadow-[0_8px_24px_rgba(194,101,42,0.08)] border border-outline-variant/30"
+              data-category={srv.category}
+            >
+              <div>
+                <div class="relative w-full h-64 overflow-hidden bg-surface-container">
+                  <img
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    alt={srv.alt}
+                    loading="lazy"
+                    src={srv.image}
+                    onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+                  />
+                  <div class="absolute top-4 left-4 bg-secondary-container/90 backdrop-blur-md px-3 py-1 rounded-full text-on-secondary-container font-label-md text-label-md font-semibold border border-secondary/20">
+                    {srv.badge}
+                  </div>
+                  <div class="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined text-[18px]" aria-hidden="true">{srv.icon}</span>
+                  </div>
+                </div>
+
+                <div class="p-6">
+                  <h3 class="font-headline-sm text-headline-sm text-primary font-semibold group-hover:text-primary-container transition-colors mb-2">
+                    {srv.title}
+                  </h3>
+                  <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-4">
+                    {srv.description}
+                  </p>
+                  <ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface-variant pt-2 border-t border-outline-variant/30">
+                    {srv.bullets.map((bullet) => (
+                      <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-[16px]" aria-hidden="true">
+                          check_circle
+                        </span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="p-6 pt-0">
+                <a
+                  class="w-full py-3 px-4 rounded-full bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-on-secondary transition-all duration-300 font-label-md text-label-md tracking-wider flex items-center justify-between"
+                  href={buildWhatsAppUrl(srv.waText)}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <span>{srv.ctaLabel}</span>
+                  <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ================= LLAMADA A LA ACCIÓN FINAL DE EVENTOS ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-xl">
+      <div class="max-w-7xl mx-auto rounded-xl bg-primary text-on-primary p-8 md:p-14 relative overflow-hidden shadow-lg text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-container text-surface-container-lowest font-label-md text-label-md uppercase tracking-widest mb-4">
+            <span class="material-symbols-outlined text-[14px]" aria-hidden="true">local_florist</span>
+            <span>Florería Boutique • Arequipa</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg font-bold text-on-primary leading-tight">
+            Diseñemos juntos la ambientación de tu próximo evento.
+          </h2>
+          <p class="font-body-lg text-body-lg text-primary-fixed mt-3 max-w-xl">
+            Agenda tu videollamada o coordina directamente al WhatsApp {ISOTELI_CONTACT.phoneShort}. Atención presencial en {ISOTELI_CONTACT.officeShortAddress} previa cita.
+          </p>
+        </div>
+
+        <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 shrink-0">
+          <a
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-surface-container-lowest hover:bg-surface-container-low text-primary px-8 py-4 rounded-full font-label-lg text-label-lg tracking-wider transition-all duration-300 shadow-md hover:scale-105 font-semibold"
+            href={buildWhatsAppUrl('Hola ISOTELI, deseo coordinar la ambientación de un evento')}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">chat</span>
+            <span>WhatsApp {ISOTELI_CONTACT.phoneShort}</span>
+          </a>
+
+          <a
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-secondary text-on-secondary hover:bg-secondary/90 px-6 py-4 rounded-full font-label-lg text-label-lg tracking-wider transition-colors border border-secondary"
+            href={`tel:+${ISOTELI_CONTACT.phoneRaw}`}
+          >
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">call</span>
+            <span>Llamar Ahora</span>
+          </a>
+        </div>
+
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-primary-container/40 pointer-events-none blur-2xl"></div>
+        <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-surface-dim/20 pointer-events-none blur-3xl"></div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  import { syncServicesPage } from '../lib/live-cms-sync';
+
+  void syncServicesPage();
+
+  // Filtro interactivo para Líneas de Paquetes de Decoración (Clásica vs Temática)
+  const lineBtns = document.querySelectorAll<HTMLButtonElement>('[data-pack-line-btn]');
+  const packGroups = document.querySelectorAll<HTMLElement>('[data-pack-group]');
+
+  lineBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selected = btn.dataset.packLineBtn || 'all';
+      lineBtns.forEach((b) => {
+        b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+        b.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+      btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+
+      packGroups.forEach((group) => {
+        const groupLine = group.dataset.packGroup;
+        group.classList.toggle('hidden', selected !== 'all' && groupLine !== selected);
+      });
+    });
+  });
+
+  // Filtro interactivo para Portafolio de Servicios por Ocasión
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>('.service-pill-btn');
+  const serviceCards = document.querySelectorAll<HTMLElement>('.service-card');
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+
+      filterButtons.forEach((b) => {
+        b.classList.remove('bg-secondary', 'text-on-secondary', 'shadow-sm');
+        b.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      btn.classList.add('bg-secondary', 'text-on-secondary', 'shadow-sm');
+
+      serviceCards.forEach((card) => {
+        const category = card.getAttribute('data-category');
+        card.style.display = filter === 'all' || category === filter ? 'flex' : 'none';
+      });
+    });
+  });
+</script>
+
