@@ -1,5 +1,6 @@
 ---
 import { buildWhatsAppUrl } from '../data/business';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import type { ServicePack } from '../lib/wp-graphql';
 
@@ -62,7 +63,7 @@ const isPopular = pack.variant === 'popular';
             rel="noopener noreferrer"
             class="py-3 px-6 rounded-full bg-secondary hover:bg-secondary/90 text-on-secondary transition-all font-label-md text-label-md tracking-wider flex items-center justify-center gap-2 font-bold shadow-lg hover:scale-105"
           >
-            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>
+            <WhatsAppIcon class="w-[18px] h-[18px] text-[#25D366]" />
             <span>{pack.ctaLabel}</span>
           </a>
         </div>
@@ -183,7 +184,7 @@ const isPopular = pack.variant === 'popular';
                     : 'bg-surface-container-lowest/95 hover:bg-white text-primary',
             ]}
           >
-            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">send</span>
+            <WhatsAppIcon class="w-4 h-4 text-[#25D366]" />
             <span>{pack.ctaLabel}</span>
           </a>
         </div>

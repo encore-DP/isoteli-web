@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import ServicePackCard from '../components/ServicePackCard.astro';
 import FurnitureRentalItem from '../components/FurnitureRentalItem.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getServicesAndRentals } from '../lib/wp-graphql';
@@ -220,7 +221,7 @@ const occasionServices = [
 
             <div class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface-variant">
               <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
-                <span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">chat</span>
+                <WhatsAppIcon class="w-5 h-5 text-[#25D366]" />
                 <div>
                   <span class="font-label-md text-label-md text-secondary uppercase block font-semibold">
                     WhatsApp de Coordinación
@@ -679,7 +680,7 @@ const occasionServices = [
             rel="noopener noreferrer"
             target="_blank"
           >
-            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">chat</span>
+            <WhatsAppIcon class="w-5 h-5 text-[#25D366]" />
             <span>WhatsApp {ISOTELI_CONTACT.phoneShort}</span>
           </a>
 

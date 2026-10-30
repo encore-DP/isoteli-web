@@ -24,6 +24,14 @@ export interface DistrictBoundary {
   readonly shortBoundary: string;
 }
 
+export interface OccasionItem {
+  readonly title: string;
+  readonly subtitle: string;
+  readonly icon: string;
+  readonly circleBg: string;
+  readonly message: string;
+}
+
 export const ISOTELI_CONTACT = {
   brandName: 'ISOTELI Flores y Detalles',
   shortName: 'ISOTELI',
@@ -172,6 +180,51 @@ export const AREQUIPA_DISTRICTS: readonly DistrictBoundary[] = [
     badge: 'Con Límite',
     boundaryDetail: 'Comisaría Ciudad Mi Trabajo',
     shortBoundary: 'Límite: Comisaría Ciudad Mi Trabajo',
+  },
+] as const;
+
+export const ISOTELI_OCCASIONS: readonly OccasionItem[] = [
+  {
+    title: 'Cumpleaños',
+    subtitle: 'Alegría & Color',
+    icon: 'cake',
+    circleBg: 'bg-primary-fixed/60 group-hover:bg-primary-fixed text-primary',
+    message: 'Hola ISOTELI, busco un arreglo para Cumpleaños',
+  },
+  {
+    title: 'Aniversario',
+    subtitle: 'Romance Puro',
+    icon: 'favorite',
+    circleBg: 'bg-[#fde3d6] group-hover:bg-[#fbd0bc] text-primary',
+    message: 'Hola ISOTELI, busco un arreglo para Aniversario',
+  },
+  {
+    title: 'Felicitaciones',
+    subtitle: 'Logros & Grados',
+    icon: 'workspace_premium',
+    circleBg: 'bg-[#fcf0db] group-hover:bg-[#f8e2bc] text-primary',
+    message: 'Hola ISOTELI, busco un arreglo de Felicitaciones o Grado',
+  },
+  {
+    title: 'Agradecimiento',
+    subtitle: 'Gratitud Sincera',
+    icon: 'volunteer_activism',
+    circleBg: 'bg-secondary-container group-hover:bg-secondary-fixed-dim/70 text-primary',
+    message: 'Hola ISOTELI, busco un arreglo de Agradecimiento',
+  },
+  {
+    title: 'Condolencias',
+    subtitle: 'Paz & Memoria',
+    icon: 'spa',
+    circleBg: 'bg-surface-container-high group-hover:bg-surface-container-highest text-on-surface-variant',
+    message: 'Hola ISOTELI, busco un arreglo de Condolencias o Fúnebre',
+  },
+  {
+    title: 'Nuevo Bebé',
+    subtitle: 'Tierna Llegada',
+    icon: 'child_care',
+    circleBg: 'bg-[#faebe1] group-hover:bg-[#f7d9c6] text-primary',
+    message: 'Hola ISOTELI, busco un arreglo para Nacimiento o Baby Shower',
   },
 ] as const;
 

@@ -1,14 +1,40 @@
 ---
-import { ISOTELI_CONTACT } from '../data/business';
+import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+
+// Enlace directo a WhatsApp oficial con mensaje predeterminado
+const whatsappUrl = buildWhatsAppUrl(
+  'Hola ISOTELI, deseo consultar sobre un pedido o información de delivery.'
+);
 ---
 
-<!-- ================= CINTILLA SUPERIOR DE DELIVERY Y WHATSAPP ================= -->
-<div class="bg-primary text-on-primary py-1.5 px-4 text-center">
-  <div class="w-full flex items-center justify-center gap-2 font-label-md text-label-md">
-    <span class="material-symbols-outlined text-[15px]" aria-hidden="true">local_florist</span>
-    <span>
-      {ISOTELI_CONTACT.deliveryPolicy.topBarText} • WhatsApp: {ISOTELI_CONTACT.phoneDisplay}
-    </span>
-  </div>
-</div>
+<!-- ================= CINTILLA SUPERIOR DE DELIVERY Y WHATSAPP (FIJA EN CABECERA) ================= -->
+<aside
+  aria-label="Aviso institucional de delivery y atención directa"
+  class="w-full bg-primary text-on-primary py-2 sm:py-1.5 px-3 sm:px-4 text-center border-b border-primary-container/40"
+>
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center py-2 justify-center gap-x-3 gap-y-1 text-[13px] sm:text-[14px] leading-snug">
+    <!-- Aviso de Delivery con Icono Floral -->
+    <div class="inline-flex items-center gap-1.5 font-medium text-on-primary">
+      <span class="material-symbols-outlined text-[15px] sm:text-[15px] text-primary-fixed shrink-0" aria-hidden="true">
+        local_florist
+      </span>
+      <span>{ISOTELI_CONTACT.deliveryPolicy.topBarText}</span>
+    </div>
 
+    <!-- Separador sutil visible en pantallas medianas y grandes -->
+    <span class="hidden sm:inline-block text-primary-fixed/50 select-none" aria-hidden="true">•</span>
+
+    <!-- Enlace directo al WhatsApp oficial con logo de WhatsApp y número sin subrayado -->
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 font-semibold text-primary-fixed hover:text-white transition-colors duration-150 py-0.5 px-1.5 rounded focus:outline-none focus:ring-1 focus:ring-primary-fixed cursor-pointer no-underline"
+      aria-label={`Escribir por WhatsApp a ISOTELI al ${ISOTELI_CONTACT.phoneDisplay}`}
+    >
+      <WhatsAppIcon class="w-4 h-4 text-[#25D366]" />
+      <span>{ISOTELI_CONTACT.phoneDisplay}</span>
+    </a>
+  </div>
+</aside>

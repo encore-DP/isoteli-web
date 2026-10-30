@@ -3,6 +3,7 @@ import { AREQUIPA_DISTRICTS, ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/b
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import type { CatalogProduct, ProductVariationOption } from '../lib/wp-graphql';
 import ProductCard from './ProductCard.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 
 export interface Props {
   product: CatalogProduct;
@@ -429,7 +430,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
             type="button"
             class="w-full bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label font-semibold text-body-md shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-3 cursor-pointer active:scale-[0.99]"
           >
-            <span class="material-symbols-outlined text-[24px]" aria-hidden="true">chat</span>
+            <WhatsAppIcon class="w-6 h-6 text-[#25D366]" />
             <span class="tracking-wide">Pedir por WhatsApp al {ISOTELI_CONTACT.phoneShort}</span>
             <span class="w-1.5 h-1.5 rounded-full bg-on-primary/60"></span>
             <span id="cta-total-pill" class="font-bold">Total: {defaultOption.formattedPrice}</span>
@@ -522,13 +523,13 @@ const supportWhatsappUrl = buildWhatsAppUrl(
       >
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="md:col-span-2 space-y-4">
-            <h3 class="font-headline text-2xl font-semibold text-on-surface">
+            <h3 class="font-headline-sm text-2xl font-semibold text-on-surface">
               Arte floral artesanal concebido para emocionar
             </h3>
             <p id="detail-full-desc" class="text-on-surface-variant text-body-md leading-relaxed">
               {product.fullDescription ?? product.shortDescription}
             </p>
-            <h4 class="font-headline text-lg font-semibold text-on-surface pt-2">Composición Botánica:</h4>
+            <h4 class="font-headline-sm text-lg font-semibold text-on-surface pt-2">Composición Botánica:</h4>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-body-sm text-on-surface-variant">
               {
                 botanicalList.map((item) => (
@@ -543,7 +544,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
 
           <div class="bg-surface-container rounded-xl p-5 flex flex-col justify-between gap-4 border border-outline-variant/40">
             <div>
-              <h4 class="font-headline text-lg font-semibold text-on-surface mb-3">
+              <h4 class="font-headline-sm text-lg font-semibold text-on-surface mb-3">
                 Cuidados &amp; Durabilidad
               </h4>
               <div class="space-y-3 text-body-sm text-on-surface-variant">
@@ -578,7 +579,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
       >
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="space-y-4">
-            <h3 class="font-headline text-2xl font-semibold text-on-surface">Tiempos y Rangos de Entrega</h3>
+            <h3 class="font-headline-sm text-2xl font-semibold text-on-surface">Tiempos y Rangos de Entrega</h3>
             <p class="text-on-surface-variant text-body-md leading-relaxed">
               Coordinamos despachos diarios cuidadosos para asegurar que ningún arreglo sufra la radiación solar característica de la Ciudad Blanca.
             </p>
@@ -599,7 +600,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
           </div>
 
           <div class="space-y-4">
-            <h4 class="font-headline text-xl font-semibold text-on-surface">
+            <h4 class="font-headline-sm text-xl font-semibold text-on-surface">
               Distritos con Cobertura Estándar (S/ 10):
             </h4>
             <p class="text-on-surface-variant text-body-sm leading-relaxed">
@@ -622,7 +623,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
         class="hidden mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
       >
         <div class="max-w-3xl space-y-6">
-          <h3 class="font-headline text-2xl font-semibold text-on-surface">La Promesa Floral ISOTELI</h3>
+          <h3 class="font-headline-sm text-2xl font-semibold text-on-surface">La Promesa Floral ISOTELI</h3>
           <p class="text-on-surface-variant text-body-md leading-relaxed">
             Sabemos que enviar flores es transmitir un sentimiento íntimo. Para garantizar que tu experiencia sea impecable de principio a fin, aplicamos nuestro protocolo de tres pasos:
           </p>
@@ -702,7 +703,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
             <span class="text-body-sm uppercase tracking-wider text-primary font-bold">
               Atención Inmediata en Arequipa
             </span>
-            <h3 class="font-headline text-2xl sm:text-3xl font-semibold text-on-surface mt-0.5">
+            <h3 class="font-headline-sm text-2xl sm:text-3xl font-semibold text-on-surface mt-0.5">
               ¿Tienes una consulta sobre este arreglo?
             </h3>
             <p class="text-on-surface-variant text-body-md mt-1 max-w-xl">
@@ -718,7 +719,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
             rel="noopener noreferrer"
             class="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label font-semibold text-body-md shadow-md transition-all flex items-center justify-center gap-2"
           >
-            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">chat</span>
+            <WhatsAppIcon class="w-5 h-5 text-[#25D366]" />
             <span>Hablar al {ISOTELI_CONTACT.phoneShort}</span>
           </a>
         </div>

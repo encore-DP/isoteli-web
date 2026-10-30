@@ -76,21 +76,27 @@
   --spacing-margin-mobile: 1.25rem;
 
   /* Familias tipográficas editoriales y de interfaz */
-  --font-display-hero: "Playfair Display", "EB Garamond", Georgia, serif;
-  --font-display-hero-mobile: "Playfair Display", "EB Garamond", Georgia, serif;
-  --font-headline-lg: "Playfair Display", "EB Garamond", Georgia, serif;
-  --font-headline-lg-mobile: "Playfair Display", "EB Garamond", Georgia, serif;
-  --font-headline-md: "Playfair Display", "EB Garamond", Georgia, serif;
-  --font-headline-sm: "Playfair Display", "EB Garamond", Georgia, serif;
-  --font-headline: "Playfair Display", "EB Garamond", "Inter", Georgia, serif;
-  --font-display: "Playfair Display", "EB Garamond", "Inter", Georgia, serif;
-  --font-body-lg: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
-  --font-body-md: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
-  --font-body-sm: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
-  --font-label-lg: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
-  --font-label-md: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
-  --font-label: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+  --font-sans: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+
+  /* Textos fuertes o títulos principales */
+  --font-display-hero: "Playfair Display", Georgia, serif;
+  --font-display-hero-mobile: "Playfair Display", Georgia, serif;
+  --font-headline-lg: "Playfair Display", Georgia, serif;
+  --font-headline-lg-mobile: "Playfair Display", Georgia, serif;
+  --font-headline-md: "Playfair Display", Georgia, serif;
+  --font-headline: "Playfair Display", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, serif;
+
+  /* Textos, párrafos, spans, h3, h4, h5, etiquetas y botones */
+  --font-headline-sm: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-body-lg: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-body-md: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-body-sm: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-body: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-label-lg: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-label-md: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-label: "Poppins", system-ui, -apple-system, sans-serif;
 
   /* Escala tipográfica con altura de línea, tracking y peso */
   --text-display-hero: 56px;
@@ -147,13 +153,37 @@
   body {
     margin: 0;
     padding: 0;
+    font-family: var(--font-body, "Poppins", system-ui, -apple-system, sans-serif);
   }
 
   body {
     overscroll-behavior: none;
   }
 
+  /* Textos fuertes o títulos principales */
+  h1,
+  h2 {
+    font-family: var(--font-display, "Playfair Display", Georgia, serif);
+  }
+
+  /* Textos, p, span, h3, h4, h5, h6, botones, inputs */
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label {
+    font-family: var(--font-body, "Poppins", system-ui, -apple-system, sans-serif);
+  }
+
   .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     user-select: none;
     line-height: 1;

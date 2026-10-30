@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import logoImg from '../assets/logo/logo.png';
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -81,7 +82,7 @@ const directWhatsappUrl = buildWhatsAppUrl(
       rel="noopener noreferrer"
       class="hidden sm:inline-flex items-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary px-space-md py-2 rounded-full font-label-md text-label-md tracking-wider transition-colors shadow-sm"
     >
-      <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chat</span>
+      <WhatsAppIcon class="w-4 h-4 text-[#25D366]" />
       <span>{ISOTELI_CONTACT.phoneDisplay}</span>
     </a>
 
@@ -130,7 +131,7 @@ const directWhatsappUrl = buildWhatsAppUrl(
       rel="noopener noreferrer"
       class="mt-2 w-full inline-flex items-center justify-center gap-2 bg-primary text-on-primary py-3 px-4 rounded-full font-label-md text-label-md tracking-wider shadow-sm"
     >
-      <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
+      <WhatsAppIcon class="w-5 h-5 text-[#25D366]" />
       <span>Pedidos al {ISOTELI_CONTACT.phoneDisplay}</span>
     </a>
   </nav>

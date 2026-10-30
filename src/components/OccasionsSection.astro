@@ -1,0 +1,87 @@
+---
+import { ISOTELI_OCCASIONS, type OccasionItem, buildWhatsAppUrl } from '../data/business';
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
+  items?: readonly OccasionItem[];
+  class?: string;
+}
+
+const {
+  title = 'Comprar por Ocasión',
+  subtitle = 'Encuentra el arreglo perfecto confeccionado específicamente para el sentimiento que deseas transmitir.',
+  tagline = 'Momentos Especiales',
+  items = ISOTELI_OCCASIONS,
+  class: className = '',
+} = Astro.props;
+---
+
+<!-- ================= SECCIÓN COMPRAR POR OCASIÓN ================= -->
+<section class:list={['w-full px-margin-mobile md:px-margin py-space-lg', className]}>
+  <div class="text-center max-w-xl mx-auto mb-10">
+    <div class="inline-flex items-center justify-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-[16px]" aria-hidden="true">celebration</span>
+      <span>{tagline}</span>
+    </div>
+    <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">{title}</h2>
+    <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+      {subtitle}
+    </p>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+    {
+      items.map((occ) => (
+        <a
+          class="group flex flex-col items-center text-center p-4 rounded-2xl hover:bg-surface-container-low transition-all"
+          href={buildWhatsAppUrl(occ.message)}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <div
+            class:list={[
+              'w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all mb-3 shadow-sm group-hover:scale-105 duration-300',
+              occ.circleBg,
+            ]}
+          >
+            <span
+              class="occasion-circle-icon material-symbols-outlined select-none transition-transform duration-300 group-hover:scale-105"
+              aria-hidden="true"
+            >
+              {occ.icon}
+            </span>
+          </div>
+          <span class="font-headline-sm text-headline-sm text-on-surface font-medium group-hover:text-primary text-[17px]">
+            {occ.title}
+          </span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">{occ.subtitle}</span>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* ==========================================================================
+     PROPORCIÓN EXACTA DEL 70% PARA ÍCONOS DE OCASIÓN
+     El !important es estrictamente requerido para sobreescribir la regla
+     no estratificada font-size: 24px inyectada por Google Fonts.
+     ========================================================================== */
+  .occasion-circle-icon {
+    font-size: 56px !important;
+    line-height: 1 !important;
+    font-variation-settings: 'opsz' 45;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 640px) {
+    .occasion-circle-icon {
+      font-size: 68px !important;
+    }
+  }
+</style>
+

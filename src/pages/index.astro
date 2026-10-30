@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import ProductCard from '../components/ProductCard.astro';
+import OccasionsSection from '../components/OccasionsSection.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { ISOTELI_VALUES, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getCatalogProducts } from '../lib/wp-graphql';
@@ -40,51 +42,6 @@ const trustItems = ISOTELI_VALUES.map((val) => ({
   subtitle: val.shortSubtitle,
 }));
 
-const occasions = [
-  {
-    title: 'Cumpleaños',
-    subtitle: 'Alegría & Color',
-    icon: 'cake',
-    circleBg: 'bg-primary-fixed/60 group-hover:bg-primary-fixed text-primary',
-    message: 'Hola ISOTELI, busco un arreglo para Cumpleaños',
-  },
-  {
-    title: 'Aniversario',
-    subtitle: 'Romance Puro',
-    icon: 'favorite',
-    circleBg: 'bg-[#fde3d6] group-hover:bg-[#fbd0bc] text-primary',
-    message: 'Hola ISOTELI, busco un arreglo para Aniversario',
-  },
-  {
-    title: 'Felicitaciones',
-    subtitle: 'Logros & Grados',
-    icon: 'workspace_premium',
-    circleBg: 'bg-[#fcf0db] group-hover:bg-[#f8e2bc] text-primary',
-    message: 'Hola ISOTELI, busco un arreglo de Felicitaciones o Grado',
-  },
-  {
-    title: 'Agradecimiento',
-    subtitle: 'Gratitud Sincera',
-    icon: 'volunteer_activism',
-    circleBg: 'bg-secondary-container group-hover:bg-secondary-fixed-dim/70 text-primary',
-    message: 'Hola ISOTELI, busco un arreglo de Agradecimiento',
-  },
-  {
-    title: 'Condolencias',
-    subtitle: 'Paz & Memoria',
-    icon: 'spa',
-    circleBg: 'bg-surface-container-high group-hover:bg-surface-container-highest text-on-surface-variant',
-    message: 'Hola ISOTELI, busco un arreglo de Condolencias o Fúnebre',
-  },
-  {
-    title: 'Nuevo Bebé',
-    subtitle: 'Tierna Llegada',
-    icon: 'child_care',
-    circleBg: 'bg-[#faebe1] group-hover:bg-[#f7d9c6] text-primary',
-    message: 'Hola ISOTELI, busco un arreglo para Nacimiento o Baby Shower',
-  },
-] as const;
-
 const testimonials = [
   {
     initials: 'VG',
@@ -119,25 +76,11 @@ const testimonials = [
 >
   <div class="flex flex-col w-full">
     <!-- ================= SECCIÓN HERO ================= -->
-    <section class="relative w-full px-margin-mobile md:px-margin pt-4 pb-space-lg overflow-hidden">
+    <section class="relative w-full px-margin-mobile mt-10 md:px-margin pb-space-lg overflow-hidden">
       <div class="relative w-full bg-gradient-to-br from-[#fae7db] via-[#f7eee2] to-[#ede3d5] rounded-xl lg:rounded-3xl p-6 sm:p-10 lg:p-16 overflow-hidden shadow-[0_8px_30px_rgba(194,101,42,0.12)]">
         <!-- Formas Orgánicas Curvas en Paleta Terracota Cálido -->
         <div class="absolute -top-16 -right-16 w-96 h-96 rounded-full bg-primary-fixed/50 blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-primary-container/20 blur-3xl pointer-events-none"></div>
-
-        <!-- Detalle Botánico Minimalista en SVG -->
-        <svg
-          class="absolute top-8 right-12 w-28 h-28 text-primary/15 hidden md:block"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          viewBox="0 0 100 100"
-          aria-hidden="true"
-        >
-          <path d="M50 20 C50 35 30 35 30 50 C30 65 50 65 50 80 C50 65 70 65 70 50 C70 35 50 35 50 20 Z"></path>
-          <path d="M20 50 C35 50 35 30 50 30 C65 30 65 50 80 50 C65 50 65 70 50 70 C35 70 35 50 20 50 Z"></path>
-        </svg>
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
           <!-- Columna Izquierda: Mensaje Principal y Llamadas a la Acción -->
           <div class="lg:col-span-6 flex flex-col items-start gap-5 max-w-xl">
@@ -163,8 +106,7 @@ const testimonials = [
                 class="inline-flex items-center justify-center gap-2.5 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-full font-label-lg text-label-lg shadow-[0_8px_20px_rgba(194,101,42,0.28)] hover:scale-[1.02] active:scale-[0.98] transition-all"
                 href="/catalogo"
               >
-                <span>Ver Colección</span>
-                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">local_florist</span>
+                <span>Ver Colección</span>                
               </a>
 
               <a
@@ -173,7 +115,7 @@ const testimonials = [
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
+                <WhatsAppIcon class="w-[18px] h-[18px]" />
                 <span>Cotizar al WhatsApp</span>
               </a>
             </div>
@@ -231,6 +173,9 @@ const testimonials = [
     <!-- ================= BARRA DE CONFIANZA Y VALORES ================= -->
     <TrustStrip items={trustItems} variant="values" />
 
+    <!-- ================= SECCIÓN COMPRAR POR OCASIÓN ================= -->
+    <OccasionsSection />
+    
     <!-- ================= SECCIÓN NUESTRAS COLECCIONES ================= -->
     <section class="w-full px-margin-mobile md:px-margin pt-space-lg pb-space-md" id="colecciones">
       <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
@@ -344,45 +289,7 @@ const testimonials = [
       </div>
     </section>
 
-    <!-- ================= SECCIÓN COMPRAR POR OCASIÓN ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-lg">
-      <div class="text-center max-w-xl mx-auto mb-10">
-        <div class="inline-flex items-center justify-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-2">
-          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">celebration</span>
-          <span>Momentos Especiales</span>
-        </div>
-        <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Comprar por Ocasión</h2>
-        <p class="font-body-md text-body-md text-on-surface-variant mt-2">
-          Encuentra el arreglo perfecto confeccionado específicamente para el sentimiento que deseas transmitir.
-        </p>
-      </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-        {
-          occasions.map((occ) => (
-            <a
-              class="group flex flex-col items-center text-center p-4 rounded-2xl hover:bg-surface-container-low transition-all"
-              href={buildWhatsAppUrl(occ.message)}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <div
-                class:list={[
-                  'w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-colors mb-3 shadow-sm group-hover:scale-105 duration-300',
-                  occ.circleBg,
-                ]}
-              >
-                <span class="material-symbols-outlined text-[36px]" aria-hidden="true">{occ.icon}</span>
-              </div>
-              <span class="font-headline-sm text-headline-sm text-on-surface font-medium group-hover:text-primary text-[17px]">
-                {occ.title}
-              </span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">{occ.subtitle}</span>
-            </a>
-          ))
-        }
-      </div>
-    </section>
 
     <!-- ================= BANNER DE SUSCRIPCIÓN Y CUPÓN 10% ================= -->
     <section class="w-full px-margin-mobile md:px-margin py-space-sm">
@@ -441,7 +348,7 @@ const testimonials = [
             <span class="material-symbols-outlined text-[16px]" aria-hidden="true">stars</span>
             <span>Los Más Solicitados</span>
           </div>
-          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Favoritos de Arequipa</h2>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Favoritos en Arequipa</h2>
         </div>
 
         <div class="flex items-center gap-2">

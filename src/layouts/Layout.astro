@@ -4,7 +4,8 @@ import TopBar from '../components/TopBar.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
-
+import { Image } from 'astro:assets';
+import logoFavicon from '../assets/logo/favicon.svg';
 export interface Props {
   title: string;
   description?: string;
@@ -27,8 +28,8 @@ const fullTitle = title.includes('ISOTELI')
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <!-- Favicon Oficial ISOTELI (src/assets/logo/favicon.svg) -->
+    <link rel="icon" type="image/svg+xml" href={logoFavicon.src} />
 
     <!-- Metadatos SEO Dinámicos -->
     <title>{fullTitle}</title>
@@ -39,11 +40,11 @@ const fullTitle = title.includes('ISOTELI')
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
 
-    <!-- Tipografías Editoriales e Iconografía Material Symbols -->
+    <!-- Tipografías Editoriales: Playfair Display (Títulos) y Poppins (Textos) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -59,7 +60,7 @@ const fullTitle = title.includes('ISOTELI')
     </header>
 
     <!-- ================= CONTENIDO PRINCIPAL DE CADA VISTA ================= -->
-    <main class="w-full pt-28 bg-background flex-1">
+    <main class="w-full pt-[138px] sm:pt-[118px] md:pt-[120px] bg-background flex-1">
       <slot />
     </main>
 

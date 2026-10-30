@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import DeliveryCoverageSection from '../components/DeliveryCoverageSection.astro';
+import OccasionsSection from '../components/OccasionsSection.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import {
   ISOTELI_CONTACT,
   ISOTELI_MISSION,
@@ -73,15 +75,6 @@ const teamMembers = [
   },
 ] as const;
 
-const occasionQuickLinks = [
-  { label: 'Cumpleaños', icon: 'cake', href: '/catalogo?categoria=cajas-y-boxes' },
-  { label: 'Aniversarios', icon: 'favorite', href: '/catalogo?categoria=ramos-y-buchones' },
-  { label: 'Felicitaciones', icon: 'celebration', href: '/catalogo?categoria=globos-y-bouquets' },
-  { label: 'Agradecimiento', icon: 'sentiment_satisfied', href: '/catalogo?categoria=chocolates' },
-  { label: 'Nacimientos', icon: 'child_friendly', href: '/catalogo?categoria=peluches-y-detalles' },
-  { label: 'Eventos', icon: 'auto_awesome', href: '/servicios' },
-] as const;
-
 const heroImageUrl =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDYR8mnI9kUixhviUSfU_UJIp-nH8-kBulQYsub77sGWEfxAiFWXK0VmufjsmEZlGLxfs8z9Jpk0TMa7HvdeVZL5CHMDSEtKsoR5NNgpdx3gysmLrii7LnFUeIx_ap_qAN50B_4FJjE1wLMzjU2PnLeGxS0a-3Y4ILrlxEu61ytNDUl-J-wlasn81I5ZlVXTB3GC_jmuPs9TIUwSnuYiXf8EPyZ8TPNfPlAX2eUwrcQ7Cww_7_VjPvkUw';
 
@@ -95,7 +88,7 @@ const studioImageUrl =
 >
   <div class="flex flex-col w-full">
     <!-- ================= SECCIÓN HERO EDITORIAL: MANIFIESTO BOTÁNICO ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pt-4 pb-space-lg">
+    <section class="w-full px-margin-mobile md:px-margin pt-10 pb-space-lg">
       <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-6 md:p-14 lg:p-16 border border-outline-variant/30">
         <!-- Arco Orgánico Decorativo -->
         <svg
@@ -144,22 +137,22 @@ const studioImageUrl =
             </div>
           </div>
 
-          <div class="lg:col-span-5 relative pb-4 sm:pb-0">
+          <div class="lg:col-span-5 relative pb-8 lg:pb-0">
             <div class="relative mx-auto max-w-md lg:max-w-none">
-              <div class="overflow-hidden rounded-xl bg-surface shadow-md aspect-[4/5] relative">
+              <div class="overflow-hidden rounded-xl bg-surface shadow-md aspect-[16/10] relative">
                 <img
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover object-center"
                   src={heroImageUrl}
                   alt="Atelier floral artesanal en Arequipa con rosas frescas color durazno, eucalipto y arquitectura de sillar iluminada por luz natural"
                   loading="eager"
                   onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-transparent to-transparent"></div>
-                <div class="absolute bottom-5 left-5 right-5 text-on-primary">
-                  <p class="font-label-md text-label-md uppercase tracking-wider text-primary-fixed">
+                <div class="absolute inset-0 bg-gradient-to-t from-on-surface/75 via-on-surface/20 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 text-on-primary">
+                  <p class="font-label-md text-[11px] sm:text-label-md uppercase tracking-wider text-primary-fixed">
                     Atelier ISOTELI • Valle de Chilina &amp; Arequipa
                   </p>
-                  <p class="font-headline-sm text-headline-sm font-semibold">
+                  <p class="font-headline-sm text-sm sm:text-headline-sm font-semibold leading-snug">
                     Flores cosechadas con reverencia al paisaje andino.
                   </p>
                 </div>
@@ -252,9 +245,9 @@ const studioImageUrl =
               <span>MODALIDAD DE ATENCIÓN &amp; UBICACIÓN</span>
             </div>
 
-            <h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
+            <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
               Tienda Virtual y Oficina de Coordinación
-            </h3>
+            </h2>
 
             <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
               Al ser <strong class="text-on-surface">tienda 100% virtual sin local físico</strong> para muestras y ventas, todo el proceso de asesoría y catálogo se realiza en línea con la posibilidad de <strong class="text-on-surface">videollamadas personalizadas</strong> para ver cada detalle antes de tu envío.
@@ -277,8 +270,8 @@ const studioImageUrl =
                 rel="noopener noreferrer"
                 target="_blank"
               >
+                <WhatsAppIcon class="w-4 h-4 text-[#25D366]" />
                 <span>Coordinar por WhatsApp</span>
-                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">chat</span>
               </a>
             </div>
           </div>
@@ -389,46 +382,8 @@ const studioImageUrl =
       </div>
     </section>
 
-    <!-- ================= SELECTOR RÁPIDO DE OCASIONES FLORALES ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-8">
-      <div class="bg-surface-container-low rounded-xl p-8 flex flex-col gap-6 border border-outline-variant/30">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">
-              CREACIONES A MEDIDA
-            </span>
-            <h3 class="font-headline-sm text-headline-sm text-primary">
-              ¿Para qué momento nos necesitas hoy?
-            </h3>
-          </div>
-          <a
-            class="font-label-md text-label-md text-primary font-semibold hover:text-on-surface transition-colors inline-flex items-center gap-1"
-            href="/catalogo"
-          >
-            <span>Ver todas las colecciones</span>
-            <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
-          </a>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
-          {
-            occasionQuickLinks.map((occasion) => (
-              <a
-                class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-surface transition-colors group"
-                href={occasion.href}
-              >
-                <div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <span class="material-symbols-outlined text-[24px]" aria-hidden="true">
-                    {occasion.icon}
-                  </span>
-                </div>
-                <span class="font-label-md text-label-md text-primary font-semibold">{occasion.label}</span>
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </section>
+    <!-- ================= SECCIÓN COMPRAR POR OCASIÓN ================= -->
+    <OccasionsSection />
 
     <!-- ================= BANNER DE ATENCIÓN DIRECTA WHATSAPP Y CORREOS ================= -->
     <section class="w-full px-margin-mobile md:px-margin pt-space-md pb-space-xl">
@@ -472,7 +427,7 @@ const studioImageUrl =
               rel="noopener noreferrer"
               target="_blank"
             >
-              <span class="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">chat</span>
+              <WhatsAppIcon class="w-5 h-5 text-[#25D366]" />
               <span>Escríbenos al {ISOTELI_CONTACT.phoneDisplay}</span>
             </a>
             <a

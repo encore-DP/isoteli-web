@@ -1,5 +1,6 @@
 ---
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 
 const whatsappHref = buildWhatsAppUrl(
   'Hola ISOTELI, deseo asesoría para elegir un arreglo floral o servicio de decoración.'
@@ -14,7 +15,7 @@ const whatsappHref = buildWhatsAppUrl(
   aria-label={`Chatear por WhatsApp con ISOTELI al ${ISOTELI_CONTACT.phoneDisplay}`}
   class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-white px-4 py-3 rounded-full shadow-[0_8px_24px_rgba(37,211,102,0.35)] hover:scale-105 active:scale-95 transition-all"
 >
-  <span class="material-symbols-outlined text-[24px]" aria-hidden="true">chat</span>
+  <WhatsAppIcon class="w-6 h-6 text-white" />
   <span class="font-label-md text-label-md tracking-wider hidden sm:inline">¿Deseas ayuda?</span>
 </a>
 
