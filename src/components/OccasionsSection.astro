@@ -19,8 +19,8 @@ const {
 ---
 
 <!-- ================= SECCIÓN COMPRAR POR OCASIÓN ================= -->
-<section class:list={['w-full px-margin-mobile md:px-margin py-space-lg', className]}>
-  <div class="text-center max-w-xl mx-auto mb-10">
+<section class:list={['w-full px-margin-mobile md:px-margin py-space-lg', className]} data-aos="fade-up">
+  <div class="text-center max-w-xl mx-auto mb-10" data-aos="fade-up">
     <div class="inline-flex items-center justify-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-2">
       <span class="material-symbols-outlined text-[16px]" aria-hidden="true">celebration</span>
       <span>{tagline}</span>
@@ -33,12 +33,14 @@ const {
 
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
     {
-      items.map((occ) => (
+      items.map((occ, idx) => (
         <a
           class="group flex flex-col items-center text-center p-4 rounded-2xl hover:bg-surface-container-low transition-all"
           href={buildWhatsAppUrl(occ.message)}
           rel="noopener noreferrer"
           target="_blank"
+          data-aos="zoom-in"
+          data-aos-delay={idx * 75}
         >
           <div
             class:list={[

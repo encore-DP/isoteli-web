@@ -9,11 +9,11 @@ const { id = 'cobertura-distrital' } = Astro.props;
 ---
 
 <!-- ================= COBERTURA DE DELIVERY Y LÍMITES DISTRITALES AREQUIPA ================= -->
-<section class="w-full px-margin-mobile md:px-margin py-space-lg" id={id}>
+<section class="w-full px-margin-mobile md:px-margin py-space-lg" id={id} data-aos="fade-up">
   <div class="rounded-xl bg-surface-container p-8 md:p-12 lg:p-14 border border-outline-variant/30">
     <div class="flex flex-col gap-6">
       <!-- Cabecera de Tarifas de Envío -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30" data-aos="fade-up">
         <div>
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md font-semibold tracking-wider mb-2">
             <span class="material-symbols-outlined text-[15px]" aria-hidden="true">local_shipping</span>
@@ -27,7 +27,7 @@ const { id = 'cobertura-distrital' } = Astro.props;
           </p>
         </div>
 
-        <div class="bg-surface rounded-xl p-4 shadow-sm border border-primary/30 flex flex-col gap-1.5 shrink-0 max-w-md">
+        <div class="bg-surface rounded-xl p-4 shadow-sm border border-primary/30 flex flex-col gap-1.5 shrink-0 max-w-md" data-aos="zoom-in" data-aos-delay="100">
           <div class="flex items-center gap-2 text-primary font-bold font-headline-sm text-headline-sm">
             <span class="material-symbols-outlined text-[22px]" aria-hidden="true">redeem</span>
             <span>Delivery GRATIS en compras &gt; S/ 99.90</span>
@@ -40,15 +40,19 @@ const { id = 'cobertura-distrital' } = Astro.props;
 
       <!-- Grilla de 9 Distritos con Límites Exactos -->
       <div>
-        <h3 class="font-headline-sm text-headline-sm text-primary mb-3 flex items-center gap-2">
+        <h3 class="font-headline-sm text-headline-sm text-primary mb-3 flex items-center gap-2" data-aos="fade-up">
           <span class="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">pin_drop</span>
           <span>Distritos con Cobertura (S/ 10 o Gratis &gt; S/ 99.90)</span>
         </h3>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {
-            AREQUIPA_DISTRICTS.map((district) => (
-              <div class="p-3.5 rounded-lg bg-surface flex flex-col gap-1 border border-outline-variant/30">
+            AREQUIPA_DISTRICTS.map((district, idx) => (
+              <div
+                class="p-3.5 rounded-lg bg-surface flex flex-col gap-1 border border-outline-variant/30"
+                data-aos="fade-up"
+                data-aos-delay={idx * 60}
+              >
                 <div class="flex items-center justify-between gap-2">
                   <span class="font-label-lg text-label-lg font-bold text-primary">{district.name}</span>
                   <span
@@ -79,7 +83,7 @@ const { id = 'cobertura-distrital' } = Astro.props;
 
       <!-- Zonas Periféricas y Métodos de Pago -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-        <div class="p-4 rounded-lg bg-surface text-on-surface flex items-start gap-3 border border-outline-variant/30">
+        <div class="p-4 rounded-lg bg-surface text-on-surface flex items-start gap-3 border border-outline-variant/30" data-aos="fade-up" data-aos-delay="100">
           <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" aria-hidden="true">navigation</span>
           <div>
             <p class="font-label-lg text-label-lg font-bold text-primary">
@@ -91,7 +95,7 @@ const { id = 'cobertura-distrital' } = Astro.props;
           </div>
         </div>
 
-        <div class="p-4 rounded-lg bg-surface text-on-surface flex items-start gap-3 border border-outline-variant/30">
+        <div class="p-4 rounded-lg bg-surface text-on-surface flex items-start gap-3 border border-outline-variant/30" data-aos="fade-up" data-aos-delay="200">
           <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" aria-hidden="true">payments</span>
           <div>
             <p class="font-label-lg text-label-lg font-bold text-primary">

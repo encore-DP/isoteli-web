@@ -41,7 +41,9 @@ export const ISOTELI_CONTACT = {
   officeAddress: 'Urb. Santa María de Lambramani A15 – José Luis Bustamante y Rivero, Arequipa',
   officeShortAddress: 'Urb. Santa María de Lambramani A15 – J.L.B. y Rivero, Arequipa',
   googleMapsUrl:
-    'https://maps.google.com/?q=Santa+Maria+de+Lambramani,Jose+Luis+Bustamante,Arequipa,Peru',
+    'https://www.google.com/maps?q=-16.413808822631836,-71.52098846435547&z=17&hl=es',
+  googleMapsEmbedUrl:
+    'https://maps.google.com/maps?q=-16.413808822631836,-71.52098846435547&z=17&hl=es&output=embed',
   virtualStoreNotice:
     'Al ser tienda virtual sin local físico para muestras y ventas, todo el proceso de asesoría y catálogo se realiza en línea con posibilidad de videollamadas personalizadas. Nuestra oficina exclusiva para coordinación y decoración de eventos se ubica en Urb. Santa María de Lambramani A15 – José Luis Bustamante y Rivero, Arequipa.',
   emails: {

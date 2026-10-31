@@ -16,10 +16,14 @@ const { items, variant = 'strip' } = Astro.props;
 <!-- ================= FRANJA DE CONFIANZA Y PROMESAS DE MARCA ================= -->
 {
   variant === 'values' ? (
-    <section class="w-full px-margin-mobile md:px-margin pt-5 py-4">
+    <section class="w-full px-margin-mobile md:px-margin pt-5 py-4" data-aos="fade-up">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {items.map((item) => (
-          <div class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-2xl p-4 flex items-center gap-3.5 shadow-sm">
+        {items.map((item, idx) => (
+          <div
+            class="bg-surface-container-low hover:bg-surface-container transition-colors rounded-2xl p-4 flex items-center gap-3.5 shadow-sm"
+            data-aos="fade-up"
+            data-aos-delay={idx * 75}
+          >
             <div class="w-12 h-12 rounded-2xl bg-secondary-container text-secondary flex items-center justify-center shrink-0">
               <span class="material-symbols-outlined text-[24px]" aria-hidden="true">{item.icon}</span>
             </div>
@@ -34,10 +38,14 @@ const { items, variant = 'strip' } = Astro.props;
       </div>
     </section>
   ) : variant === 'fullbleed' ? (
-    <section class="w-full bg-surface-container-low mt-10 pt-5 py-4 px-margin-mobile md:px-margin border-b border-outline-variant/30">
+    <section class="w-full bg-surface-container-low mt-10 pt-5 py-4 px-margin-mobile md:px-margin border-b border-outline-variant/30" data-aos="fade-up">
       <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {items.map((item) => (
-          <div class="flex items-center gap-3 bg-surface-container-lowest px-4 py-3 rounded-DEFAULT shadow-sm border border-outline-variant/20">
+        {items.map((item, idx) => (
+          <div
+            class="flex items-center gap-3 bg-surface-container-lowest px-4 py-3 rounded-DEFAULT shadow-sm border border-outline-variant/20"
+            data-aos="fade-up"
+            data-aos-delay={idx * 75}
+          >
             <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
               <span class="material-symbols-outlined text-[20px]" aria-hidden="true">{item.icon}</span>
             </div>
@@ -50,10 +58,14 @@ const { items, variant = 'strip' } = Astro.props;
       </div>
     </section>
   ) : (
-    <section class="w-full px-margin-mobile md:px-margin pt-10 mb-8 pt-4">
+    <section class="w-full px-margin-mobile md:px-margin pt-10 mb-8 pt-4" data-aos="fade-up">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter bg-surface-container-low rounded-xl p-space-md sm:p-space-lg shadow-sm border border-outline-variant/40">
-        {items.map((item) => (
-          <div class="flex items-center gap-space-sm">
+        {items.map((item, idx) => (
+          <div
+            class="flex items-center gap-space-sm"
+            data-aos="fade-up"
+            data-aos-delay={idx * 75}
+          >
             <div class="w-11 h-11 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
               <span class="material-symbols-outlined text-[22px]" aria-hidden="true">{item.icon}</span>
             </div>

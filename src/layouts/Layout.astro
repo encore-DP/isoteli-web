@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import 'aos/dist/aos.css';
 import TopBar from '../components/TopBar.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
@@ -69,5 +70,37 @@ const fullTitle = title.includes('ISOTELI')
 
     <!-- ================= ACCESO RÁPIDO WHATSAPP FLOTANTE ================= -->
     <WhatsAppFloat />
+
+    <!-- ================= INICIALIZACIÓN DE ANIMACIONES AOS ================= -->
+    <script>
+      import AOS from 'aos';
+
+      const initAOS = () => {
+        // Garantizar que todas las secciones y segmentos principales tengan animación de entrada
+        document.querySelectorAll('main section, footer').forEach((sec) => {
+          if (!sec.hasAttribute('data-aos')) {
+            sec.setAttribute('data-aos', 'fade-up');
+          }
+        });
+
+        AOS.init({
+          duration: 750,
+          easing: 'ease-out-cubic',
+          once: true,
+          offset: 50,
+          delay: 30,
+        });
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAOS);
+      } else {
+        initAOS();
+      }
+
+      window.addEventListener('load', () => {
+        AOS.refresh();
+      });
+    </script>
   </body>
 </html>

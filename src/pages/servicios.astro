@@ -159,10 +159,10 @@ const occasionServices = [
     <TrustStrip items={serviceTrustItems} variant="fullbleed" />
 
     <!-- ================= SECCIÓN HERO Y CANALES DE COORDINACIÓN DE EVENTOS ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pt-6 pb-space-lg">
+    <section class="w-full px-margin-mobile md:px-margin pt-6 pb-space-lg" data-aos="fade-up">
       <div class="max-w-7xl mx-auto bg-surface-container-low rounded-xl p-6 sm:p-10 border border-outline-variant/30 shadow-sm">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="lg:col-span-7 flex flex-col gap-4" data-aos="fade-right">
             <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md uppercase tracking-widest w-max">
               <span class="material-symbols-outlined text-[16px]" aria-hidden="true">event_available</span>
               <span>Cotizador &amp; Asesoría Personalizada</span>
@@ -213,7 +213,7 @@ const occasionServices = [
             </div>
           </div>
 
-          <div class="lg:col-span-5 bg-surface-container-lowest p-6 sm:p-8 rounded-xl shadow-md flex flex-col gap-5 border border-outline-variant/30">
+          <div class="lg:col-span-5 bg-surface-container-lowest p-6 sm:p-8 rounded-xl shadow-md flex flex-col gap-5 border border-outline-variant/30" data-aos="fade-left">
             <h2 class="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-2">
               <span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">support_agent</span>
               <span>Canales Oficiales para Eventos</span>
@@ -279,10 +279,11 @@ const occasionServices = [
     <section
       class="w-full py-space-xl bg-surface-container-low/70 border-y border-outline-variant/30"
       id="paquetes-decoracion"
+      data-aos="fade-up"
     >
       <div class="w-full px-margin-mobile md:px-margin">
         <!-- Encabezado y Pestañas de Línea Clásica / Temática -->
-        <div class="max-w-4xl mx-auto text-center mb-10">
+        <div class="max-w-4xl mx-auto text-center mb-10" data-aos="fade-up">
           <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold inline-block mb-1">
             Paquetes de Ambientación ISOTELI
           </span>
@@ -402,9 +403,9 @@ const occasionServices = [
     </section>
 
     <!-- ================= METODOLOGÍA ISOTELI EN 4 PASOS ================= -->
-    <section class="w-full bg-surface py-space-xl px-margin-mobile md:px-margin border-b border-outline-variant/30">
+    <section class="w-full bg-surface py-space-xl px-margin-mobile md:px-margin border-b border-outline-variant/30" data-aos="fade-up">
       <div class="max-w-7xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
           <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
             Metodología ISOTELI
           </span>
@@ -418,8 +419,12 @@ const occasionServices = [
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
           {
-            processSteps.map((st) => (
-              <div class="bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between shadow-sm relative group hover:-translate-y-1 transition-transform border border-outline-variant/30">
+            processSteps.map((st, idx) => (
+              <div
+                class="bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between shadow-sm relative group hover:-translate-y-1 transition-transform border border-outline-variant/30"
+                data-aos="fade-up"
+                data-aos-delay={idx * 80}
+              >
                 <div>
                   <div class="flex items-center justify-between mb-6">
                     <span class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center font-headline-sm text-headline-sm">
@@ -447,9 +452,9 @@ const occasionServices = [
     </section>
 
     <!-- ================= GALERÍA DE MONTAJES REALIZADOS EN AREQUIPA ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-xl">
+    <section class="w-full px-margin-mobile md:px-margin py-space-xl" data-aos="fade-up">
       <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8" data-aos="fade-up">
           <div>
             <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
               Galería Botánica
@@ -467,7 +472,7 @@ const occasionServices = [
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[220px]">
-          <div class="md:col-span-2 md:row-span-2 relative rounded-xl overflow-hidden group shadow-sm">
+          <div class="md:col-span-2 md:row-span-2 relative rounded-xl overflow-hidden group shadow-sm" data-aos="fade-up">
             <img
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               alt="Mesa imperial de matrimonio al aire libre en Sabandía con centros de mesa florales altos de rosas y hortensias"
@@ -536,8 +541,9 @@ const occasionServices = [
     <section
       class="w-full px-margin-mobile md:px-margin py-space-xl bg-surface-container-low border-t border-outline-variant/30"
       id="catalogo-servicios"
+      data-aos="fade-up"
     >
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10" data-aos="fade-up">
         <div class="flex flex-col">
           <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold mb-2">
             Portafolio Especializado
@@ -598,10 +604,12 @@ const occasionServices = [
 
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter" id="services-grid">
         {
-          occasionServices.map((srv) => (
+          occasionServices.map((srv, idx) => (
             <article
               class="service-card group bg-surface-container-lowest rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 shadow-[0_8px_24px_rgba(194,101,42,0.08)] border border-outline-variant/30"
               data-category={srv.category}
+              data-aos="fade-up"
+              data-aos-delay={idx * 75}
             >
               <div>
                 <div class="relative w-full h-64 overflow-hidden bg-surface-container">
@@ -658,7 +666,7 @@ const occasionServices = [
     </section>
 
     <!-- ================= LLAMADA A LA ACCIÓN FINAL DE EVENTOS ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-xl">
+    <section class="w-full px-margin-mobile md:px-margin py-space-xl" data-aos="zoom-in">
       <div class="max-w-7xl mx-auto rounded-xl bg-primary text-on-primary p-8 md:p-14 relative overflow-hidden shadow-lg text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div class="relative z-10 max-w-2xl">
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-container text-surface-container-lowest font-label-md text-label-md uppercase tracking-widest mb-4">

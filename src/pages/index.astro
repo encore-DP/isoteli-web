@@ -76,14 +76,14 @@ const testimonials = [
 >
   <div class="flex flex-col w-full">
     <!-- ================= SECCIÓN HERO ================= -->
-    <section class="relative w-full px-margin-mobile mt-10 md:px-margin pb-space-lg overflow-hidden">
+    <section class="relative w-full px-margin-mobile mt-10 md:px-margin pb-space-lg overflow-hidden" data-aos="fade-up">
       <div class="relative w-full bg-gradient-to-br from-[#fae7db] via-[#f7eee2] to-[#ede3d5] rounded-xl lg:rounded-3xl p-6 sm:p-10 lg:p-16 overflow-hidden shadow-[0_8px_30px_rgba(194,101,42,0.12)]">
         <!-- Formas Orgánicas Curvas en Paleta Terracota Cálido -->
         <div class="absolute -top-16 -right-16 w-96 h-96 rounded-full bg-primary-fixed/50 blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-primary-container/20 blur-3xl pointer-events-none"></div>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
           <!-- Columna Izquierda: Mensaje Principal y Llamadas a la Acción -->
-          <div class="lg:col-span-6 flex flex-col items-start gap-5 max-w-xl">
+          <div class="lg:col-span-6 flex flex-col items-start gap-5 max-w-xl" data-aos="fade-right" data-aos-delay="100">
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-md text-label-md uppercase tracking-widest shadow-sm">
               <span class="material-symbols-outlined text-[15px]" aria-hidden="true">filter_vintage</span>
               <span>Atelier Floral en Arequipa</span>
@@ -128,7 +128,7 @@ const testimonials = [
           </div>
 
           <!-- Columna Derecha: Composición Floral Destacada -->
-          <div class="lg:col-span-6 relative flex justify-center lg:justify-end">
+          <div class="lg:col-span-6 relative flex justify-center lg:justify-end" data-aos="fade-left" data-aos-delay="200">
             <div class="relative w-full max-w-lg aspect-[4/4.8] sm:aspect-[4/4.5] rounded-3xl overflow-hidden shadow-2xl bg-surface-container">
               <img
                 class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
@@ -177,8 +177,8 @@ const testimonials = [
     <OccasionsSection />
     
     <!-- ================= SECCIÓN NUESTRAS COLECCIONES ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pt-space-lg pb-space-md" id="colecciones">
-      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+    <section class="w-full px-margin-mobile md:px-margin pt-space-lg pb-space-md" id="colecciones" data-aos="fade-up">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8" data-aos="fade-up">
         <div>
           <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-1">
             <span class="material-symbols-outlined text-[16px]" aria-hidden="true">filter_vintage</span>
@@ -199,7 +199,11 @@ const testimonials = [
       <div id="homeCollectionsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {
           collectionHighlights.map((item, idx) => (
-            <div class="group relative bg-surface-container-low hover:bg-surface-container-lowest transition-all duration-300 rounded-3xl p-3 flex flex-col shadow-sm hover:shadow-xl">
+            <div
+              class="group relative bg-surface-container-low hover:bg-surface-container-lowest transition-all duration-300 rounded-3xl p-3 flex flex-col shadow-sm hover:shadow-xl"
+              data-aos="fade-up"
+              data-aos-delay={idx * 75}
+            >
               <a
                 href={`/producto/${item.slug}`}
                 class="relative w-full aspect-square rounded-2xl overflow-hidden bg-surface-container block"
@@ -252,9 +256,9 @@ const testimonials = [
     </section>
 
     <!-- ================= BANNER EDITORIAL ASIMÉTRICO ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-md">
+    <section class="w-full px-margin-mobile md:px-margin py-space-md" data-aos="fade-up">
       <div class="w-full bg-[#fae7db]/80 rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-sm">
-        <div class="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-center items-start gap-4">
+        <div class="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-center items-start gap-4" data-aos="fade-right" data-aos-delay="100">
           <div class="flex items-center gap-2 text-primary font-semibold">
             <span class="material-symbols-outlined text-[22px]" aria-hidden="true">auto_stories</span>
             <span class="font-label-md text-label-md uppercase tracking-wider">Atelier Arequipeño</span>
@@ -276,7 +280,7 @@ const testimonials = [
           </div>
         </div>
 
-        <div class="lg:col-span-7 relative min-h-[300px] lg:min-h-full">
+        <div class="lg:col-span-7 relative min-h-[300px] lg:min-h-full" data-aos="fade-left" data-aos-delay="200">
           <img
             class="w-full h-full object-cover object-center"
             alt="Maestra florista en delantal preparando un arreglo de rosas coral y follaje fresco en el taller ISOTELI de Arequipa"
@@ -289,10 +293,8 @@ const testimonials = [
       </div>
     </section>
 
-
-
     <!-- ================= BANNER DE SUSCRIPCIÓN Y CUPÓN 10% ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-sm">
+    <section class="w-full px-margin-mobile md:px-margin py-space-sm" data-aos="zoom-in">
       <div class="w-full bg-secondary text-on-secondary rounded-3xl p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-md relative overflow-hidden">
         <div class="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-8" aria-hidden="true">
           <span class="material-symbols-outlined text-[180px]">local_florist</span>
@@ -341,8 +343,8 @@ const testimonials = [
     </section>
 
     <!-- ================= SECCIÓN FAVORITOS DE AREQUIPA (MÁS VENDIDOS) ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pt-space-xl pb-space-xl">
-      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+    <section class="w-full px-margin-mobile md:px-margin pt-space-xl pb-space-xl" data-aos="fade-up">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8" data-aos="fade-up">
         <div>
           <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-1">
             <span class="material-symbols-outlined text-[16px]" aria-hidden="true">stars</span>
@@ -365,14 +367,18 @@ const testimonials = [
       </div>
 
       <div id="homeBestSellersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {bestSellers.map((prod) => <ProductCard product={prod} variant="featured" />)}
+        {bestSellers.map((prod, idx) => (
+          <div data-aos="fade-up" data-aos-delay={idx * 75}>
+            <ProductCard product={prod} variant="featured" />
+          </div>
+        ))}
       </div>
     </section>
 
     <!-- ================= RESEÑAS DE CLIENTES EN AREQUIPA ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pb-space-xl">
+    <section class="w-full px-margin-mobile md:px-margin pb-space-xl" data-aos="fade-up">
       <div class="bg-surface-container-low rounded-3xl p-8 sm:p-12">
-        <div class="text-center max-w-xl mx-auto mb-10">
+        <div class="text-center max-w-xl mx-auto mb-10" data-aos="fade-up">
           <div class="flex items-center justify-center gap-1 text-primary mb-2" aria-label="Calificación de 5 estrellas">
             <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
             <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
@@ -388,8 +394,12 @@ const testimonials = [
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {
-            testimonials.map((rev) => (
-              <div class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between gap-4 shadow-sm">
+            testimonials.map((rev, idx) => (
+              <div
+                class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between gap-4 shadow-sm"
+                data-aos="fade-up"
+                data-aos-delay={idx * 100}
+              >
                 <p class="font-body-md text-body-md text-on-surface italic">"{rev.quote}"</p>
                 <div class="flex items-center gap-3">
                   <div
