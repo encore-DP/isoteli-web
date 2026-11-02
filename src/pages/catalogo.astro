@@ -33,7 +33,7 @@ const catalogTrustItems = [
 const categoryCounts = FLORIST_CATEGORIES.map((cat) => ({
   ...cat,
   count: products.filter((p) => p.categorySlug === cat.slug).length,
-}));
+})).filter((cat) => cat.count > 0);
 ---
 
 <Layout

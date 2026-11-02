@@ -523,7 +523,12 @@ export async function syncCatalogPage(onUpdated?: () => void): Promise<void> {
     const btn = document.querySelector<HTMLButtonElement>(`.category-btn[data-category="${cat.slug}"]`);
     if (btn) {
       const count = products.filter((p) => p.categorySlug === cat.slug).length;
-      btn.textContent = `${cat.shortLabel} (${count})`;
+      if (count === 0) {
+        btn.style.display = 'none';
+      } else {
+        btn.style.display = '';
+        btn.textContent = `${cat.shortLabel} (${count})`;
+      }
     }
   }
 
@@ -575,7 +580,14 @@ export async function syncServicesPage(): Promise<void> {
   );
   if (btnAll) btnAll.textContent = `Todas las Líneas (${classicPacks.length + thematicPacks.length})`;
   if (btnClassic) btnClassic.textContent = `Línea Clásica (${classicPacks.length})`;
-  if (btnThematic) btnThematic.textContent = `Línea Temática Infantil / Baby (${thematicPacks.length})`;
+  if (btnThematic) {
+    if (thematicPacks.length === 0) {
+      btnThematic.style.display = 'none';
+    } else {
+      btnThematic.style.display = '';
+      btnThematic.textContent = `Línea Temática Infantil / Baby (${thematicPacks.length})`;
+    }
+  }
 
   // Actualizar grilla de alquiler preservando la tarjeta fija final "¿Deseas combinar mobiliario?"
   if (rentalsGrid) {

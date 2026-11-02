@@ -618,27 +618,10 @@ export async function getCatalogProducts(): Promise<{
   }
 
   const mappedWp = wpNodes.map((node, idx) => mapWPProductToCatalog(node, idx));
-  const merged: CatalogProduct[] = [...mappedWp];
-  const seenSlugs = new Set(mappedWp.map((p) => p.slug));
-  let usedFallback = false;
-
-  for (const catSlug of FLORIST_CATEGORY_SLUGS) {
-    const hasWpCategoryItems = mappedWp.some((p) => p.categorySlug === catSlug);
-    if (!hasWpCategoryItems) {
-      const fallbackForCat = FALLBACK_CATALOG_PRODUCTS.filter(
-        (p) => p.categorySlug === catSlug && !seenSlugs.has(p.slug)
-      );
-      for (const item of fallbackForCat) {
-        seenSlugs.add(item.slug);
-        merged.push(item);
-      }
-      if (fallbackForCat.length > 0) usedFallback = true;
-    }
-  }
 
   return {
-    products: merged,
-    source: usedFallback ? 'hybrid' : 'wordpress',
+    products: mappedWp,
+    source: 'wordpress',
   };
 }
 
@@ -692,21 +675,21 @@ export async function getServicesAndRentals(): Promise<{
   const classicPacks = normalizePackGridSpans(
     wpClassic.length > 0
       ? wpClassic
-      : FALLBACK_DECORATION_PACKS.filter((p) => p.lineSlug === 'linea-clasica')
+      : (wpPackNodes.length === 0 ? FALLBACK_DECORATION_PACKS.filter((p) => p.lineSlug === 'linea-clasica') : [])
   );
 
   const thematicPacks = normalizePackGridSpans(
     wpThematic.length > 0
       ? wpThematic
-      : FALLBACK_DECORATION_PACKS.filter((p) => p.lineSlug === 'linea-tematica-infantil')
+      : (wpPackNodes.length === 0 ? FALLBACK_DECORATION_PACKS.filter((p) => p.lineSlug === 'linea-tematica-infantil') : [])
   );
 
   const rentals =
     wpRentalNodes.length > 0
       ? wpRentalNodes.map((node) => mapWPProductToRental(node))
-      : [...FALLBACK_FURNITURE_RENTALS];
+      : (wpRentalNodes.length === 0 && wpPackNodes.length === 0 ? [...FALLBACK_FURNITURE_RENTALS] : []);
 
-  const allFromWp = wpClassic.length > 0 && wpThematic.length > 0 && wpRentalNodes.length > 0;
+  const allFromWp = wpClassic.length > 0 && wpRentalNodes.length > 0;
   const noneFromWp = wpPackNodes.length === 0 && wpRentalNodes.length === 0;
 
   return {

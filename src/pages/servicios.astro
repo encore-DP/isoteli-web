@@ -300,29 +300,33 @@ const occasionServices = [
           </div>
 
           <!-- Filtro rápido por Línea de Paquetes -->
-          <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
-            <button
-              type="button"
-              data-pack-line-btn="all"
-              class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-colors cursor-pointer"
-            >
-              Todas las Líneas ({classicPacks.length + thematicPacks.length})
-            </button>
-            <button
-              type="button"
-              data-pack-line-btn="linea-clasica"
-              class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-            >
-              Línea Clásica ({classicPacks.length})
-            </button>
-            <button
-              type="button"
-              data-pack-line-btn="linea-tematica-infantil"
-              class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-            >
-              Línea Temática Infantil / Baby ({thematicPacks.length})
-            </button>
-          </div>
+          {
+            thematicPacks.length > 0 && (
+              <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
+                <button
+                  type="button"
+                  data-pack-line-btn="all"
+                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-colors cursor-pointer"
+                >
+                  Todas las Líneas ({classicPacks.length + thematicPacks.length})
+                </button>
+                <button
+                  type="button"
+                  data-pack-line-btn="linea-clasica"
+                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                >
+                  Línea Clásica ({classicPacks.length})
+                </button>
+                <button
+                  type="button"
+                  data-pack-line-btn="linea-tematica-infantil"
+                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                >
+                  Línea Temática Infantil / Baby ({thematicPacks.length})
+                </button>
+              </div>
+            )
+          }
         </div>
 
         <!-- Mosaico Modular Dinámico: Línea Clásica y Línea Temática Infantil -->

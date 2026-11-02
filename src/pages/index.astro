@@ -26,6 +26,8 @@ function pickUniqueProducts(preferred: readonly (typeof products)[number][], lim
 
 const wpOriginProducts = products.filter((p) => !p.id.startsWith('fb-'));
 
+const heroProduct = products.find((p) => p.slug === 'rosas') || products[0];
+
 const collectionHighlights = pickUniqueProducts([
   ...wpOriginProducts,
   ...products.filter((p) => p.featuredOnHome === 'collection' || p.featuredOnHome === 'both'),
@@ -132,32 +134,39 @@ const testimonials = [
             <div class="relative w-full max-w-lg aspect-[4/4.8] sm:aspect-[4/4.5] rounded-3xl overflow-hidden shadow-2xl bg-surface-container">
               <img
                 class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
-                alt="Ramo silvestre Amanecer Misti con rosas durazno, ranúnculos crema, gerberas coral y eucalipto fresco en papel artesanal ISOTELI"
+                alt={heroProduct ? `${heroProduct.name} - ISOTELI Florería Arequipa` : 'Arreglos Florales Exclusivos en Arequipa'}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJURc8yWFkGU4yVxjvcxQw_--Berh-BocPFih3LineN5r3SCoF5velUvsU5VIDF-MRWMRNVz41THocRCoW_UpnCALcuRyokcXRMvoynWOqyJ_7c6xP7BJnTFAUJdomVuyQs8sI64QfGrz5D7SwQRjyPgRAc4RgGo4ksjLegWGMaZL-vw8maYHIi701EuxM8XVJIiZrPPLfWp6krLaEYVRX4guDY8Epk1y0deNzIZKRkJqGa9477K-Qdw"
                 onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
               />
 
               <!-- Etiqueta Flotante de Producto Signature -->
-              <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-xs bg-surface-container-lowest/95 backdrop-blur-md p-4 rounded-2xl shadow-lg flex items-center justify-between gap-4">
-                <div class="flex flex-col">
-                  <span class="font-label-md text-label-md uppercase tracking-wider text-primary">
-                    Ramo Silvestre
-                  </span>
-                  <span class="font-headline-sm text-headline-sm text-primary font-bold">Amanecer Misti</span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">
-                    Con rosas de exportación &amp; follaje fino
-                  </span>
-                </div>
-                <a
-                  aria-label="Pedir Ramo Amanecer Misti por WhatsApp"
-                  class="h-10 w-10 rounded-full bg-primary hover:bg-primary-container text-on-primary flex items-center justify-center shrink-0 transition-colors"
-                  href={buildWhatsAppUrl('Hola ISOTELI, quisiera el Ramo Amanecer Misti')}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_forward</span>
-                </a>
-              </div>
+              {
+                heroProduct && (
+                  <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-xs bg-surface-container-lowest/95 backdrop-blur-md p-4 rounded-2xl shadow-lg flex items-center justify-between gap-4">
+                    <a href={`/producto/${heroProduct.slug}`} class="flex flex-col group/hero text-left">
+                      <span class="font-label-md text-label-md uppercase tracking-wider text-primary">
+                        {heroProduct.categoryLabel}
+                      </span>
+                      <span class="font-headline-sm text-headline-sm text-primary font-bold group-hover/hero:underline">
+                        {heroProduct.name}
+                      </span>
+                      <span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">
+                        {heroProduct.formattedPrice} • Con rosas de exportación
+                      </span>
+                    </a>
+
+                    <a
+                      aria-label={`Pedir ${heroProduct.name} por WhatsApp`}
+                      class="h-10 w-10 rounded-full bg-primary hover:bg-primary-container text-on-primary flex items-center justify-center shrink-0 transition-colors"
+                      href={buildWhatsAppUrl(`Hola ISOTELI, quisiera pedir: ${heroProduct.name} (${heroProduct.formattedPrice})`)}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_forward</span>
+                    </a>
+                  </div>
+                )
+              }
 
               <!-- Insignia de Frescura -->
               <div class="absolute top-5 right-5 bg-surface-container-lowest/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-primary font-label-md text-label-md shadow-sm flex items-center gap-1.5">
