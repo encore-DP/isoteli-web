@@ -10,9 +10,11 @@ const { product, related } = await getProductBySlug(primarySlug);
 
 <!-- ================= VISTA INSIGNIA DE DETALLE DE PRODUCTO (MIGRACIÓN DIRECTA STITCH) ================= -->
 <Layout
-  title={`${product.name} | Detalle de Producto`}
+  title={`${product.name} | Detalle de Producto | ISOTELI Florería Arequipa`}
   description={product.shortDescription}
   ogImage={product.imageUrl}
+  canonicalPath={`/producto/${product.slug}`}
+  noindex={true}
 >
   <ProductDetailView product={product} relatedProducts={related} />
 </Layout>

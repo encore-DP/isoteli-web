@@ -7,8 +7,14 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getServicesAndRentals } from '../lib/wp-graphql';
+import { getBreadcrumbSchema } from '../lib/seo-schema';
 
 const { classicPacks, thematicPacks, rentals } = await getServicesAndRentals();
+
+const breadcrumbSchema = getBreadcrumbSchema([
+  { name: 'Inicio', path: '/' },
+  { name: 'Servicios de Decoración', path: '/servicios' },
+]);
 
 // Separación visual para el mosaico panorámico de Línea Temática (Fila 2: 2 tarjetas; Fila 3: panorámica)
 const thematicRowPacks = thematicPacks.filter((p) => p.variant !== 'panoramic');
@@ -151,8 +157,9 @@ const occasionServices = [
 ---
 
 <Layout
-  title="Servicios de Decoración & Alquiler de Mobiliario"
-  description="Paquetes de decoración de eventos en Arequipa (Línea Clásica desde S/ 150 y Línea Temática Infantil desde S/ 250) y alquiler de mobiliario y accesorios."
+  title="Decoración de Eventos en Arequipa | Packs ISOTELI"
+  description="Servicio de decoración de eventos y ambientación floral en Arequipa: cumpleaños, bautizos y pedidas. Packs completos y alquiler de mobiliario. ¡Cotiza ya!"
+  schema={breadcrumbSchema}
 >
   <div class="flex flex-col w-full">
     <!-- ================= FRANJA SUPERIOR DE GARANTÍAS DE EVENTOS ================= -->
@@ -165,11 +172,11 @@ const occasionServices = [
           <div class="lg:col-span-7 flex flex-col gap-4" data-aos="fade-right">
             <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md uppercase tracking-widest w-max">
               <span class="material-symbols-outlined text-[16px]" aria-hidden="true">event_available</span>
-              <span>Cotizador &amp; Asesoría Personalizada</span>
+              <span>Cotizador &amp; Asesoría en Arequipa</span>
             </div>
 
             <h1 class="font-headline-lg text-headline-lg text-primary font-bold leading-tight">
-              Cotiza la Ambientación para tu Celebración
+              Decoración de Eventos en Arequipa &amp; Ambientación Floral
             </h1>
 
             <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">

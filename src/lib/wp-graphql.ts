@@ -435,7 +435,7 @@ function mapWPProductToCatalog(node: WPProductNode, index: number): CatalogProdu
     .filter((img): img is { sourceUrl: string; altText?: string | null } => Boolean(img.sourceUrl))
     .map((img) => ({
       url: img.sourceUrl,
-      alt: stripHtmlAndDecode(img.altText) || node.name,
+      alt: stripHtmlAndDecode(img.altText) || `${node.name} - Florería en Arequipa`,
     }));
 
   const cleanShortDesc =

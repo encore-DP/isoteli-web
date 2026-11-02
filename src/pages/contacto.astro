@@ -3,6 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import { AREQUIPA_DISTRICTS, ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { getBreadcrumbSchema } from '../lib/seo-schema';
+
+const breadcrumbSchema = getBreadcrumbSchema([
+  { name: 'Inicio', path: '/' },
+  { name: 'Contacto & Pedidos', path: '/contacto' },
+]);
 
 const assurancePills = [
   { icon: 'schedule', title: 'Mismo Día', subtitle: 'Entrega de 1h a 3h' },
@@ -70,8 +76,9 @@ const promiseVignetteUrl =
 ---
 
 <Layout
-  title="Contacto & Pedidos | Cotización Floral y Cobertura en Arequipa"
-  description="Cotiza tu arreglo floral o decoración de eventos en Arequipa con ISOTELI. Atención inmediata al WhatsApp +51 904 803 219, tienda 100% virtual y oficina de eventos en Urb. Santa María de Lambramani A15."
+  title="Contacto y Pedidos | Florería en Arequipa | ISOTELI"
+  description="Pide tus flores a domicilio en Arequipa al WhatsApp +51 904 803 219. Entregas en 1h a 3h, fotos previas y atención personalizada. ¡Escríbenos hoy mismo!"
+  schema={breadcrumbSchema}
 >
   <div class="flex flex-col w-full">
     <!-- ================= CABECERA EDITORIAL Y FRANJA DE GARANTÍAS ================= -->
@@ -116,6 +123,7 @@ const promiseVignetteUrl =
         </div>
 
         <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary tracking-tight leading-tight">
+          <span class="block text-primary font-label-md text-xs sm:text-sm uppercase tracking-widest font-semibold mb-2">Florería en Arequipa • Pedidos &amp; Consultas</span>
           Hablemos de Flores &amp; <span class="italic font-light text-on-surface">Momentos Especiales</span>
         </h1>
 

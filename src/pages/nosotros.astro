@@ -12,6 +12,12 @@ import {
   buildWhatsAppUrl,
 } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
+import { getBreadcrumbSchema } from '../lib/seo-schema';
+
+const breadcrumbSchema = getBreadcrumbSchema([
+  { name: 'Inicio', path: '/' },
+  { name: 'Sobre Nosotros', path: '/nosotros' },
+]);
 
 const assuranceItems = [
   {
@@ -83,8 +89,9 @@ const studioImageUrl =
 ---
 
 <Layout
-  title="Nosotros | Historia, Misión, Visión y Valores"
-  description="Conoce la historia, misión, visión y valores de ISOTELI Flores y Detalles en Arequipa: Creatividad, Calidad, Puntualidad y Amabilidad, junto con nuestra cobertura de delivery."
+  title="Sobre Nosotros | Florería ISOTELI en Arequipa"
+  description="Conoce a ISOTELI: atelier floral en Arequipa dedicado a crear momentos inolvidables con flores frescas, diseño botánico de autor y entregas puntuales."
+  schema={breadcrumbSchema}
 >
   <div class="flex flex-col w-full">
     <!-- ================= SECCIÓN HERO EDITORIAL: MANIFIESTO BOTÁNICO ================= -->
@@ -106,12 +113,12 @@ const studioImageUrl =
           <div class="lg:col-span-7 flex flex-col gap-4" data-aos="fade-right" data-aos-delay="100">
             <div class="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md tracking-wider font-semibold">
               <span class="material-symbols-outlined icon-filled text-[15px]" aria-hidden="true">spa</span>
-              <span>MANIFIESTO BOTÁNICO AREQUIPEÑO</span>
+              <span>ATELIER FLORAL EN AREQUIPA</span>
             </div>
 
             <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary tracking-tight">
               Nuestra Historia &amp; <br class="hidden sm:inline" />
-              <span class="italic font-normal text-on-surface">Pasión Botánica</span>
+              <span class="italic font-normal text-on-surface">Pasión Botánica en Arequipa</span>
             </h1>
 
             <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">

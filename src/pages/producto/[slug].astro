@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ProductDetailView from '../../components/ProductDetailView.astro';
 import { getCatalogProducts, type CatalogProduct } from '../../lib/wp-graphql';
+import { getProductSchema, getBreadcrumbSchema, SITE_URL } from '../../lib/seo-schema';
 
 export async function getStaticPaths() {
   const { products } = await getCatalogProducts();
@@ -28,13 +29,29 @@ interface Props {
 }
 
 const { product, relatedProducts } = Astro.props;
+
+const canonicalUrl = `${SITE_URL}/producto/${product.slug}`;
+const pageTitle = `${product.name} en Arequipa | Florería ISOTELI`;
+const pageDescription = `Compra ${product.name} en Arequipa desde ${product.formattedPrice}. Arreglo floral fresco para toda ocasión con entrega a domicilio hoy mismo. ¡Pide por WhatsApp!`;
+
+const productSchemas = [
+  getProductSchema(product, canonicalUrl),
+  getBreadcrumbSchema([
+    { name: 'Inicio', path: '/' },
+    { name: 'Catálogo', path: '/catalogo' },
+    { name: product.categoryLabel, path: '/catalogo' },
+    { name: product.name, path: `/producto/${product.slug}` },
+  ]),
+];
 ---
 
 <!-- ================= PÁGINA DINÁMICA DE DETALLE DE PRODUCTO (WPGRAPHQL) ================= -->
 <Layout
-  title={`${product.name} | ${product.categoryLabel}`}
-  description={product.shortDescription}
+  title={pageTitle}
+  description={pageDescription}
   ogImage={product.imageUrl}
+  canonicalPath={`/producto/${product.slug}`}
+  schema={productSchemas}
 >
   <ProductDetailView product={product} relatedProducts={relatedProducts} />
 </Layout>

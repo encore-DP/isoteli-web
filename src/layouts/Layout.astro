@@ -7,21 +7,42 @@ import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import { Image } from 'astro:assets';
 import logoFavicon from '../assets/logo/favicon.svg';
+import { getFloristSchema, SITE_URL } from '../lib/seo-schema';
+
 export interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  canonicalPath?: string;
+  schema?: Record<string, any> | Array<Record<string, any>>;
+  noindex?: boolean;
 }
 
 const {
   title,
-  description = 'ISOTELI Flores y Detalles: Atelier floral 100% virtual en Arequipa. Ramos de rosas, cajas florales, chocolates La Ibérica, decoración de eventos y alquiler de mobiliario.',
-  ogImage = '/images/producto_sin_foto.svg',
+  description = 'ISOTELI Flores y Detalles: Florería en Arequipa con delivery el mismo día. Ramos de rosas, cajas florales personalizadas y decoración de eventos.',
+  ogImage = '/images/placeholder-floral.svg',
+  canonicalPath,
+  schema,
+  noindex = false,
 } = Astro.props;
 
 const fullTitle = title.includes('ISOTELI')
   ? title
-  : `${title} | ISOTELI Florería & Decoración Arequipa`;
+  : `${title} | ISOTELI Florería Arequipa`;
+
+const rawPath = Astro.url.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+const cleanPath = canonicalPath ?? (rawPath || '/');
+const canonicalUrl = `${SITE_URL}${cleanPath === '/' ? '' : cleanPath}`;
+const absoluteOgImage = ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`;
+
+// Construcción del grafo de Schema.org unificado
+const extraSchemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
+const jsonLdGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [getFloristSchema(), ...extraSchemas],
+};
+const jsonLdString = JSON.stringify(jsonLdGraph);
 ---
 
 <!doctype html>
@@ -32,14 +53,40 @@ const fullTitle = title.includes('ISOTELI')
     <!-- Favicon Oficial ISOTELI (src/assets/logo/favicon.svg) -->
     <link rel="icon" type="image/svg+xml" href={logoFavicon.src} />
 
-    <!-- Metadatos SEO Dinámicos -->
+    <!-- Metadatos SEO Primarios -->
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
+
+    <!-- Local SEO Geo-Tags para Arequipa, Perú -->
+    <meta name="geo.region" content="PE-ARE" />
+    <meta name="geo.placename" content="Arequipa" />
+    <meta name="geo.position" content="-16.413809;-71.520988" />
+    <meta name="ICBM" content="-16.413809, -71.520988" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:site_name" content="ISOTELI Florería Arequipa" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_PE" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={absoluteOgImage} />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+
+    <!-- Datos Estructurados JSON-LD (@graph Schema.org) -->
+    <script type="application/ld+json" set:html={jsonLdString} />
 
     <!-- Tipografías Editoriales: Playfair Display (Títulos) y Poppins (Textos) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

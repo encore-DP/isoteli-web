@@ -7,6 +7,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { ISOTELI_VALUES, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getCatalogProducts } from '../lib/wp-graphql';
+import { getWebSiteSchema } from '../lib/seo-schema';
 
 const { products } = await getCatalogProducts();
 
@@ -73,8 +74,9 @@ const testimonials = [
 ---
 
 <Layout
-  title="ISOTELI Florería & Decoración | Arequipa"
-  description="Arreglos florales exclusivos, cajas de rosas, girasoles, chocolates La Ibérica y decoración integral de eventos en Arequipa. Delivery gratis desde S/ 99.90."
+  title="Florería en Arequipa | Flores y Rosas a Domicilio | ISOTELI"
+  description="Envío de flores y rosas a domicilio en Arequipa el mismo día. Arreglos florales, cajas y eventos con delivery gratis desde S/99.90. ¡Pide hoy por WhatsApp!"
+  schema={getWebSiteSchema()}
 >
   <div class="flex flex-col w-full">
     <!-- ================= SECCIÓN HERO ================= -->
@@ -93,6 +95,7 @@ const testimonials = [
 
             <div class="flex flex-col">
               <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary font-bold tracking-tight leading-[1.08]">
+                <span class="block text-primary font-label-md text-xs sm:text-sm uppercase tracking-widest font-semibold mb-2">Florería en Arequipa • Envíos a Domicilio</span>
                 MÁS GRANDE. <br />
                 <span class="text-primary-container italic font-normal">MÁS VIBRANTE.</span> <br />
                 INOLVIDABLE.
@@ -134,8 +137,13 @@ const testimonials = [
             <div class="relative w-full max-w-lg aspect-[4/4.8] sm:aspect-[4/4.5] rounded-3xl overflow-hidden shadow-2xl bg-surface-container">
               <img
                 class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
-                alt={heroProduct ? `${heroProduct.name} - ISOTELI Florería Arequipa` : 'Arreglos Florales Exclusivos en Arequipa'}
+                alt={heroProduct ? `${heroProduct.name} - Ramo de flores frescas a domicilio en Arequipa - ISOTELI` : 'Arreglos Florales y Ramos de Rosas a Domicilio en Arequipa - ISOTELI'}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJURc8yWFkGU4yVxjvcxQw_--Berh-BocPFih3LineN5r3SCoF5velUvsU5VIDF-MRWMRNVz41THocRCoW_UpnCALcuRyokcXRMvoynWOqyJ_7c6xP7BJnTFAUJdomVuyQs8sI64QfGrz5D7SwQRjyPgRAc4RgGo4ksjLegWGMaZL-vw8maYHIi701EuxM8XVJIiZrPPLfWp6krLaEYVRX4guDY8Epk1y0deNzIZKRkJqGa9477K-Qdw"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                width="600"
+                height="720"
                 onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
               />
 
@@ -191,9 +199,9 @@ const testimonials = [
         <div>
           <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md uppercase tracking-wider mb-1">
             <span class="material-symbols-outlined text-[16px]" aria-hidden="true">filter_vintage</span>
-            <span>Catálogo Exclusivo</span>
+            <span>Catálogo Exclusivo en Arequipa</span>
           </div>
-          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Nuestras Colecciones</h2>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Nuestras Colecciones de Flores</h2>
         </div>
 
         <a
@@ -359,7 +367,7 @@ const testimonials = [
             <span class="material-symbols-outlined text-[16px]" aria-hidden="true">stars</span>
             <span>Los Más Solicitados</span>
           </div>
-          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Favoritos en Arequipa</h2>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Favoritos en Arequipa: Arreglos Más Pedidos</h2>
         </div>
 
         <div class="flex items-center gap-2">
@@ -395,7 +403,7 @@ const testimonials = [
             <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
             <span class="material-symbols-outlined icon-filled text-[20px]" aria-hidden="true">star</span>
           </div>
-          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Voces de Nuestra Comunidad</h2>
+          <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Voces de Nuestra Comunidad en Arequipa</h2>
           <p class="font-body-md text-body-md text-on-surface-variant mt-1">
             Entregas puntuales, frescura garantizada y sonrisas compartidas en toda la Ciudad Blanca.
           </p>
