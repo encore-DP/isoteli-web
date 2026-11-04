@@ -1,15 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import ProductCard from '../components/ProductCard.astro';
 import OccasionsSection from '../components/OccasionsSection.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { ISOTELI_VALUES, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
-import { getCatalogProducts } from '../lib/wp-graphql';
+import { getCatalogProducts, getServicesAndRentals } from '../lib/wp-graphql';
 import { getWebSiteSchema } from '../lib/seo-schema';
 
 const { products } = await getCatalogProducts();
+const { classicPacks } = await getServicesAndRentals();
 
 // Selección sin duplicados priorizando los productos reales publicados en WordPress
 function pickUniqueProducts(preferred: readonly (typeof products)[number][], limit = 4) {
@@ -26,8 +28,6 @@ function pickUniqueProducts(preferred: readonly (typeof products)[number][], lim
 }
 
 const wpOriginProducts = products.filter((p) => !p.id.startsWith('fb-'));
-
-const heroProduct = products.find((p) => p.slug === 'rosas') || products[0];
 
 const collectionHighlights = pickUniqueProducts([
   ...wpOriginProducts,
@@ -79,113 +79,8 @@ const testimonials = [
   schema={getWebSiteSchema()}
 >
   <div class="flex flex-col w-full">
-    <!-- ================= SECCIÓN HERO ================= -->
-    <section class="relative w-full px-margin-mobile mt-10 md:px-margin pb-space-lg overflow-hidden" data-aos="fade-up">
-      <div class="relative w-full bg-gradient-to-br from-[#fae7db] via-[#f7eee2] to-[#ede3d5] rounded-xl lg:rounded-3xl p-6 sm:p-10 lg:p-16 overflow-hidden shadow-[0_8px_30px_rgba(194,101,42,0.12)]">
-        <!-- Formas Orgánicas Curvas en Paleta Terracota Cálido -->
-        <div class="absolute -top-16 -right-16 w-96 h-96 rounded-full bg-primary-fixed/50 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] rounded-full bg-primary-container/20 blur-3xl pointer-events-none"></div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-          <!-- Columna Izquierda: Mensaje Principal y Llamadas a la Acción -->
-          <div class="lg:col-span-6 flex flex-col items-start gap-5 max-w-xl" data-aos="fade-right" data-aos-delay="100">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-md text-label-md uppercase tracking-widest shadow-sm">
-              <span class="material-symbols-outlined text-[15px]" aria-hidden="true">filter_vintage</span>
-              <span>Atelier Floral en Arequipa</span>
-            </div>
-
-            <div class="flex flex-col">
-              <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary font-bold tracking-tight leading-[1.08]">
-                <span class="block text-primary font-label-md text-xs sm:text-sm uppercase tracking-widest font-semibold mb-2">Florería en Arequipa • Envíos a Domicilio</span>
-                MÁS GRANDE. <br />
-                <span class="text-primary-container italic font-normal">MÁS VIBRANTE.</span> <br />
-                INOLVIDABLE.
-              </h1>
-            </div>
-
-            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg leading-relaxed">
-              Arreglos florales y decoraciones exclusivas pensadas para celebrar el amor, la vida y cada momento memorable bajo el cielo arequipeño.
-            </p>
-
-            <div class="flex flex-wrap items-center gap-3 pt-2 w-full sm:w-auto">
-              <a
-                class="inline-flex items-center justify-center gap-2.5 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-full font-label-lg text-label-lg shadow-[0_8px_20px_rgba(194,101,42,0.28)] hover:scale-[1.02] active:scale-[0.98] transition-all"
-                href="/catalogo"
-              >
-                <span>Ver Colección</span>                
-              </a>
-
-              <a
-                class="inline-flex items-center justify-center gap-2 bg-secondary-container hover:bg-secondary text-secondary hover:text-on-secondary px-6 py-3.5 rounded-full font-label-lg text-label-lg shadow-sm hover:shadow-md transition-all"
-                href={buildWhatsAppUrl('Hola ISOTELI, quisiera consultar por un arreglo personalizado')}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <WhatsAppIcon class="w-[18px] h-[18px]" />
-                <span>Cotizar al WhatsApp</span>
-              </a>
-            </div>
-
-            <div class="flex items-center gap-2 pt-4" aria-hidden="true">
-              <span class="w-7 h-2 rounded-full bg-primary transition-all"></span>
-              <span class="w-2 h-2 rounded-full bg-on-surface-variant/30"></span>
-              <span class="w-2 h-2 rounded-full bg-on-surface-variant/30"></span>
-            </div>
-          </div>
-
-          <!-- Columna Derecha: Composición Floral Destacada -->
-          <div class="lg:col-span-6 relative flex justify-center lg:justify-end" data-aos="fade-left" data-aos-delay="200">
-            <div class="relative w-full max-w-lg aspect-[4/4.8] sm:aspect-[4/4.5] rounded-3xl overflow-hidden shadow-2xl bg-surface-container">
-              <img
-                class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
-                alt={heroProduct ? `${heroProduct.name} - Ramo de flores frescas a domicilio en Arequipa - ISOTELI` : 'Arreglos Florales y Ramos de Rosas a Domicilio en Arequipa - ISOTELI'}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJURc8yWFkGU4yVxjvcxQw_--Berh-BocPFih3LineN5r3SCoF5velUvsU5VIDF-MRWMRNVz41THocRCoW_UpnCALcuRyokcXRMvoynWOqyJ_7c6xP7BJnTFAUJdomVuyQs8sI64QfGrz5D7SwQRjyPgRAc4RgGo4ksjLegWGMaZL-vw8maYHIi701EuxM8XVJIiZrPPLfWp6krLaEYVRX4guDY8Epk1y0deNzIZKRkJqGa9477K-Qdw"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                width="600"
-                height="720"
-                onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
-              />
-
-              <!-- Etiqueta Flotante de Producto Signature -->
-              {
-                heroProduct && (
-                  <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:max-w-xs bg-surface-container-lowest/95 backdrop-blur-md p-4 rounded-2xl shadow-lg flex items-center justify-between gap-4">
-                    <a href={`/producto/${heroProduct.slug}`} class="flex flex-col group/hero text-left">
-                      <span class="font-label-md text-label-md uppercase tracking-wider text-primary">
-                        {heroProduct.categoryLabel}
-                      </span>
-                      <span class="font-headline-sm text-headline-sm text-primary font-bold group-hover/hero:underline">
-                        {heroProduct.name}
-                      </span>
-                      <span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">
-                        {heroProduct.formattedPrice} • Con rosas de exportación
-                      </span>
-                    </a>
-
-                    <a
-                      aria-label={`Pedir ${heroProduct.name} por WhatsApp`}
-                      class="h-10 w-10 rounded-full bg-primary hover:bg-primary-container text-on-primary flex items-center justify-center shrink-0 transition-colors"
-                      href={buildWhatsAppUrl(`Hola ISOTELI, quisiera pedir: ${heroProduct.name} (${heroProduct.formattedPrice})`)}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_forward</span>
-                    </a>
-                  </div>
-                )
-              }
-
-              <!-- Insignia de Frescura -->
-              <div class="absolute top-5 right-5 bg-surface-container-lowest/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-primary font-label-md text-label-md shadow-sm flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span>100% Flores Frescas</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- ================= SECCIÓN HERO CARRUSEL DINÁMICO (3 SLIDES) ================= -->
+    <HeroCarousel products={products} decorationPacks={classicPacks} />
 
     <!-- ================= BARRA DE CONFIANZA Y VALORES ================= -->
     <TrustStrip items={trustItems} variant="values" />

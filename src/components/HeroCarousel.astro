@@ -1,0 +1,531 @@
+---
+import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import type { CatalogProduct, ServicePack } from '../lib/wp-graphql';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+
+export interface Props {
+  products?: readonly CatalogProduct[];
+  decorationPacks?: readonly ServicePack[];
+}
+
+const { products = [], decorationPacks = [] } = Astro.props;
+
+/* ==========================================================================
+   DATOS DINÁMICOS DEL SLIDE 1 (NUESTROS DESTACADOS)
+   Extraídos de WooCommerce o con fallback exacto al diseño aprobado
+   ========================================================================== */
+const defaultFeaturedItems = [
+  {
+    name: 'Caja Isoteli con Rosas',
+    formattedPrice: 'S/ 45.00',
+    slug: 'girasoles',
+    fallbackThumb: '/images/hero/thumb-caja-rosas.webp',
+  },
+  {
+    name: 'Caja Isoteli con Girasoles',
+    formattedPrice: 'S/ 45.00',
+    slug: 'caja-isoteli-con-girasoles',
+    fallbackThumb: '/images/hero/thumb-caja-girasoles.webp',
+  },
+  {
+    name: 'Box Vibrante',
+    formattedPrice: 'S/ 75.00',
+    slug: 'box-vibrante',
+    fallbackThumb: '/images/hero/thumb-box-vibrante.webp',
+  },
+] as const;
+
+const slide1Products = defaultFeaturedItems.map((item) => {
+  const match = products.find(
+    (p) =>
+      p.slug === item.slug ||
+      p.name.toLowerCase().includes(item.name.toLowerCase().replace('caja isoteli con ', ''))
+  );
+
+  const hasRealImage = match?.imageUrl && !match.imageUrl.includes('producto_sin_foto');
+
+  return {
+    name: match?.name || item.name,
+    formattedPrice: match?.formattedPrice || item.formattedPrice,
+    slug: match?.slug || item.slug,
+    thumb: hasRealImage ? match!.imageUrl : item.fallbackThumb,
+    productUrl: `/producto/${match?.slug || item.slug}`,
+    waUrl: buildWhatsAppUrl(
+      `Hola ISOTELI, quisiera pedir: ${match?.name || item.name} (${match?.formattedPrice || item.formattedPrice})`
+    ),
+  };
+});
+
+/* ==========================================================================
+   DATOS DINÁMICOS DEL SLIDE 2 (DECORACIÓN DE EVENTOS)
+   Precios dinámicos de packs WooCommerce con fallback seguro
+   ========================================================================== */
+const petitPack = decorationPacks.find((p) => /petit/i.test(p.name || p.slug));
+const goldPack = decorationPacks.find((p) => /gold/i.test(p.name || p.slug));
+const deluxePack = decorationPacks.find((p) => /deluxe/i.test(p.name || p.slug));
+
+const petitPrice = petitPack?.formattedPrice?.replace('.00', '').replace(/\s+/g, '') || 'S/150';
+const goldPrice = goldPack?.formattedPrice?.replace('.00', '').replace(/\s+/g, '') || 'S/250';
+const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/g, '') || 'S/490';
+---
+
+<!-- ================= CARRUSEL HERO DINÁMICO ISOTELI (3 SLIDES) ================= -->
+<section
+  class="relative w-full px-margin-mobile mt-4 sm:mt-6 md:px-margin pb-space-sm sm:pb-space-md overflow-hidden"
+  data-aos="fade-up"
+  aria-roledescription="carousel"
+  aria-label="Promociones y Colecciones Destacadas de ISOTELI"
+>
+  <div
+    id="hero-carousel-container"
+    class="relative w-full bg-[#FAF4EE] rounded-2xl lg:rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(80,14,5,0.08)] border border-[#ECD9CC]/70 group select-none"
+  >
+    <!-- 1. CAPA DE FONDO CON PATRÓN FLORAL Y LAZOS (LOCAL: src/assets/patron_isoteli.png) -->
+    <div
+      class="absolute inset-0 pointer-events-none opacity-20 bg-repeat z-0"
+      style="background-image: url('/images/patron_isoteli.png'); background-size: 420px auto; filter: blur(0.6px);"
+      aria-hidden="true"
+    ></div>
+
+    <!-- 2. DEGRADADO SUAVE DE CONTRASTE EDITORIAL -->
+    <div
+      class="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#FAF4EE]/95 via-[#FAF4EE]/75 to-[#FAF4EE]/35 z-0"
+      aria-hidden="true"
+    ></div>
+
+    <!-- 3. CONTENEDOR DE SLIDES TRANSICIONABLES -->
+    <div class="relative w-full min-h-[460px] sm:min-h-[400px] lg:min-h-[360px] z-10 flex">
+      <!-- ===================================================================
+           SLIDE 1: SERVICIO DE FLORERÍA ("NUESTROS DESTACADOS")
+           =================================================================== -->
+      <article
+        data-hero-slide="0"
+        class="hero-slide w-full flex-none transition-opacity duration-700 ease-in-out opacity-100 z-10 p-6 sm:p-8 lg:p-10 flex flex-col justify-between min-h-[460px] sm:min-h-[400px] lg:min-h-[360px]"
+        aria-label="Slide 1 de 3: Nuestros Productos Destacados"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center flex-1 w-full">
+          <!-- Columna Izquierda: Insignia + Textos + CTA -->
+          <div class="lg:col-span-5 xl:col-span-4 flex flex-col items-start gap-4 sm:gap-5 max-w-md">
+            <div class="flex flex-col">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#ECD9CC] text-[#500e05] text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-2.5 w-fit shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true"></span>
+                <span>100% Flores Frescas</span>
+              </span>
+              <h1 class="font-serif text-2xl sm:text-3xl lg:text-4xl xl:text-[40px] font-bold tracking-tight text-[#500e05] uppercase leading-tight">
+                <span class="sr-only">Florería en Arequipa • Envíos a Domicilio - </span>
+                NUESTROS DESTACADOS
+              </h1>
+              <p class="font-sans text-sm sm:text-base lg:text-lg text-[#55423f] font-normal mt-1">
+                Detalles que enamoran
+              </p>
+            </div>
+
+            <!-- Botón CTA único: Ver catálogo -->
+            <div class="pt-1 sm:pt-2">
+              <a
+                href="/catalogo"
+                class="inline-flex items-center justify-center bg-[#500e05] hover:bg-[#6e2417] text-white font-sans text-xs sm:text-sm font-semibold px-6 sm:px-7 py-2.5 sm:py-3 rounded-full transition-all shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Ver catálogo</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Grilla de los 3 Productos Destacados (1x1 con nombre y precio DEBAJO) -->
+          <div class="lg:col-span-7 xl:col-span-8 w-full">
+            <div class="grid grid-cols-3 gap-2.5 sm:gap-3.5 lg:gap-4.5 w-full">
+              {
+                slide1Products.map((prod) => (
+                  <a
+                    href={prod.productUrl}
+                    class="bg-white/95 hover:bg-white rounded-2xl p-2 sm:p-3 shadow-xs hover:shadow-md border border-[#ECD9CC] hover:border-primary/40 flex flex-col transition-all group/card focus:outline-none"
+                    aria-label={`Ver producto: ${prod.name}`}
+                  >
+                    <!-- Imagen en proporción 1x1 -->
+                    <div class="w-full aspect-square rounded-xl overflow-hidden bg-[#FAF4EE] shrink-0 relative">
+                      <img
+                        src={prod.thumb}
+                        alt={`${prod.name} - ISOTELI Florería Arequipa`}
+                        loading="eager"
+                        decoding="async"
+                        class="w-full h-full object-cover object-center group-hover/card:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+
+                    <!-- Nombre y Precio DEBAJO de la imagen -->
+                    <div class="flex flex-col mt-2 sm:mt-2.5 flex-1 justify-between">
+                      <span class="text-xs sm:text-[13px] font-bold text-[#500e05] group-hover/card:text-[#6e2417] transition-colors leading-tight line-clamp-2">
+                        {prod.name}
+                      </span>
+                      <div class="flex items-center justify-between mt-1 sm:mt-1.5 pt-0.5">
+                        <span class="text-xs sm:text-[13px] font-bold text-[#6e2417]">
+                          {prod.formattedPrice}
+                        </span>
+                        <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#500e05]/10 group-hover/card:bg-[#500e05] text-[#500e05] group-hover/card:text-white flex items-center justify-center transition-colors shrink-0">
+                          <span class="material-symbols-outlined text-[12px] sm:text-[14px]" aria-hidden="true">
+                            arrow_forward
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacto Inferior Discreto con WhatsApp -->
+        <div class="pt-3 sm:pt-4 flex items-center justify-center sm:justify-start">
+          <a
+            href={buildWhatsAppUrl('Hola ISOTELI, deseo consultar por un arreglo floral')}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-xs text-[#55423f] hover:text-[#500e05] font-medium transition-colors"
+          >
+            <WhatsAppIcon class="w-3.5 h-3.5 text-[#25D366]" />
+            <span>{ISOTELI_CONTACT.phoneDisplay}</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- ===================================================================
+           SLIDE 2: SERVICIO DE DECORACIÓN DE EVENTOS ("DECORACIÓN DE EVENTOS")
+           =================================================================== -->
+      <article
+        data-hero-slide="1"
+        class="hero-slide w-full flex-none transition-opacity duration-700 ease-in-out opacity-0 absolute inset-0 pointer-events-none flex flex-col lg:flex-row justify-between items-stretch overflow-hidden min-h-[460px] sm:min-h-[400px] lg:min-h-[360px]"
+        aria-label="Slide 2 de 3: Decoración de Eventos en Arequipa"
+      >
+        <!-- Columna Izquierda con padding -->
+        <div class="flex-1 p-6 sm:p-8 lg:p-10 flex flex-col justify-between z-10 max-w-xl">
+          <div class="flex flex-col items-start gap-4 sm:gap-5">
+            <div class="flex flex-col">
+              <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl xl:text-[40px] font-bold tracking-tight text-[#500e05] uppercase leading-tight">
+                DECORACIÓN DE EVENTOS
+              </h2>
+              <p class="font-sans text-sm sm:text-base lg:text-lg text-[#55423f] font-normal mt-0.5">
+                Creamos momentos inolvidables
+              </p>
+            </div>
+
+            <!-- Lista en Bullets de los 3 paquetes de decoración -->
+            <ul class="flex flex-col gap-2.5 sm:gap-3 text-xs sm:text-sm text-[#402d29] leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="text-[#500e05] font-bold mt-0.5" aria-hidden="true">•</span>
+                <span>
+                  <strong class="font-bold text-[#500e05]">Pack Petit {petitPrice}</strong> — Backing de 1.5 m de ancho diseñado de forma personalizada
+                </span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#500e05] font-bold mt-0.5" aria-hidden="true">•</span>
+                <span>
+                  <strong class="font-bold text-[#500e05]">Pack Gold {goldPrice}</strong> — Backing de 2.5 m de ancho con mobiliario y accesorios
+                </span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#500e05] font-bold mt-0.5" aria-hidden="true">•</span>
+                <span>
+                  <strong class="font-bold text-[#500e05]">Pack Deluxe {deluxePrice}</strong> — Backing de 3 m de ancho completo para tu celebración
+                </span>
+              </li>
+            </ul>
+
+            <!-- Botón CTA único: Ver Paquetes -->
+            <div class="pt-1">
+              <a
+                href="/servicios"
+                class="inline-flex items-center justify-center bg-white/90 hover:bg-white text-[#500e05] border border-[#d8c2b5] font-sans text-xs sm:text-sm font-semibold px-6 sm:px-7 py-2.5 sm:py-3 rounded-full transition-all shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Ver Paquetes</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Contacto Inferior Discreto con WhatsApp -->
+          <div class="pt-3 sm:pt-4 flex items-center justify-start">
+            <a
+              href={buildWhatsAppUrl('Hola ISOTELI, quisiera cotizar la decoración para un evento')}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-xs text-[#55423f] hover:text-[#500e05] font-medium transition-colors"
+            >
+              <WhatsAppIcon class="w-3.5 h-3.5 text-[#25D366]" />
+              <span>{ISOTELI_CONTACT.phoneDisplay}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Ocupa todo el alto del slide y pegada al extremo derecho -->
+        <div class="w-full lg:w-[44%] xl:w-[42%] h-52 sm:h-64 lg:h-auto shrink-0 relative lg:self-stretch overflow-hidden">
+          <img
+            src="/images/hero/slide2-decoracion.webp"
+            alt="Montaje de decoración de evento con backing circular, globos, flores naturales y neón Feliz Cumpleaños en Arequipa"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover object-center lg:rounded-l-[90px] xl:rounded-l-[110px]"
+          />
+        </div>
+      </article>
+
+      <!-- ===================================================================
+           SLIDE 3: PROMOCIÓN DE FLORES ETERNAS ("FLORES ETERNAS")
+           =================================================================== -->
+      <article
+        data-hero-slide="2"
+        class="hero-slide w-full flex-none transition-opacity duration-700 ease-in-out opacity-0 absolute inset-0 pointer-events-none flex flex-col lg:flex-row justify-between items-stretch overflow-hidden min-h-[460px] sm:min-h-[400px] lg:min-h-[360px]"
+        aria-label="Slide 3 de 3: Ramos de Flores Eternas hechas a mano"
+      >
+        <!-- Columna Izquierda con padding -->
+        <div class="flex-1 p-6 sm:p-8 lg:p-10 flex flex-col justify-between z-10 max-w-xl">
+          <div class="flex flex-col items-start gap-4 sm:gap-5">
+            <div class="flex flex-col">
+              <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-[40px] font-bold tracking-tight text-[#500e05] leading-tight flex items-baseline gap-1">
+                <span class="font-serif italic font-normal text-[1.12em] tracking-normal text-[#6e2417]">F</span>
+                <span class="font-serif uppercase">lores Eternas</span>
+              </h2>
+              <p class="font-sans text-sm sm:text-base lg:text-lg text-[#55423f] font-normal mt-0.5">
+                Hechas a mano con cinta de raso
+              </p>
+            </div>
+
+            <!-- Descripción en bullets compactos -->
+            <div class="flex flex-col gap-1.5 text-xs sm:text-sm text-[#402d29] leading-relaxed">
+              <p class="font-semibold text-[#500e05]">
+                Ramos y arreglos duraderos y personalizados
+              </p>
+              <div class="flex items-center gap-2">
+                <span class="text-[#500e05] font-bold" aria-hidden="true">•</span>
+                <span>El regalo perfecto que nunca se marchita</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[#500e05] font-bold" aria-hidden="true">•</span>
+                <span>Hechos con dedicación y amor</span>
+              </div>
+            </div>
+
+            <!-- Botones CTA: Personalizar mi Ramo + Ver más -->
+            <div class="flex flex-wrap items-center gap-3 pt-1">
+              <a
+                href={buildWhatsAppUrl('Hola ISOTELI, deseo personalizar un ramo de Flores Eternas')}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center bg-[#500e05] hover:bg-[#6e2417] text-white font-sans text-xs sm:text-sm font-semibold px-6 sm:px-7 py-2.5 sm:py-3 rounded-full transition-all shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Personalizar mi Ramo</span>
+              </a>
+
+              <a
+                href="/catalogo"
+                class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-[#500e05] hover:text-[#6e2417] px-3 py-2 transition-colors hover:underline underline-offset-4"
+              >
+                <span>Ver más</span>
+                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Contacto Inferior Discreto con WhatsApp -->
+          <div class="pt-3 sm:pt-4 flex items-center justify-start">
+            <a
+              href={buildWhatsAppUrl('Hola ISOTELI, deseo consultar por un ramo de flores eternas')}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-xs text-[#55423f] hover:text-[#500e05] font-medium transition-colors"
+            >
+              <WhatsAppIcon class="w-3.5 h-3.5 text-[#25D366]" />
+              <span>{ISOTELI_CONTACT.phoneDisplay}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Ocupa todo el alto del slide y pegada al extremo derecho -->
+        <div class="w-full lg:w-[46%] xl:w-[44%] h-52 sm:h-64 lg:h-auto shrink-0 relative lg:self-stretch overflow-hidden">
+          <img
+            src="/images/hero/slide3-flores-eternas.webp"
+            alt="Ramos de flores eternas hechas a mano con cinta de raso en tonos rosa, crema y rojo con luces LED en Arequipa"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover object-center lg:rounded-l-[90px] xl:rounded-l-[110px]"
+          />
+        </div>
+      </article>
+    </div>
+
+    <!-- 4. INDICADORES INFERIORES INTERACTIVOS (DOTS) -->
+    <div
+      class="absolute bottom-3.5 sm:bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2"
+      role="tablist"
+      aria-label="Controles de navegación del carrusel"
+    >
+      <button
+        type="button"
+        data-hero-dot="0"
+        role="tab"
+        aria-selected="true"
+        aria-label="Ver slide 1: Nuestros Destacados"
+        class="hero-dot w-8 h-2 sm:h-2.5 rounded-full bg-[#500e05] transition-all duration-300 cursor-pointer focus:outline-none"
+      ></button>
+      <button
+        type="button"
+        data-hero-dot="1"
+        role="tab"
+        aria-selected="false"
+        aria-label="Ver slide 2: Decoración de Eventos"
+        class="hero-dot w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#500e05]/30 hover:bg-[#500e05]/60 transition-all duration-300 cursor-pointer focus:outline-none"
+      ></button>
+      <button
+        type="button"
+        data-hero-dot="2"
+        role="tab"
+        aria-selected="false"
+        aria-label="Ver slide 3: Flores Eternas"
+        class="hero-dot w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#500e05]/30 hover:bg-[#500e05]/60 transition-all duration-300 cursor-pointer focus:outline-none"
+      ></button>
+    </div>
+
+    <!-- 5. FLECHAS DE NAVEGACIÓN DISCRETAS -->
+    <button
+      type="button"
+      id="hero-prev-btn"
+      aria-label="Slide anterior"
+      class="absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 hover:bg-white text-[#500e05] shadow-sm backdrop-blur-sm flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95 focus:opacity-100 cursor-pointer"
+    >
+      <span class="material-symbols-outlined text-[20px] sm:text-[22px]" aria-hidden="true">chevron_left</span>
+    </button>
+    <button
+      type="button"
+      id="hero-next-btn"
+      aria-label="Siguiente slide"
+      class="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/80 hover:bg-white text-[#500e05] shadow-sm backdrop-blur-sm flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95 focus:opacity-100 cursor-pointer"
+    >
+      <span class="material-symbols-outlined text-[20px] sm:text-[22px]" aria-hidden="true">chevron_right</span>
+    </button>
+  </div>
+</section>
+
+<!-- ================= SCRIPT DE INTERACTIVIDAD NATIVO ZERO-DEPENDENCY ================= -->
+<script>
+  function setupHeroCarousel(): void {
+    const container = document.getElementById('hero-carousel-container');
+    if (!container) return;
+
+    const slides = container.querySelectorAll<HTMLElement>('[data-hero-slide]');
+    const dots = container.querySelectorAll<HTMLButtonElement>('[data-hero-dot]');
+    const prevBtn = document.getElementById('hero-prev-btn');
+    const nextBtn = document.getElementById('hero-next-btn');
+
+    if (slides.length === 0) return;
+
+    let current = 0;
+    const total = slides.length;
+    let timer: number | null = null;
+    const AUTOPLAY_INTERVAL = 6000;
+
+    function goToSlide(target: number): void {
+      current = (target + total) % total;
+
+      slides.forEach((slide, idx) => {
+        if (idx === current) {
+          slide.classList.remove('opacity-0', 'pointer-events-none', 'absolute', 'z-0');
+          slide.classList.add('opacity-100', 'pointer-events-auto', 'relative', 'z-10');
+        } else {
+          slide.classList.remove('opacity-100', 'pointer-events-auto', 'relative', 'z-10');
+          slide.classList.add('opacity-0', 'pointer-events-none', 'absolute', 'z-0');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        const isCurrent = idx === current;
+        dot.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+        if (isCurrent) {
+          dot.classList.remove('w-2', 'sm:w-2.5', 'bg-[#500e05]/30');
+          dot.classList.add('w-8', 'bg-[#500e05]');
+        } else {
+          dot.classList.remove('w-8', 'bg-[#500e05]');
+          dot.classList.add('w-2', 'sm:w-2.5', 'bg-[#500e05]/30');
+        }
+      });
+    }
+
+    function startAutoPlay(): void {
+      stopAutoPlay();
+      timer = window.setInterval(() => {
+        goToSlide(current + 1);
+      }, AUTOPLAY_INTERVAL);
+    }
+
+    function stopAutoPlay(): void {
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    // Navegación con flechas
+    prevBtn?.addEventListener('click', () => {
+      goToSlide(current - 1);
+      startAutoPlay();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      goToSlide(current + 1);
+      startAutoPlay();
+    });
+
+    // Navegación con dots
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const targetIdx = Number(dot.dataset.heroDot || '0');
+        goToSlide(targetIdx);
+        startAutoPlay();
+      });
+    });
+
+    // Pausar con hover o focus
+    container.addEventListener('mouseenter', stopAutoPlay);
+    container.addEventListener('mouseleave', startAutoPlay);
+    container.addEventListener('focusin', stopAutoPlay);
+    container.addEventListener('focusout', startAutoPlay);
+
+    // Navegación táctil (Swipe)
+    let touchStartX = 0;
+    container.addEventListener(
+      'touchstart',
+      (e) => {
+        touchStartX = e.changedTouches[0]?.clientX || 0;
+      },
+      { passive: true }
+    );
+
+    container.addEventListener(
+      'touchend',
+      (e) => {
+        const touchEndX = e.changedTouches[0]?.clientX || 0;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) {
+            goToSlide(current + 1);
+          } else {
+            goToSlide(current - 1);
+          }
+          startAutoPlay();
+        }
+      },
+      { passive: true }
+    );
+
+    // Iniciar reproducción automática
+    startAutoPlay();
+  }
+
+  // Inicialización compatible con ciclo de vida Astro y navegación cliente
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupHeroCarousel);
+  } else {
+    setupHeroCarousel();
+  }
+
+  document.addEventListener('astro:page-load', setupHeroCarousel);
+</script>
+
