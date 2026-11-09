@@ -137,7 +137,7 @@ products.forEach((p) => {
         <!-- ================= BARRA LATERAL DE FILTROS (IZQUIERDA EN DESKTOP) ================= -->
         <aside
           id="filterSidebar"
-          class="hidden lg:block w-full lg:w-72 xl:w-80 shrink-0 bg-white/95 rounded-2xl p-5 sm:p-6 shadow-sm border border-[#ECD9CC] lg:sticky lg:top-28 z-20"
+          class="hidden lg:block w-full lg:w-72 xl:w-80 shrink-0 bg-white/95 rounded-2xl p-5 sm:p-6 shadow-sm border border-[#ECD9CC] lg:sticky lg:top-[168px] lg:max-h-[calc(100vh-188px)] lg:overflow-y-auto scroll-mt-[175px] z-20"
         >
           <!-- Encabezado de la barra lateral -->
           <div class="flex items-center justify-between pb-3.5 border-b border-[#ECD9CC]/70">
@@ -231,7 +231,7 @@ products.forEach((p) => {
                 id="productSearchInput"
                 type="text"
                 placeholder="Rosas, girasol, caja..."
-                class="w-full pl-9 pr-8 py-2 bg-[#FAF4EE]/70 focus:bg-white text-on-surface rounded-xl text-sm placeholder:text-outline/70 border border-[#ECD9CC] focus:border-[#500e05] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-all shadow-2xs"
+                class="w-full pl-9 pr-8 py-2 bg-[#FAF4EE]/70 focus:bg-white text-on-surface rounded-xl text-sm placeholder:text-outline/70 border border-[#ECD9CC] focus:border-[#500e05] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-all shadow-2xs scroll-mt-[190px]"
               />
               <button
                 id="clearSearchBtn"
@@ -483,6 +483,25 @@ products.forEach((p) => {
   .dual-range-input::-moz-range-thumb:active {
     transform: scale(1.25);
     background-color: #380a04;
+  }
+
+  /* Scrollbar estilizado para la barra lateral de filtros */
+  #filterSidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #ecd9cc transparent;
+  }
+  #filterSidebar::-webkit-scrollbar {
+    width: 5px;
+  }
+  #filterSidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #filterSidebar::-webkit-scrollbar-thumb {
+    background: #ecd9cc;
+    border-radius: 9999px;
+  }
+  #filterSidebar::-webkit-scrollbar-thumb:hover {
+    background: #500e05;
   }
 </style>
 
@@ -826,6 +845,17 @@ products.forEach((p) => {
   ) {
     setActiveCategory(initialHash);
   }
+
+  // Manejo de foco y desplazamiento si se accede por el enlace de búsqueda del navbar
+  const handleSearchFocusFromNav = () => {
+    if (window.location.hash === '#productSearchInput') {
+      setTimeout(() => {
+        searchInput?.focus();
+      }, 300);
+    }
+  };
+  handleSearchFocusFromNav();
+  window.addEventListener('hashchange', handleSearchFocusFromNav);
 
   // Inicializar estado del slider
   updateSlider();

@@ -9,7 +9,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const navLinks = [
   { label: 'Inicio', href: '/' },
   { label: 'Catálogo', href: '/catalogo' },
-  { label: 'Servicios', href: '/servicios' },
+  { label: 'Eventos', href: '/eventos' },
   { label: 'Nosotros', href: '/nosotros' },
   { label: 'Contacto', href: '/contacto' },
 ] as const;
@@ -28,7 +28,7 @@ const directWhatsappUrl = buildWhatsAppUrl(
 ---
 
 <!-- ================= BARRA DE NAVEGACIÓN PRINCIPAL ================= -->
-<div class="h-20 w-full px-margin-mobile md:px-margin flex items-center justify-between gap-gutter">
+<div class="h-25 w-full px-margin-mobile md:px-margin flex items-center justify-between gap-gutter">
   <!-- Logotipo oficial optimizado con Astro Assets -->
   <div class="flex items-center gap-space-sm">
     <a href="/" class="flex items-center focus:outline-none" aria-label="Ir al inicio de ISOTELI Florería">
@@ -38,7 +38,7 @@ const directWhatsappUrl = buildWhatsAppUrl(
         width={175}
         height={125}
         loading="eager"
-        class="h-15 w-auto object-contain"
+        class="h-20 w-auto object-contain"
       />
     </a>
   </div>

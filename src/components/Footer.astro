@@ -21,23 +21,9 @@ const footerWhatsappUrl = buildWhatsAppUrl('Hola ISOTELI, deseo realizar una con
               alt="Logotipo ISOTELI Flores y Detalles"
               width={130}
               height={91}
-              class="h-11 w-auto object-contain"
+              class="h-25 w-auto object-contain"
             />
           </a>
-        </div>
-        <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-          Atelier floral boutique y ambientación estética en Arequipa, Perú. Tienda 100% virtual especializada en flores frescas, detalles personalizados y decoración integral de eventos.
-        </p>
-        <div class="flex flex-col gap-1 text-body-sm font-body-sm text-on-surface-variant">
-          <div class="flex items-start gap-1.5">
-            <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">location_on</span>
-            <span>
-              Oficina de coordinación: <strong class="text-on-surface">{ISOTELI_CONTACT.officeShortAddress}</strong>
-            </span>
-          </div>
-          <p class="italic text-[11px] text-outline">
-            *Operamos como tienda 100% virtual (asesoría y videollamadas en línea) con oficina exclusiva para coordinación de eventos.
-          </p>
         </div>
       </div>
 
@@ -56,24 +42,6 @@ const footerWhatsappUrl = buildWhatsAppUrl('Hola ISOTELI, deseo realizar una con
               <span>{ISOTELI_CONTACT.emails.ventas}</span>
             </a>
           </li>
-          <li>
-            <a
-              class="hover:text-primary transition-colors flex items-center gap-2"
-              href={`mailto:${ISOTELI_CONTACT.emails.eventos}`}
-            >
-              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">mail</span>
-              <span>{ISOTELI_CONTACT.emails.eventos}</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="hover:text-primary transition-colors flex items-center gap-2"
-              href={`mailto:${ISOTELI_CONTACT.emails.administracion}`}
-            >
-              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">mail</span>
-              <span>{ISOTELI_CONTACT.emails.administracion}</span>
-            </a>
-          </li>
         </ul>
         <div class="mt-2 pt-3 border-t border-outline-variant/30">
           <p class="font-label-md text-label-md uppercase text-primary mb-1 flex items-center gap-1.5">
@@ -81,7 +49,7 @@ const footerWhatsappUrl = buildWhatsAppUrl('Hola ISOTELI, deseo realizar una con
             <span>Métodos de Pago</span>
           </p>
           <p class="font-body-sm text-body-sm text-on-surface-variant">
-            Transferencia bancaria, <strong class="text-on-surface">Yape</strong> y <strong class="text-on-surface">Plin</strong>.
+            Transferencia bancaria, Tarjeta de Credito/Debito <strong class="text-on-surface">Yape</strong> y <strong class="text-on-surface">Plin</strong>.
           </p>
         </div>
       </div>
@@ -141,8 +109,16 @@ const footerWhatsappUrl = buildWhatsAppUrl('Hola ISOTELI, deseo realizar una con
           </div>
           <div class="flex items-start gap-2">
             <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">local_shipping</span>
-            <p>{ISOTELI_CONTACT.deliveryPolicy.topBarText} (periféricos: S/15).</p>
+            <p>{ISOTELI_CONTACT.deliveryPolicy.topBarText}</p>
           </div>
+          <div class="flex items-start gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5" aria-hidden="true">location_on</span>
+            <span>
+              Ubicación para recojos: <strong class="text-on-surface">{ISOTELI_CONTACT.officeShortAddress}</strong>
+            </span>
+          </div>
+          
+
         </div>
 
         <div class="flex items-center gap-space-xs">

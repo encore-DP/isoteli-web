@@ -165,390 +165,7 @@ const occasionServices = [
     <!-- ================= FRANJA SUPERIOR DE GARANTÍAS DE EVENTOS ================= -->
     <TrustStrip items={serviceTrustItems} variant="fullbleed" />
 
-    <!-- ================= SECCIÓN HERO Y CANALES DE COORDINACIÓN DE EVENTOS ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pt-6 pb-space-lg" data-aos="fade-up">
-      <div class="max-w-7xl mx-auto bg-surface-container-low rounded-xl p-6 sm:p-10 border border-outline-variant/30 shadow-sm">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-7 flex flex-col gap-4" data-aos="fade-right">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md uppercase tracking-widest w-max">
-              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">event_available</span>
-              <span>Cotizador &amp; Asesoría en Arequipa</span>
-            </div>
-
-            <h1 class="font-headline-lg text-headline-lg text-primary font-bold leading-tight">
-              Decoración de Eventos en Arequipa &amp; Ambientación Floral
-            </h1>
-
-            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              Diseñamos y montamos la escenografía perfecta para nuestros 5 servicios exclusivos: <strong class="text-primary">Cumpleaños, Bautizos, Revelación de Género, Primera Comunión y Pedidas de Mano</strong>.
-            </p>
-
-            <div class="bg-surface-container-lowest p-4 rounded-lg border-l-4 border-primary flex flex-col gap-1 shadow-sm">
-              <div class="flex items-center gap-2 text-primary font-label-md text-label-md font-semibold">
-                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">storefront</span>
-                <span>Modalidad Virtual y Oficina de Coordinación</span>
-              </div>
-              <p class="font-body-sm text-body-sm text-on-surface-variant">
-                Al ser tienda 100% virtual sin local físico para muestras y ventas, todo se gestiona en línea (con posibilidad de videollamadas), y la coordinación presencial para eventos se realiza en nuestra oficina: <strong class="text-on-surface">{ISOTELI_CONTACT.officeAddress}</strong>.
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <div class="flex items-start gap-2 bg-surface-container px-3.5 py-2.5 rounded-DEFAULT">
-                <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5" aria-hidden="true">schedule</span>
-                <div>
-                  <span class="font-label-md text-label-md text-primary block font-semibold">
-                    Tiempos de Coordinación
-                  </span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">
-                    Pedidos inmediatos (mín 1 h, máx 3 h) para detalles; eventos coordinados con anticipación.
-                  </span>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-2 bg-surface-container px-3.5 py-2.5 rounded-DEFAULT">
-                <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5" aria-hidden="true">payments</span>
-                <div>
-                  <span class="font-label-md text-label-md text-primary block font-semibold">
-                    Métodos de Pago
-                  </span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">
-                    Transferencia bancaria, Yape y Plin.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-5 bg-surface-container-lowest p-6 sm:p-8 rounded-xl shadow-md flex flex-col gap-5 border border-outline-variant/30" data-aos="fade-left">
-            <h2 class="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">support_agent</span>
-              <span>Canales Oficiales para Eventos</span>
-            </h2>
-
-            <div class="flex flex-col gap-3 font-body-sm text-body-sm text-on-surface-variant">
-              <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
-                <WhatsAppIcon class="w-5 h-5 text-[#25D366]" />
-                <div>
-                  <span class="font-label-md text-label-md text-secondary uppercase block font-semibold">
-                    WhatsApp de Coordinación
-                  </span>
-                  <a
-                    class="font-semibold text-primary hover:underline text-[15px]"
-                    href={buildWhatsAppUrl('Hola ISOTELI, deseo cotizar un servicio de decoración')}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {ISOTELI_CONTACT.phoneDisplay}
-                  </a>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
-                <span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">mail</span>
-                <div>
-                  <span class="font-label-md text-label-md text-secondary uppercase block font-semibold">
-                    Correos de Contacto
-                  </span>
-                  <div class="flex flex-col">
-                    <a
-                      class="hover:text-primary transition-colors font-medium"
-                      href={`mailto:${ISOTELI_CONTACT.emails.eventos}`}
-                    >
-                      {ISOTELI_CONTACT.emails.eventos}
-                    </a>
-                    <a
-                      class="hover:text-primary transition-colors font-medium"
-                      href={`mailto:${ISOTELI_CONTACT.emails.ventas}`}
-                    >
-                      {ISOTELI_CONTACT.emails.ventas}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <a
-              class="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-on-primary py-3.5 px-6 rounded-full font-label-lg text-label-lg tracking-wider transition-all duration-300 shadow-md hover:shadow-lg"
-              href={buildWhatsAppUrl('Hola ISOTELI, quisiera agendar una coordinación para un evento')}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>
-              <span>Contactar por WhatsApp</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= PACKS DE DECORACIÓN (WOOCOMMERCE: SERVICIOS-DECORACION) ================= -->
-    <section
-      class="w-full py-space-xl bg-surface-container-low/70 border-y border-outline-variant/30"
-      id="paquetes-decoracion"
-      data-aos="fade-up"
-    >
-      <div class="w-full px-margin-mobile md:px-margin">
-        <!-- Encabezado y Pestañas de Línea Clásica / Temática -->
-        <div class="max-w-4xl mx-auto text-center mb-10" data-aos="fade-up">
-          <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold inline-block mb-1">
-            Paquetes de Ambientación ISOTELI
-          </span>
-          <h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">
-            Planes &amp; Paquetes de Decoración
-          </h2>
-          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl mx-auto">
-            Soluciones completas y escalables para Cumpleaños, Bautizos, Revelación de Género, Primera Comunión y Pedidas de Mano.
-          </p>
-
-          <div class="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30 font-semibold shadow-sm">
-            <span class="material-symbols-outlined text-[17px] text-secondary" aria-hidden="true">info</span>
-            <span>Incluye mobiliario y accesorios • No incluye movilidad</span>
-          </div>
-
-          <!-- Filtro rápido por Línea de Paquetes -->
-          {
-            thematicPacks.length > 0 && (
-              <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
-                <button
-                  type="button"
-                  data-pack-line-btn="all"
-                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-colors cursor-pointer"
-                >
-                  Todas las Líneas ({classicPacks.length + thematicPacks.length})
-                </button>
-                <button
-                  type="button"
-                  data-pack-line-btn="linea-clasica"
-                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-                >
-                  Línea Clásica ({classicPacks.length})
-                </button>
-                <button
-                  type="button"
-                  data-pack-line-btn="linea-tematica-infantil"
-                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-                >
-                  Línea Temática Infantil / Baby ({thematicPacks.length})
-                </button>
-              </div>
-            )
-          }
-        </div>
-
-        <!-- Mosaico Modular Dinámico: Línea Clásica y Línea Temática Infantil -->
-        <div class="max-w-7xl mx-auto flex flex-col gap-4">
-          <!-- Subcategoría: linea-clasica -->
-          <div data-pack-group="linea-clasica" class="grid grid-cols-1 md:grid-cols-12 gap-4">
-            {classicPacks.map((pack) => <ServicePackCard pack={pack} />)}
-          </div>
-
-          <!-- Subcategoría: linea-tematica-infantil -->
-          <div data-pack-group="linea-tematica-infantil" class="flex flex-col gap-4">
-            {
-              thematicRowPacks.length > 0 && (
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {thematicRowPacks.map((pack) => (
-                    <ServicePackCard pack={pack} />
-                  ))}
-                </div>
-              )
-            }
-            {
-              thematicPanoramicPacks.length > 0 && (
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {thematicPanoramicPacks.map((pack) => (
-                    <ServicePackCard pack={pack} />
-                  ))}
-                </div>
-              )
-            }
-          </div>
-        </div>
-
-        <!-- ================= ALQUILER DE MOBILIARIO (WOOCOMMERCE: ALQUILER-DE-MOBILIARIO) ================= -->
-        <div class="mt-14 max-w-7xl mx-auto" id="alquiler-mobiliario">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-2 border-b border-outline-variant/30">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary text-[24px]" aria-hidden="true">chair</span>
-              <h3 class="font-headline-sm text-headline-sm text-primary font-bold">
-                Alquiler de Mobiliario y Accesorios Individuales
-              </h3>
-            </div>
-            <span class="text-body-sm text-on-surface-variant font-medium">
-              Precios unitarios o por juego
-            </span>
-          </div>
-
-          <div id="rentalsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {rentals.map((rental) => <FurnitureRentalItem item={rental} />)}
-
-            <!-- Tarjeta Estática Final de Llamada a la Acción para Combinar Mobiliario -->
-            <div
-              data-static-rental-cta
-              class="bg-primary-fixed/40 p-4 rounded-lg border border-primary/20 flex items-center justify-between gap-3"
-            >
-              <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary text-[24px] shrink-0" aria-hidden="true">info</span>
-                <div>
-                  <span class="font-semibold text-primary block text-[14px]">
-                    ¿Deseas combinar mobiliario?
-                  </span>
-                  <span class="text-[12px] text-on-surface-variant">
-                    Cotizamos paquetes a medida por WhatsApp
-                  </span>
-                </div>
-              </div>
-              <a
-                class="px-3.5 py-1.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md tracking-wider font-semibold transition-colors shrink-0"
-                href={buildWhatsAppUrl('Hola ISOTELI, deseo alquilar y combinar mobiliario adicional para mi evento')}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Consultar
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= METODOLOGÍA ISOTELI EN 4 PASOS ================= -->
-    <section class="w-full bg-surface py-space-xl px-margin-mobile md:px-margin border-b border-outline-variant/30" data-aos="fade-up">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
-          <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
-            Metodología ISOTELI
-          </span>
-          <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">
-            Cómo Creamos la Magia de tu Evento
-          </h2>
-          <p class="font-body-md text-body-md text-on-surface-variant mt-3">
-            Un proceso minucioso y transparente desde la primera idea hasta el último pétalo colocado en tu recepción.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-          {
-            processSteps.map((st, idx) => (
-              <div
-                class="bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between shadow-sm relative group hover:-translate-y-1 transition-transform border border-outline-variant/30"
-                data-aos="fade-up"
-                data-aos-delay={idx * 80}
-              >
-                <div>
-                  <div class="flex items-center justify-between mb-6">
-                    <span class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center font-headline-sm text-headline-sm">
-                      {st.step}
-                    </span>
-                  </div>
-                  <h3 class="font-headline-sm text-headline-sm text-primary font-semibold mb-2">
-                    {st.title}
-                  </h3>
-                  <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    {st.description}
-                  </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center text-primary font-label-md text-label-md">
-                  <span class="material-symbols-outlined text-[15px] mr-1" aria-hidden="true">
-                    {st.footerIcon}
-                  </span>
-                  <span>{st.footerLabel}</span>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= GALERÍA DE MONTAJES REALIZADOS EN AREQUIPA ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-xl" data-aos="fade-up">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8" data-aos="fade-up">
-          <div>
-            <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
-              Galería Botánica
-            </span>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">
-              Montajes Realizados en Arequipa
-            </h2>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30">
-              <span class="material-symbols-outlined text-[14px]" aria-hidden="true">pin_drop</span>
-              <span>Yanahuara • Cayma • Sabandía • J.L.B. y Rivero</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[220px]">
-          <div class="md:col-span-2 md:row-span-2 relative rounded-xl overflow-hidden group shadow-sm" data-aos="fade-up">
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="Mesa imperial de matrimonio al aire libre en Sabandía con centros de mesa florales altos de rosas y hortensias"
-              loading="lazy"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiHBhnWGSmiUDH7pUeMHC1u4ADHRL02BQg4Tr8NtAzMFl-1NfFPgD9cp-jDSDc1Dfon0bRdea2rVkJ8Dt7h18xJqe0qYPsMRc_rHu6VfnUjdLPqKF-qzOwu4qCdhnQZhExlrxxZEIeZTFYk_GKayX0fG3hUWO6XdNczWxVNpFm4yiVMwuIWipXnoHC50j0RRxQQF0L_77wBOXXM99JOw7r7AGMXwb5UHAjZ8nT3Xpe5ZtlojgNvIDkJw"
-              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex flex-col justify-end p-6">
-              <span class="text-on-primary/80 font-label-md text-label-md uppercase tracking-wider">
-                Recepción de Matrimonio
-              </span>
-              <p class="font-headline-sm text-headline-sm text-on-primary font-semibold">
-                Casona &amp; Jardines en Sabandía
-              </p>
-            </div>
-          </div>
-
-          <div class="relative rounded-xl overflow-hidden group shadow-sm">
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="Ramo de novia couture con rosas durazno, ranúnculos blancos, eucalipto y cinta de seda"
-              loading="lazy"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbU1HODzU-vpMpr2nEdFjy7rWOheKd4oImzdmFfLvsh-4WsUt9iLMP5R7LKz3hwtEwbRzsTzw4QhPrnhxXal8Dy6FIZMtdPCzq7sSLWKgLaAqN5q5uWZWfxE49vCa-3x8WtBqItviQSgwP20u90hL61zyIVZIvcgNdGfH3W0qRFLlfsRtcrEDNI37Yzdtc7JaptWByBnqB4Qx1HBq7vupv9zcnx7OnIheUd-uqaEz9EuLvKsLR0489CQ"
-              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-4">
-              <span class="text-on-primary font-label-md text-label-md">Ramo de Novia Couture</span>
-            </div>
-          </div>
-
-          <div class="relative rounded-xl overflow-hidden group shadow-sm">
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="Arco circular botánico iluminado con lluvia de luces cálidas y sillar arequipeño de fondo"
-              loading="lazy"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEDJ6yCpgvDIVuRqy9eyZ_fGTybo7_J4FvF9DwqMubovq7CWbInObLpc0yBgWWO40ISqPGMAefxcYdEcw_pmYE8itzUhaS62-cUA1VrNJoe0jeOUOJ8_0ZGlEkkwtz0DOidyq-Gvm5-Pp6SkSk08yH7PAa_GdAym2yh_fgxFsya18dwkDjSmFDnAd6r9KqGT3gKHIlcsNOrFfwZLoQDJbS4MgJWKDiAbXCi9MwZHjBAV8WU_P6gJ4scw"
-              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-4">
-              <span class="text-on-primary font-label-md text-label-md">Arco Botánico Iluminado</span>
-            </div>
-          </div>
-
-          <div class="md:col-span-2 relative rounded-xl overflow-hidden group shadow-sm">
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="Escenografía botánica minimalista con pedestales florales asimétricos para evento corporativo en Arequipa"
-              loading="lazy"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE5Nwe-8lJcacySJscr4rhJHqCow2KWMf5PxkyC8Ol3Xcm2AYIXPwUmPUh1HUeRd5E3JPx1SXOv8M2IB5ax-ALQRRP7BkDvhriTJE2QQyjNDa7i6D9Hcxo_ewo5454_DZ2mjDq6rrCFqLgzYzogQemI7EhurUChiViuU8EWikZYkSrYJB-8863ikx0OW3CSQz1Ereo5idfAwzCQVWgJdw62LkLiG4vGbIBE7ZX8Txml8ZsNdrSr7LtCg"
-              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-6">
-              <span class="text-on-primary/80 font-label-md text-label-md uppercase tracking-wider">
-                Lanzamiento Corporativo
-              </span>
-              <p class="font-headline-sm text-headline-sm text-on-primary font-semibold">
-                Escenografía Botánica Minimalista
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= PORTAFOLIO DE SERVICIOS POR OCASIÓN (5 ESPECIALIDADES) ================= -->
+    <!-- ================= SECCIÓN HERO - PORTAFOLIO DE SERVICIOS POR OCASIÓN (5 ESPECIALIDADES) ================= -->
     <section
       class="w-full px-margin-mobile md:px-margin py-space-xl bg-surface-container-low border-t border-outline-variant/30"
       id="catalogo-servicios"
@@ -674,7 +291,273 @@ const occasionServices = [
           ))
         }
       </div>
+    </section>    
+
+
+    <!-- ================= PACKS DE DECORACIÓN (WOOCOMMERCE: SERVICIOS-DECORACION) ================= -->
+    <section
+      class="w-full py-space-xl bg-surface-container-low/70 border-y border-outline-variant/30"
+      id="paquetes-decoracion"
+      data-aos="fade-up"
+    >
+      <div class="w-full px-margin-mobile md:px-margin">
+        <!-- Encabezado y Pestañas de Línea Clásica / Temática -->
+        <div class="max-w-4xl mx-auto text-center mb-10" data-aos="fade-up">
+          <h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">
+            Planes &amp; Paquetes de Decoración de Eventos
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl mx-auto">
+            Soluciones completas y escalables para Cumpleaños, Bautizos, Revelación de Género, Primera Comunión y Pedidas de Mano.
+          </p>
+
+          <div class="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30 font-semibold shadow-sm">
+          <!--  <span class="material-symbols-outlined text-[17px] text-secondary" aria-hidden="true">info</span>
+            <span>Incluye mobiliario y accesorios • No incluye movilidad</span> -->
+          </div>
+
+          <!-- Filtro rápido por Línea de Paquetes -->
+          {
+            thematicPacks.length > 0 && (
+              <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
+                <button
+                  type="button"
+                  data-pack-line-btn="all"
+                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-colors cursor-pointer"
+                >
+                  Todas las Líneas ({classicPacks.length + thematicPacks.length})
+                </button>
+                <button
+                  type="button"
+                  data-pack-line-btn="linea-clasica"
+                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                >
+                  Línea Clásica ({classicPacks.length})
+                </button>
+                <button
+                  type="button"
+                  data-pack-line-btn="linea-tematica-infantil"
+                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                >
+                  Línea Temática Infantil / Baby ({thematicPacks.length})
+                </button>
+              </div>
+            )
+          }
+        </div>
+
+        <!-- Mosaico Modular Dinámico: Línea Clásica y Línea Temática Infantil -->
+        <div class="max-w-7xl mx-auto flex flex-col gap-4">
+          <!-- Subcategoría: linea-clasica -->
+          <div data-pack-group="linea-clasica" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            {classicPacks.map((pack) => <ServicePackCard pack={pack} />)}
+          </div>
+
+          <!-- Subcategoría: linea-tematica-infantil -->
+          <div data-pack-group="linea-tematica-infantil" class="flex flex-col gap-4">
+            {
+              thematicRowPacks.length > 0 && (
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  {thematicRowPacks.map((pack) => (
+                    <ServicePackCard pack={pack} />
+                  ))}
+                </div>
+              )
+            }
+            {
+              thematicPanoramicPacks.length > 0 && (
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  {thematicPanoramicPacks.map((pack) => (
+                    <ServicePackCard pack={pack} />
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        </div>
+
+        <!-- ================= ALQUILER DE MOBILIARIO (WOOCOMMERCE: ALQUILER-DE-MOBILIARIO) ================= -->
+        <div class="mt-14 max-w-7xl mx-auto" id="alquiler-mobiliario">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-2 border-b border-outline-variant/30">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[24px]" aria-hidden="true">chair</span>
+              <h3 class="font-headline-sm text-headline-sm text-primary font-bold">
+                Alquiler de Mobiliario y Accesorios Individuales
+              </h3>
+            </div>
+            <span class="text-body-sm text-on-surface-variant font-medium">
+              Precios unitarios o por juego
+            </span>
+          </div>
+
+          <div id="rentalsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {rentals.map((rental) => <FurnitureRentalItem item={rental} />)}
+
+            <!-- Tarjeta Estática Final de Llamada a la Acción para Combinar Mobiliario -->
+            <div
+              data-static-rental-cta
+              class="bg-primary-fixed/40 p-4 rounded-lg border border-primary/20 flex items-center justify-between gap-3"
+            >
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-[24px] shrink-0" aria-hidden="true">info</span>
+                <div>
+                  <span class="font-semibold text-primary block text-[14px]">
+                    ¿Deseas combinar mobiliario?
+                  </span>
+                  <span class="text-[12px] text-on-surface-variant">
+                    Cotizamos paquetes a medida por WhatsApp
+                  </span>
+                </div>
+              </div>
+              <a
+                class="px-3.5 py-1.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md tracking-wider font-semibold transition-colors shrink-0"
+                href={buildWhatsAppUrl('Hola ISOTELI, deseo alquilar y combinar mobiliario adicional para mi evento')}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Consultar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- ================= METODOLOGÍA ISOTELI EN 4 PASOS ================= 
+    <section class="w-full bg-surface py-space-xl px-margin-mobile md:px-margin border-b border-outline-variant/30" data-aos="fade-up">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
+          <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
+            Metodología ISOTELI
+          </span>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">
+            Cómo Creamos la Magia de tu Evento
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-3">
+            Un proceso minucioso y transparente desde la primera idea hasta el último pétalo colocado en tu recepción.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          {
+            processSteps.map((st, idx) => (
+              <div
+                class="bg-surface-container-lowest p-6 rounded-lg flex flex-col justify-between shadow-sm relative group hover:-translate-y-1 transition-transform border border-outline-variant/30"
+                data-aos="fade-up"
+                data-aos-delay={idx * 80}
+              >
+                <div>
+                  <div class="flex items-center justify-between mb-6">
+                    <span class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center font-headline-sm text-headline-sm">
+                      {st.step}
+                    </span>
+                  </div>
+                  <h3 class="font-headline-sm text-headline-sm text-primary font-semibold mb-2">
+                    {st.title}
+                  </h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    {st.description}
+                  </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center text-primary font-label-md text-label-md">
+                  <span class="material-symbols-outlined text-[15px] mr-1" aria-hidden="true">
+                    {st.footerIcon}
+                  </span>
+                  <span>{st.footerLabel}</span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section> -->
+
+    <!-- ================= GALERÍA DE MONTAJES REALIZADOS EN AREQUIPA ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-space-xl" data-aos="fade-up">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8" data-aos="fade-up">
+          <div>
+            <span class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold">
+              Galería de Eventos
+            </span>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">
+              Montajes Realizados en Arequipa
+            </h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30">
+              <span class="material-symbols-outlined text-[14px]" aria-hidden="true">pin_drop</span>
+              <span>Yanahuara • Cayma • Sabandía • J.L.B. y Rivero</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[220px]">
+          <div class="md:col-span-2 md:row-span-2 relative rounded-xl overflow-hidden group shadow-sm" data-aos="fade-up">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Mesa imperial de matrimonio al aire libre en Sabandía con centros de mesa florales altos de rosas y hortensias"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiHBhnWGSmiUDH7pUeMHC1u4ADHRL02BQg4Tr8NtAzMFl-1NfFPgD9cp-jDSDc1Dfon0bRdea2rVkJ8Dt7h18xJqe0qYPsMRc_rHu6VfnUjdLPqKF-qzOwu4qCdhnQZhExlrxxZEIeZTFYk_GKayX0fG3hUWO6XdNczWxVNpFm4yiVMwuIWipXnoHC50j0RRxQQF0L_77wBOXXM99JOw7r7AGMXwb5UHAjZ8nT3Xpe5ZtlojgNvIDkJw"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex flex-col justify-end p-6">
+              <span class="text-on-primary/80 font-label-md text-label-md uppercase tracking-wider">
+                Recepción de Matrimonio
+              </span>
+              <p class="font-headline-sm text-headline-sm text-on-primary font-semibold">
+                Casona &amp; Jardines en Sabandía
+              </p>
+            </div>
+          </div>
+
+          <div class="relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Ramo de novia couture con rosas durazno, ranúnculos blancos, eucalipto y cinta de seda"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbU1HODzU-vpMpr2nEdFjy7rWOheKd4oImzdmFfLvsh-4WsUt9iLMP5R7LKz3hwtEwbRzsTzw4QhPrnhxXal8Dy6FIZMtdPCzq7sSLWKgLaAqN5q5uWZWfxE49vCa-3x8WtBqItviQSgwP20u90hL61zyIVZIvcgNdGfH3W0qRFLlfsRtcrEDNI37Yzdtc7JaptWByBnqB4Qx1HBq7vupv9zcnx7OnIheUd-uqaEz9EuLvKsLR0489CQ"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-4">
+              <span class="text-on-primary font-label-md text-label-md">Ramo de Novia Couture</span>
+            </div>
+          </div>
+
+          <div class="relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Arco circular botánico iluminado con lluvia de luces cálidas y sillar arequipeño de fondo"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEDJ6yCpgvDIVuRqy9eyZ_fGTybo7_J4FvF9DwqMubovq7CWbInObLpc0yBgWWO40ISqPGMAefxcYdEcw_pmYE8itzUhaS62-cUA1VrNJoe0jeOUOJ8_0ZGlEkkwtz0DOidyq-Gvm5-Pp6SkSk08yH7PAa_GdAym2yh_fgxFsya18dwkDjSmFDnAd6r9KqGT3gKHIlcsNOrFfwZLoQDJbS4MgJWKDiAbXCi9MwZHjBAV8WU_P6gJ4scw"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-4">
+              <span class="text-on-primary font-label-md text-label-md">Arco Botánico Iluminado</span>
+            </div>
+          </div>
+
+          <div class="md:col-span-2 relative rounded-xl overflow-hidden group shadow-sm">
+            <img
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              alt="Escenografía botánica minimalista con pedestales florales asimétricos para evento corporativo en Arequipa"
+              loading="lazy"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE5Nwe-8lJcacySJscr4rhJHqCow2KWMf5PxkyC8Ol3Xcm2AYIXPwUmPUh1HUeRd5E3JPx1SXOv8M2IB5ax-ALQRRP7BkDvhriTJE2QQyjNDa7i6D9Hcxo_ewo5454_DZ2mjDq6rrCFqLgzYzogQemI7EhurUChiViuU8EWikZYkSrYJB-8863ikx0OW3CSQz1Ereo5idfAwzCQVWgJdw62LkLiG4vGbIBE7ZX8Txml8ZsNdrSr7LtCg"
+              onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent flex flex-col justify-end p-6">
+              <span class="text-on-primary/80 font-label-md text-label-md uppercase tracking-wider">
+                Lanzamiento Corporativo
+              </span>
+              <p class="font-headline-sm text-headline-sm text-on-primary font-semibold">
+                Escenografía Botánica Minimalista
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
 
     <!-- ================= LLAMADA A LA ACCIÓN FINAL DE EVENTOS ================= -->
     <section class="w-full px-margin-mobile md:px-margin py-space-xl" data-aos="zoom-in">

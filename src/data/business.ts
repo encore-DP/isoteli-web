@@ -55,10 +55,10 @@ export const ISOTELI_CONTACT = {
   schedule: {
     weekdays: 'Lun - Sáb: 8:00 AM - 8:00 PM',
     sundays: 'Dom: 9:00 AM - 3:00 PM',
-    leadTime: 'Pedidos inmediatos (mínimo 1 hora, máximo 3 horas) según disponibilidad de movilidad.',
+    leadTime: 'Pedidos inmediatos segun disponibilidad.',
   },
   deliveryPolicy: {
-    topBarText: 'Delivery Gratis a partir de compras mayores a S/99.90. Caso contrario: S/10',
+    topBarText: 'Delivery Gratis a partir de compras mayores a S/99.90',
     freeThreshold: 99.9,
     standardFee: 10,
     peripheralFee: 15,

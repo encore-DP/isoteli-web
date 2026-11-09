@@ -69,16 +69,18 @@ const supportWhatsappUrl = buildWhatsAppUrl(
 ---
 
 <div
-  class="relative w-full overflow-hidden"
+  class="relative w-full"
   id="product-detail-root"
   data-product-name={product.name}
   data-base-price={String(defaultOption.numericPrice)}
   data-base-format={defaultOption.label}
   data-phone={ISOTELI_CONTACT.phoneRaw}
 >
-  <!-- Elementos Ambientales Orgánicos de Fondo -->
-  <div class="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="absolute top-1/2 -left-32 w-80 h-80 bg-tertiary/10 rounded-full blur-3xl pointer-events-none"></div>
+  <!-- Elementos Ambientales Orgánicos de Fondo (Con overflow contenido para no bloquear el sticky) -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10" aria-hidden="true">
+    <div class="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 -left-32 w-80 h-80 bg-tertiary/10 rounded-full blur-3xl"></div>
+  </div>
 
   <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin py-6 md:py-10">
     <!-- ================= 1. RUTA DE NAVEGACIÓN (BREADCRUMB) ================= -->
@@ -109,9 +111,9 @@ const supportWhatsappUrl = buildWhatsAppUrl(
     <!-- ================= 2. GALERÍA Y CONFIGURADOR DE COMPRA (2 COLUMNAS) ================= -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
       <!-- Columna Izquierda: Galería Visual (6 cols) -->
-      <div class="lg:col-span-6 flex flex-col gap-5 lg:sticky lg:top-28">
+      <div class="lg:col-span-6 flex flex-col gap-5 lg:sticky lg:top-[168px] lg:self-start">
         <div class="relative w-full rounded-2xl overflow-hidden bg-surface-container shadow-md group">
-          <div class="aspect-[4/5] w-full relative">
+          <div class="aspect-[4/5] lg:max-h-[500px] xl:max-h-[540px] w-full relative">
             <img
               id="main-product-img"
               src={product.imageUrl || PLACEHOLDER_IMAGE}
@@ -164,19 +166,6 @@ const supportWhatsappUrl = buildWhatsAppUrl(
                 </button>
               ))
           }
-        </div>
-
-        <!-- Sello de Garantía Fotográfica Previa -->
-        <div class="rounded-xl p-4 bg-surface-container-low flex items-center gap-3.5 shadow-sm border border-outline-variant/50">
-          <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-[22px]" aria-hidden="true">photo_camera</span>
-          </div>
-          <div class="text-body-sm leading-snug">
-            <p class="font-semibold text-on-surface">Foto previa garantizada</p>
-            <p class="text-on-surface-variant">
-              Te enviamos foto y video en tiempo real de tu arreglo terminado por WhatsApp antes del despacho.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -349,16 +338,6 @@ const supportWhatsappUrl = buildWhatsAppUrl(
             }
           </div>
 
-          <!-- Destacado de Tarjeta Caligrafiada Incluida -->
-          <div class="mt-1 flex items-center justify-between p-3 rounded-xl bg-secondary-container border border-secondary/20 text-body-sm">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[18px] text-secondary" aria-hidden="true">draw</span>
-              <span class="font-medium text-on-surface">Tarjeta Caligrafiada en Tinta Sepia</span>
-            </div>
-            <span class="font-bold text-secondary uppercase text-[11px] tracking-wider bg-surface-container-lowest px-2.5 py-0.5 rounded-full shadow-xs border border-secondary/20">
-              ¡Gratis! Incluida
-            </span>
-          </div>
         </div>
 
         <!-- Paso 4: Dedicatoria -->
@@ -454,209 +433,32 @@ const supportWhatsappUrl = buildWhatsAppUrl(
           <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
             <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">bolt</span>
             <div class="text-body-sm">
-              <p class="font-semibold text-on-surface">Envío Express hoy (1 a 3h)</p>
-              <p class="text-on-surface-variant">Llegamos puntual a Yanahuara, Cayma, JLByR y todo Arequipa.</p>
+              <p class="font-semibold text-on-surface">Envío Express segun disponibilidad</p>
+              <p class="text-on-surface-variant">Llegamos a todo Arequipa.</p>
             </div>
           </div>
 
           <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
             <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">local_shipping</span>
             <div class="text-body-sm">
-              <p class="font-semibold text-on-surface">Delivery GRATIS &gt; S/99.90</p>
-              <p class="text-on-surface-variant">En pedidos menores, tarifa plana de S/ 10 en cobertura principal.</p>
+              <p class="font-semibold text-on-surface">Delivery GRATIS</p>
+              <p class="text-on-surface-variant">En pedidos a partir de S/99.90.</p>
             </div>
           </div>
 
           <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
             <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">qr_code_2</span>
             <div class="text-body-sm">
-              <p class="font-semibold text-on-surface">Yape, Plin &amp; Transferencia</p>
-              <p class="text-on-surface-variant">Pagos instantáneos con confirmación directa vía WhatsApp.</p>
+              <p class="font-semibold text-on-surface">Yape, Plin, Transferencia &amp; Tarjeta</p>
+              <p class="text-on-surface-variant">Diferentes metodos de Pagos con confirmación directa vía WhatsApp.</p>
             </div>
           </div>
 
           <div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-sm">
             <span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" aria-hidden="true">storefront</span>
             <div class="text-body-sm">
-              <p class="font-semibold text-on-surface">Oficina en Lambramani A15</p>
-              <p class="text-on-surface-variant">Tienda 100% virtual con oficina de coordinación en J.L.B. y Rivero.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 3. PESTAÑAS DE INFORMACIÓN DETALLADA ================= -->
-    <div class="mt-16 sm:mt-24">
-      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" role="tablist">
-        <button
-          type="button"
-          role="tab"
-          aria-selected="true"
-          data-tab-trigger="tab-desc"
-          class="px-6 py-3 rounded-full font-label font-semibold text-body-sm bg-primary text-on-primary shadow-sm transition-all whitespace-nowrap cursor-pointer"
-        >
-          Descripción &amp; Composición Botánica
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected="false"
-          data-tab-trigger="tab-delivery"
-          class="px-6 py-3 rounded-full font-label font-semibold text-body-sm bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all whitespace-nowrap cursor-pointer"
-        >
-          Delivery &amp; Cobertura en Arequipa
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected="false"
-          data-tab-trigger="tab-garantia"
-          class="px-6 py-3 rounded-full font-label font-semibold text-body-sm bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all whitespace-nowrap cursor-pointer"
-        >
-          Garantía de Satisfacción ISOTELI
-        </button>
-      </div>
-
-      <!-- Pestaña 1: Descripción -->
-      <div
-        id="tab-desc"
-        data-tab-panel
-        class="mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
-      >
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="md:col-span-2 space-y-4">
-            <h2 class="font-headline-sm text-2xl font-semibold text-on-surface">
-              Arte floral artesanal concebido para emocionar
-            </h2>
-            <p id="detail-full-desc" class="text-on-surface-variant text-body-md leading-relaxed">
-              {product.fullDescription ?? product.shortDescription}
-            </p>
-            <h3 class="font-headline-sm text-lg font-semibold text-on-surface pt-2">Composición Botánica:</h3>
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-body-sm text-on-surface-variant">
-              {
-                botanicalList.map((item) => (
-                  <li class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-
-          <div class="bg-surface-container rounded-xl p-5 flex flex-col justify-between gap-4 border border-outline-variant/40">
-            <div>
-              <h3 class="font-headline-sm text-lg font-semibold text-on-surface mb-3">
-                Cuidados &amp; Durabilidad
-              </h3>
-              <div class="space-y-3 text-body-sm text-on-surface-variant">
-                <div class="flex items-start gap-2.5">
-                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" aria-hidden="true">water_drop</span>
-                  <span><strong class="text-on-surface">Duración:</strong> 4 a 7 días en plenitud fresca.</span>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" aria-hidden="true">opacity</span>
-                  <span><strong class="text-on-surface">Hidratación:</strong> Renovar o añadir agua fresca cada 2 días.</span>
-                </div>
-                <div class="flex items-start gap-2.5">
-                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5" aria-hidden="true">wb_sunny</span>
-                  <span><strong class="text-on-surface">Ubicación:</strong> Evitar luz solar directa y corrientes cálidas.</span>
-                </div>
-              </div>
-            </div>
-            {product.dimensions && (
-              <div class="pt-3 border-t border-outline-variant/60 text-body-sm text-outline">
-                Dimensiones: {product.dimensions}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <!-- Pestaña 2: Delivery y Límites -->
-      <div
-        id="tab-delivery"
-        data-tab-panel
-        class="hidden mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
-      >
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-4">
-            <h2 class="font-headline-sm text-2xl font-semibold text-on-surface">Tiempos y Rangos de Entrega en Arequipa</h2>
-            <p class="text-on-surface-variant text-body-md leading-relaxed">
-              Coordinamos despachos diarios cuidadosos para asegurar que ningún arreglo sufra la radiación solar característica de la Ciudad Blanca.
-            </p>
-            <div class="space-y-3 pt-2">
-              <div class="p-3.5 rounded-xl bg-surface-container flex items-center justify-between text-body-sm">
-                <span class="font-medium text-on-surface">Horario Mañana:</span>
-                <span class="text-primary font-semibold">8:00 AM – 1:00 PM</span>
-              </div>
-              <div class="p-3.5 rounded-xl bg-surface-container flex items-center justify-between text-body-sm">
-                <span class="font-medium text-on-surface">Horario Tarde:</span>
-                <span class="text-primary font-semibold">2:00 PM – 8:00 PM</span>
-              </div>
-              <div class="p-3.5 rounded-xl bg-surface-container flex items-center justify-between text-body-sm">
-                <span class="font-medium text-on-surface">Pedidos Inmediatos:</span>
-                <span class="text-primary font-semibold">1 a 3 Horas (según movilidad)</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-4">
-            <h3 class="font-headline-sm text-xl font-semibold text-on-surface">
-              Distritos con Cobertura Estándar (S/ 10):
-            </h3>
-            <p class="text-on-surface-variant text-body-sm leading-relaxed">
-              Yanahuara (Total), José Luis Bustamante y Rivero (Total), Cayma (Av. Bolognesi), Alto Selva Alegre (Piscina P. José Schmidpeter), Mariano Melgar (Av. Argentina), Paucarpata (Parque Backus), Cerro Colorado (Plaza las Américas), Miraflores (Alto Misti) y Socabaya (Comisaría Ciudad Mi Trabajo). Distritos restantes: S/ 15.
-            </p>
-            <div class="p-4 rounded-xl bg-primary-fixed/40 border border-primary/20 flex items-start gap-3">
-              <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" aria-hidden="true">info</span>
-              <p class="text-body-sm text-on-surface">
-                <strong>Delivery GRATIS:</strong> Aplica automáticamente para compras mayores a S/ 99.90 dentro de nuestra cobertura principal.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pestaña 3: Garantía ISOTELI -->
-      <div
-        id="tab-garantia"
-        data-tab-panel
-        class="hidden mt-6 p-6 sm:p-10 rounded-2xl bg-surface-container-low border border-outline-variant/50 shadow-sm"
-      >
-        <div class="max-w-3xl space-y-6">
-          <h2 class="font-headline-sm text-2xl font-semibold text-on-surface">La Promesa Floral ISOTELI</h2>
-          <p class="text-on-surface-variant text-body-md leading-relaxed">
-            Sabemos que enviar flores es transmitir un sentimiento íntimo. Para garantizar que tu experiencia sea impecable de principio a fin, aplicamos nuestro protocolo de tres pasos:
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div class="p-4 rounded-xl bg-surface-container flex flex-col gap-2">
-              <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-body-sm">
-                1
-              </div>
-              <h3 class="font-semibold text-on-surface text-body-md">Foto Previa al Despacho</h3>
-              <p class="text-body-sm text-on-surface-variant">
-                Te enviamos foto y video del arreglo terminado para tu aprobación por WhatsApp.
-              </p>
-            </div>
-            <div class="p-4 rounded-xl bg-surface-container flex flex-col gap-2">
-              <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-body-sm">
-                2
-              </div>
-              <h3 class="font-semibold text-on-surface text-body-md">Notificación de Entrega</h3>
-              <p class="text-body-sm text-on-surface-variant">
-                Te avisamos inmediatamente cuando la persona especial recibe su detalle.
-              </p>
-            </div>
-            <div class="p-4 rounded-xl bg-surface-container flex flex-col gap-2">
-              <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-body-sm">
-                3
-              </div>
-              <h3 class="font-semibold text-on-surface text-body-md">Calidad Seleccionada</h3>
-              <p class="text-body-sm text-on-surface-variant">
-                Trabajamos únicamente con tallos frescos seleccionados cada mañana en Arequipa.
-              </p>
+              <p class="font-semibold text-on-surface">Recojo en Lambramani A15</p>
+              <p class="text-on-surface-variant">Punto de recojo en J.L.B. y Rivero.</p>
             </div>
           </div>
         </div>
