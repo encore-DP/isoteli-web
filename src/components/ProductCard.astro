@@ -77,7 +77,7 @@ const productFlowerTypes = extractFlowerTypes(product);
 {
   variant === 'catalog' ? (
     <article
-      class="product-item group flex flex-col transition-all duration-300"
+      class="product-item group flex flex-col bg-white rounded-2xl p-3 sm:p-4 border border-[#ECD9CC]/70 shadow-2xs hover:shadow-md transition-all duration-300"
       data-category={product.categorySlug}
       data-colors={productColors.join(',')}
       data-flower-types={productFlowerTypes.join(',')}
@@ -87,10 +87,10 @@ const productFlowerTypes = extractFlowerTypes(product);
       data-product-name={product.name}
       data-whatsapp-phone={ISOTELI_CONTACT.phoneRaw}
     >
-      <!-- Fotografía Dinámica en Proporción Retrato Editorial (con esquinas redondeadas) -->
+      <!-- Fotografía del producto con esquinas redondeadas -->
       <a
         href={productHref}
-        class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-[#FAF4EE] block shadow-2xs group-hover:shadow-md transition-all duration-300"
+        class="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-[#FAF4EE] block group-hover:opacity-95 transition-opacity"
         aria-label={`Ver detalles de ${product.name}`}
       >
         <img
@@ -109,27 +109,67 @@ const productFlowerTypes = extractFlowerTypes(product);
         )}
       </a>
 
-      <!-- Datos del Producto Debajo de la Imagen (idéntico a la imagen de referencia) -->
-      <div class="flex flex-col flex-1 pt-3 pb-1">
-        <h3 class="font-sans font-bold text-sm sm:text-base text-[#1b1c16] group-hover:text-[#500e05] transition-colors leading-snug line-clamp-2">
-          <a href={productHref} class="hover:underline focus:outline-none">
-            {product.name}
-          </a>
-        </h3>
+      <!-- Cuerpo de la tarjeta: Título con sus variantes de presentación (sin descripción corta) -->
+      <div class="flex flex-col flex-1 justify-between pt-3">
+        <div>
+          <!-- Título del producto -->
+          <h3 class="font-sans font-bold text-sm sm:text-base text-[#1b1c16] group-hover:text-[#500e05] transition-colors leading-snug line-clamp-2">
+            <a href={productHref} class="hover:underline focus:outline-none">
+              {product.name}
+            </a>
+          </h3>
 
-        <div class="mt-1 flex items-baseline gap-2">
-          <span class="font-bold text-sm sm:text-base text-[#500e05]">
-            {initialPriceText}
-          </span>
+          <!-- Variantes de presentación -->
+          {product.productType === 'variable' && product.variations.length > 0 && (
+            <div class="mt-2.5 pt-2 border-t border-[#ECD9CC]/60">
+              <span class="text-[10px] uppercase tracking-wider text-[#88726e] font-semibold block mb-1.5">
+                Elige presentación:
+              </span>
+              <div class="flex flex-wrap gap-1.5" role="group" aria-label={`Opciones de ${product.name}`}>
+                {product.variations.map((v) => {
+                  const isDefault = defaultVariation?.id === v.id;
+                  return (
+                    <button
+                      type="button"
+                      data-var-btn
+                      data-var-label={v.label}
+                      data-var-price={v.formattedPrice}
+                      data-var-numeric={String(v.numericPrice)}
+                      class:list={[
+                        'px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer border',
+                        isDefault
+                          ? 'bg-[#500e05] text-white border-[#500e05] font-semibold'
+                          : 'bg-[#FAF4EE] text-[#55423f] border-[#ECD9CC] hover:bg-[#ECD9CC]/50',
+                      ]}
+                    >
+                      {v.label} · {v.formattedPrice}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
-        <!-- Botón tipo píldora contorneada 'Ver detalles' idéntico a la referencia -->
-        <a
-          href={productHref}
-          class="mt-3 w-full py-2 px-3 sm:px-4 rounded-full border border-[#500e05] text-[#500e05] font-semibold text-xs sm:text-sm hover:bg-[#500e05] hover:text-white transition-all text-center block focus:outline-none focus:ring-1 focus:ring-[#500e05]"
-        >
-          Ver detalles
-        </a>
+        <!-- Pie de Tarjeta: Precio y Botón 'Pedir por WhatsApp' -->
+        <div class="mt-3 pt-2.5 border-t border-[#ECD9CC]/60 flex flex-col gap-2.5">
+          <div class="flex items-baseline justify-between">
+            <span data-card-price class="font-bold text-lg sm:text-xl text-[#500e05]">
+              {initialPriceText}
+            </span>
+          </div>
+
+          <a
+            data-card-wa-link
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full py-2.5 px-4 rounded-full bg-[#500e05] hover:bg-[#6e2417] text-white font-sans font-semibold text-xs sm:text-sm inline-flex items-center justify-center gap-2 transition-all shadow-sm hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          >
+            <WhatsAppIcon class="w-4 h-4 text-white" />
+            <span class="text-white">Pedir por WhatsApp</span>
+          </a>
+        </div>
       </div>
     </article>
   ) : (
@@ -213,7 +253,7 @@ const productFlowerTypes = extractFlowerTypes(product);
                       class:list={[
                         'px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer border',
                         isDefault
-                          ? 'bg-primary-fixed text-primary border-primary/40 font-semibold'
+                          ? 'bg-[#500e05] text-white border-[#500e05] font-semibold'
                           : 'bg-surface-container-low text-on-surface-variant border-outline-variant/40 hover:bg-surface-container',
                       ]}
                     >
@@ -228,7 +268,6 @@ const productFlowerTypes = extractFlowerTypes(product);
 
         <div class="pt-3 border-t border-surface-container flex items-center justify-between gap-space-sm">
           <div class="flex flex-col">
-            <span class="font-label-md text-[10px] uppercase tracking-wider text-outline">Precio Arequipa</span>
             <span data-card-price class="font-headline text-2xl font-bold text-primary">
               {initialPriceText}
             </span>
@@ -241,8 +280,8 @@ const productFlowerTypes = extractFlowerTypes(product);
             rel="noopener noreferrer"
             class="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-container text-on-primary px-4 py-2.5 rounded-full font-label-md text-label-md tracking-wider transition-all shadow-sm hover:scale-[1.02]"
           >
-            <WhatsAppIcon class="w-4 h-4 text-[#25D366]" />
-            <span>Pedir</span>
+            <WhatsAppIcon class="w-4 h-4 text-white" />
+            <span class="text-white">Pedir por WhatsApp</span>
           </a>
         </div>
       </div>
@@ -265,14 +304,17 @@ const productFlowerTypes = extractFlowerTypes(product);
     const phone = card.dataset.whatsappPhone || '51904803219';
 
     varBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         varBtns.forEach((b) => {
-          b.classList.remove('bg-primary-fixed', 'text-primary', 'border-primary/40', 'font-semibold');
-          b.classList.add('bg-surface-container-low', 'text-on-surface-variant', 'border-outline-variant/40');
+          b.classList.remove('bg-[#500e05]', 'text-white', 'border-[#500e05]', 'bg-primary-fixed', 'text-primary', 'border-primary/40', 'font-semibold');
+          b.classList.add('bg-[#FAF4EE]', 'text-[#55423f]', 'border-[#ECD9CC]', 'bg-surface-container-low', 'text-on-surface-variant', 'border-outline-variant/40');
         });
 
-        btn.classList.add('bg-primary-fixed', 'text-primary', 'border-primary/40', 'font-semibold');
-        btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'border-outline-variant/40');
+        btn.classList.add('bg-[#500e05]', 'text-white', 'border-[#500e05]', 'font-semibold');
+        btn.classList.remove('bg-[#FAF4EE]', 'text-[#55423f]', 'border-[#ECD9CC]', 'bg-surface-container-low', 'text-on-surface-variant', 'border-outline-variant/40');
 
         const varLabel = btn.dataset.varLabel || '';
         const varPrice = btn.dataset.varPrice || '';
