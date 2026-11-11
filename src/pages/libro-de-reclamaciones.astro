@@ -1,0 +1,777 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { AREQUIPA_DISTRICTS, ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { getBreadcrumbSchema } from '../lib/seo-schema';
+
+const breadcrumbSchema = getBreadcrumbSchema([
+  { name: 'Inicio', path: '/' },
+  { name: 'Libro de Reclamaciones', path: '/libro-de-reclamaciones' },
+]);
+
+const today = new Date();
+const formattedDate = today.toLocaleDateString('es-PE', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
+const todayIso = today.toISOString().split('T')[0];
+
+const targetEmail = ISOTELI_CONTACT.emails.ventas; // ventas@isoteli.com
+---
+
+<Layout
+  title="Libro de Reclamaciones Virtual | Florería ISOTELI Arequipa"
+  description="Libro de Reclamaciones Virtual de ISOTELI Flores y Detalles en Arequipa. Registra tu reclamo o queja conforme a la Ley N° 29571 del Código de Protección y Defensa del Consumidor."
+  schema={breadcrumbSchema}
+>
+  <div class="flex flex-col w-full bg-[#FCFAEF]">
+    <!-- ================= CABECERA INSTITUCIONAL Y LEGAL ================= -->
+    <section class="w-full px-margin-mobile md:px-margin pt-8 pb-6 border-b border-[#ECD9CC]/70 bg-white/60">
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
+        <div class="flex items-center gap-4 text-center md:text-left">
+          <!-- Emblema Oficial del Libro de Reclamaciones -->
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#500e05] text-white flex flex-col items-center justify-center shrink-0 shadow-md p-2 border-2 border-[#ECD9CC]">
+            <span class="material-symbols-outlined text-[30px] sm:text-[36px]" aria-hidden="true">menu_book</span>
+            <span class="text-[8px] sm:text-[9px] uppercase font-bold tracking-tight text-[#ffdad3]">INDECOPI</span>
+          </div>
+          <div class="flex flex-col">
+            <div class="inline-flex items-center justify-center md:justify-start gap-1.5 text-xs font-bold text-[#500e05] uppercase tracking-wider mb-1">
+              <span class="w-2 h-2 rounded-full bg-[#500e05]"></span>
+              <span>Libro de Reclamaciones Virtual</span>
+            </div>
+            <h1 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#500e05] tracking-tight">
+              Hoja de Reclamación
+            </h1>
+            <p class="font-sans text-xs sm:text-sm text-[#55423f] mt-1 max-w-xl">
+              Conforme a lo establecido en el Código de Protección y Defensa del Consumidor (Ley N° 29571) y el Reglamento del Libro de Reclamaciones (D.S. N° 011-2011-PCM).
+            </p>
+          </div>
+        </div>
+
+        <!-- Ficha Resumen del Proveedor -->
+        <div class="w-full md:w-auto bg-[#FAF4EE] rounded-xl p-3.5 sm:p-4 border border-[#ECD9CC] text-xs font-sans text-[#402d29] flex flex-col gap-1.5 shrink-0 shadow-2xs">
+          <div><strong class="text-[#500e05]">Razón Social / Marca:</strong> {ISOTELI_CONTACT.brandName}</div>
+          <div><strong class="text-[#500e05]">Domicilio:</strong> {ISOTELI_CONTACT.officeShortAddress}</div>
+          <div><strong class="text-[#500e05]">Correo oficial:</strong> <span class="text-[#500e05] font-semibold">{targetEmail}</span></div>
+          <div><strong class="text-[#500e05]">Fecha de Emisión:</strong> <span id="currentDateBadge">{formattedDate}</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTENEDOR DEL FORMULARIO DE RECLAMACIÓN ================= -->
+    <section class="w-full px-margin-mobile md:px-margin py-8 sm:py-12">
+      <div class="max-w-4xl mx-auto">
+        <!-- ESTADO DE CONFIRMACIÓN / HOJA ENVIADA (Oculto inicialmente) -->
+        <div
+          id="claimSuccessState"
+          class="hidden flex-col bg-white rounded-3xl p-6 sm:p-10 border border-[#ECD9CC] shadow-md mb-8 text-center"
+        >
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#FAF4EE] text-[#500e05] border-2 border-[#ECD9CC] flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-[36px] sm:text-[44px]">verified</span>
+          </div>
+
+          <span class="text-xs font-bold uppercase tracking-widest text-[#500e05] mb-1">
+            Registro Oficial Completado
+          </span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#500e05] mb-2">
+            Tu Hoja de Reclamación ha sido registrada
+          </h2>
+          <p class="font-sans text-sm text-[#55423f] max-w-xl mx-auto mb-6 leading-relaxed">
+            Hemos recibido los detalles de tu solicitud. Se ha generado tu código correlativo y remitido la información oficial a <strong class="text-[#500e05]">{targetEmail}</strong>.
+          </p>
+
+          <!-- Código y Datos de Seguimiento -->
+          <div class="bg-[#FAF4EE] rounded-2xl p-5 border border-[#ECD9CC] max-w-lg mx-auto mb-6 text-left flex flex-col gap-2">
+            <div class="flex items-center justify-between pb-2 border-b border-[#ECD9CC]/70">
+              <span class="text-xs uppercase tracking-wider font-semibold text-[#88726e]">N° de Reclamación:</span>
+              <strong id="successClaimCode" class="font-mono text-base font-bold text-[#500e05]">LR-2026-00001</strong>
+            </div>
+            <div class="flex items-center justify-between text-xs text-[#402d29]">
+              <span>Fecha y hora:</span>
+              <span id="successClaimDate" class="font-semibold">-</span>
+            </div>
+            <div class="flex items-center justify-between text-xs text-[#402d29]">
+              <span>Consumidor:</span>
+              <span id="successClaimName" class="font-semibold">-</span>
+            </div>
+            <div class="flex items-center justify-between text-xs text-[#402d29]">
+              <span>Tipo registrado:</span>
+              <span id="successClaimType" class="font-semibold uppercase text-[#500e05]">-</span>
+            </div>
+            <div class="flex items-center justify-between text-xs text-[#402d29] pt-2 border-t border-[#ECD9CC]/70">
+              <span>Plazo legal de respuesta:</span>
+              <span class="font-bold text-[#500e05]">Máximo 15 días hábiles</span>
+            </div>
+          </div>
+
+          <!-- Botones de Acción Posterior al Registro -->
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <button
+              id="printClaimBtn"
+              type="button"
+              class="inline-flex items-center gap-2 bg-white hover:bg-[#FAF4EE] text-[#500e05] border border-[#500e05] py-2.5 px-5 rounded-full font-sans text-xs sm:text-sm font-semibold transition-all shadow-xs cursor-pointer"
+            >
+              <span class="material-symbols-outlined text-[18px]">print</span>
+              <span>Imprimir / Guardar en PDF</span>
+            </button>
+
+            <a
+              id="successWaShareBtn"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 bg-[#500e05] hover:bg-[#6e2417] text-white py-2.5 px-6 rounded-full font-sans text-xs sm:text-sm font-semibold transition-all shadow-sm hover:scale-[1.02] cursor-pointer"
+            >
+              <WhatsAppIcon class="w-4 h-4 text-white" />
+              <span>Enviar constancia por WhatsApp</span>
+            </a>
+          </div>
+
+          <button
+            id="registerAnotherBtn"
+            type="button"
+            class="text-xs text-[#88726e] hover:text-[#500e05] hover:underline mt-6 inline-block cursor-pointer font-medium"
+          >
+            Formular otra reclamación o queja
+          </button>
+        </div>
+
+        <!-- FORMULARIO DE RECLAMACIONES (Fiel a la referencia de Alore) -->
+        <form
+          id="claimForm"
+          class="bg-white rounded-3xl p-6 sm:p-10 border border-[#ECD9CC] shadow-sm flex flex-col gap-8"
+          novalidate
+        >
+          <!-- ================= 1. TUS DATOS ================= -->
+          <fieldset class="flex flex-col gap-5 border-b border-[#ECD9CC]/70 pb-8">
+            <legend class="font-serif text-xl sm:text-2xl font-bold text-[#500e05] flex items-center gap-2 mb-2">
+              <span class="w-7 h-7 rounded-full bg-[#FAF4EE] text-[#500e05] border border-[#ECD9CC] flex items-center justify-center text-sm font-bold font-sans">
+                1
+              </span>
+              <span>Tus datos</span>
+            </legend>
+            <p class="text-xs text-[#88726e] -mt-2">
+              Identificación del consumidor reclamante o su representante legal.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <!-- Tipo de Documento -->
+              <div class="flex flex-col gap-1.5">
+                <label for="docType" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Tipo de documento <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <div class="relative">
+                  <select
+                    id="docType"
+                    name="docType"
+                    required
+                    class="w-full appearance-none bg-[#FAF4EE]/70 hover:bg-[#FAF4EE] text-on-surface text-sm py-2.5 pl-3.5 pr-8 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] font-medium cursor-pointer"
+                  >
+                    <option value="DNI" selected>DNI</option>
+                    <option value="Carné de Extranjería">Carné de extranjería</option>
+                    <option value="RUC">RUC</option>
+                    <option value="Pasaporte">Pasaporte</option>
+                  </select>
+                  <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#500e05] text-[18px]">
+                    expand_more
+                  </span>
+                </div>
+              </div>
+
+              <!-- Número de Documento -->
+              <div class="flex flex-col gap-1.5">
+                <label for="docNumber" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Número de documento <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="docNumber"
+                  name="docNumber"
+                  type="text"
+                  required
+                  placeholder="Ej. 72345678"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <!-- Nombre(s) -->
+              <div class="flex flex-col gap-1.5">
+                <label for="firstName" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Nombre(s) <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  required
+                  placeholder="Ej. Valeria Camila"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+
+              <!-- Apellidos -->
+              <div class="flex flex-col gap-1.5">
+                <label for="lastName" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Apellidos <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  required
+                  placeholder="Ej. Mendoza Paredes"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+            </div>
+
+            <!-- Nombre de padre o madre (menor de edad) -->
+            <div class="flex flex-col gap-1.5">
+              <label for="parentName" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Nombre del padre o madre <span class="text-xs font-normal text-[#88726e] normal-case">(solo si eres menor de edad)</span>
+              </label>
+              <input
+                id="parentName"
+                name="parentName"
+                type="text"
+                placeholder="Nombre completo del apoderado o tutor"
+                class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+              />
+            </div>
+
+            <!-- Ubicación Geográfica -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label for="department" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Departamento <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="department"
+                  name="department"
+                  type="text"
+                  value="Arequipa"
+                  required
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05]"
+                />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label for="province" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Provincia <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="province"
+                  name="province"
+                  type="text"
+                  value="Arequipa"
+                  required
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05]"
+                />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label for="district" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Distrito <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <div class="relative">
+                  <select
+                    id="district"
+                    name="district"
+                    required
+                    class="w-full appearance-none bg-[#FAF4EE]/70 hover:bg-[#FAF4EE] text-on-surface text-sm py-2.5 pl-3.5 pr-8 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] cursor-pointer"
+                  >
+                    <option value="" disabled selected>Selecciona tu distrito</option>
+                    {
+                      AREQUIPA_DISTRICTS.map((d) => (
+                        <option value={d.name}>{d.name}</option>
+                      ))
+                    }
+                    <option value="Cerro Colorado">Cerro Colorado</option>
+                    <option value="Paucarpata">Paucarpata</option>
+                    <option value="Mariano Melgar">Mariano Melgar</option>
+                    <option value="Miraflores">Miraflores</option>
+                    <option value="Sachaca">Sachaca</option>
+                    <option value="Tiabaya">Tiabaya</option>
+                    <option value="Hunter">Jacobo Hunter</option>
+                    <option value="Otro">Otro distrito de Arequipa / Perú</option>
+                  </select>
+                  <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#500e05] text-[18px]">
+                    expand_more
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dirección -->
+            <div class="flex flex-col gap-1.5">
+              <label for="address" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Dirección <span class="text-[#ba1a1a]">*</span>
+              </label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                required
+                placeholder="Av. / Calle / Urbanización / N° o Referencia"
+                class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+              />
+            </div>
+
+            <!-- Correo y Teléfono -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <div class="flex flex-col gap-1.5">
+                <label for="email" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Correo electrónico <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="ejemplo@correo.com (para enviarte la constancia)"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label for="phone" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Teléfono / Celular <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  placeholder="Ej. 987 654 321"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- ================= 2. DETALLE DE TU RECLAMO O QUEJA ================= -->
+          <fieldset class="flex flex-col gap-5 border-b border-[#ECD9CC]/70 pb-8">
+            <legend class="font-serif text-xl sm:text-2xl font-bold text-[#500e05] flex items-center gap-2 mb-2">
+              <span class="w-7 h-7 rounded-full bg-[#FAF4EE] text-[#500e05] border border-[#ECD9CC] flex items-center justify-center text-sm font-bold font-sans">
+                2
+              </span>
+              <span>Detalle de tu reclamo o queja</span>
+            </legend>
+
+            <!-- Caja Informativa Legal de Diferenciación (como en Alore) -->
+            <div class="bg-[#FAF4EE] rounded-2xl p-4 sm:p-5 border border-[#ECD9CC] flex flex-col sm:flex-row gap-4 text-xs font-sans text-[#402d29]">
+              <div class="flex-1">
+                <strong class="text-[#500e05] block font-semibold mb-1">Reclamo:</strong>
+                <span>Disconformidad relacionada directamente a los productos o servicios adquiridos (calidad, entrega, características).</span>
+              </div>
+              <div class="hidden sm:block w-px bg-[#ECD9CC]"></div>
+              <div class="flex-1">
+                <strong class="text-[#500e05] block font-semibold mb-1">Queja:</strong>
+                <span>Malestar o descontento respecto a la atención recibida al público, o disconformidad no relacionada directamente a los productos o servicios.</span>
+              </div>
+            </div>
+
+            <!-- Selector de Tipo: Reclamo o Queja -->
+            <div class="flex flex-col gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Tipo <span class="text-[#ba1a1a]">*</span>
+              </span>
+              <div class="grid grid-cols-2 gap-3 max-w-md">
+                <label class="cursor-pointer">
+                  <input type="radio" name="claimType" value="Reclamo" checked class="sr-only peer" />
+                  <div class="p-3 rounded-xl border border-[#ECD9CC] text-center font-semibold text-xs sm:text-sm text-[#402d29] peer-checked:bg-[#500e05] peer-checked:text-white peer-checked:border-[#500e05] transition-all">
+                    Reclamo
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="claimType" value="Queja" class="sr-only peer" />
+                  <div class="p-3 rounded-xl border border-[#ECD9CC] text-center font-semibold text-xs sm:text-sm text-[#402d29] peer-checked:bg-[#500e05] peer-checked:text-white peer-checked:border-[#500e05] transition-all">
+                    Queja
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Selector de ¿Sobre qué es?: Producto o Servicio -->
+            <div class="flex flex-col gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                ¿Sobre qué es? <span class="text-[#ba1a1a]">*</span>
+              </span>
+              <div class="grid grid-cols-2 gap-3 max-w-md">
+                <label class="cursor-pointer">
+                  <input type="radio" name="itemCategory" value="Producto" checked class="sr-only peer" />
+                  <div class="p-3 rounded-xl border border-[#ECD9CC] text-center font-semibold text-xs sm:text-sm text-[#402d29] peer-checked:bg-[#500e05] peer-checked:text-white peer-checked:border-[#500e05] transition-all">
+                    Producto (Flores, Arreglos)
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="itemCategory" value="Servicio" class="sr-only peer" />
+                  <div class="p-3 rounded-xl border border-[#ECD9CC] text-center font-semibold text-xs sm:text-sm text-[#402d29] peer-checked:bg-[#500e05] peer-checked:text-white peer-checked:border-[#500e05] transition-all">
+                    Servicio (Entrega, Decoración)
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+              <!-- Número de Pedido -->
+              <div class="flex flex-col gap-1.5">
+                <label for="orderNumber" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Número de pedido
+                </label>
+                <input
+                  id="orderNumber"
+                  name="orderNumber"
+                  type="text"
+                  placeholder="Ej. #1245 o nombre del destinatario"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+
+              <!-- Fecha del Incidente -->
+              <div class="flex flex-col gap-1.5">
+                <label for="incidentDate" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Fecha del incidente <span class="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  id="incidentDate"
+                  name="incidentDate"
+                  type="date"
+                  max={todayIso}
+                  required
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+
+              <!-- Monto del Producto o Servicio -->
+              <div class="flex flex-col gap-1.5">
+                <label for="claimedAmount" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                  Monto reclamado (S/)
+                </label>
+                <input
+                  id="claimedAmount"
+                  name="claimedAmount"
+                  type="number"
+                  step="0.10"
+                  min="0"
+                  placeholder="Ej. 150.00"
+                  class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+                />
+              </div>
+            </div>
+
+            <!-- Descripción del producto o servicio -->
+            <div class="flex flex-col gap-1.5">
+              <label for="productDescription" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Descripción del producto o servicio <span class="text-[#ba1a1a]">*</span>
+              </label>
+              <input
+                id="productDescription"
+                name="productDescription"
+                type="text"
+                required
+                placeholder="Ej. Ramo de 24 rosas rojas / Servicio de delivery a Cayma"
+                class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm py-2.5 px-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors"
+              />
+            </div>
+
+            <!-- Detalle del reclamo o queja -->
+            <div class="flex flex-col gap-1.5">
+              <label for="claimDetail" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Detalle del reclamo o queja <span class="text-[#ba1a1a]">*</span>
+              </label>
+              <textarea
+                id="claimDetail"
+                name="claimDetail"
+                rows="4"
+                required
+                placeholder="Indica con claridad y detalle los hechos ocurridos..."
+                class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm p-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors resize-y"
+              ></textarea>
+            </div>
+
+            <!-- Pedido: ¿qué solución esperas? -->
+            <div class="flex flex-col gap-1.5">
+              <label for="expectedSolution" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Pedido: ¿qué solución esperas? <span class="text-[#ba1a1a]">*</span>
+              </label>
+              <textarea
+                id="expectedSolution"
+                name="expectedSolution"
+                rows="3"
+                required
+                placeholder="Detalla tu petición concreta (cambio de producto, reembolso, reenvío, disculpas, etc.)..."
+                class="w-full bg-[#FAF4EE]/70 focus:bg-white text-on-surface text-sm p-3.5 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] transition-colors resize-y"
+              ></textarea>
+            </div>
+
+            <!-- Adjuntar archivo (opcional) -->
+            <div class="flex flex-col gap-1.5">
+              <label for="claimAttachment" class="text-xs font-bold uppercase tracking-wider text-[#500e05]">
+                Adjuntar archivo <span class="text-xs font-normal text-[#88726e] normal-case">(opcional: foto del arreglo o comprobante)</span>
+              </label>
+              <div class="relative flex items-center">
+                <input
+                  id="claimAttachment"
+                  name="claimAttachment"
+                  type="file"
+                  accept="image/*,application/pdf"
+                  class="w-full text-xs text-[#55423f] file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#FAF4EE] file:text-[#500e05] hover:file:bg-[#ECD9CC] cursor-pointer border border-[#ECD9CC] rounded-xl p-2 bg-[#FAF4EE]/40"
+                />
+              </div>
+              <span class="text-[11px] text-[#88726e]">
+                1 archivo de hasta 5 MB (JPG, PNG o PDF).
+              </span>
+            </div>
+          </fieldset>
+
+          <!-- ================= 3. PROTECCIÓN DE DATOS Y AVISO LEGAL ================= -->
+          <fieldset class="flex flex-col gap-4">
+            <legend class="font-serif text-lg font-bold text-[#500e05] mb-1">
+              Protección de datos y términos
+            </legend>
+
+            <!-- Checkbox de Datos Personales -->
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                id="agreeDataPolicy"
+                name="agreeDataPolicy"
+                type="checkbox"
+                required
+                class="mt-1 w-4 h-4 rounded text-[#500e05] focus:ring-[#500e05] border-[#ECD9CC] shrink-0 cursor-pointer accent-[#500e05]"
+              />
+              <span class="text-xs text-[#402d29] leading-relaxed">
+                Acepto que <strong>ISOTELI</strong> utilice mis datos personales únicamente para gestionar, procesar y dar respuesta formal a este reclamo o queja, conforme a la Ley N° 29733 de Protección de Datos Personales.
+              </span>
+            </label>
+
+            <!-- Checkbox de Veracidad -->
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                id="agreeTruthful"
+                name="agreeTruthful"
+                type="checkbox"
+                required
+                class="mt-1 w-4 h-4 rounded text-[#500e05] focus:ring-[#500e05] border-[#ECD9CC] shrink-0 cursor-pointer accent-[#500e05]"
+              />
+              <span class="text-xs text-[#402d29] leading-relaxed">
+                Declaro bajo juramento que los datos consignados en esta Hoja de Reclamación son verídicos y corresponden a mi persona.
+              </span>
+            </label>
+
+            <!-- Marco Regulatorio INDECOPI -->
+            <div class="bg-[#FAF4EE] rounded-2xl p-4 border border-[#ECD9CC] text-xs text-[#55423f] leading-relaxed flex flex-col gap-2 mt-2">
+              <p>
+                <strong>Nota Legal:</strong> La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el <strong>INDECOPI</strong>.
+              </p>
+              <p>
+                El proveedor deberá dar respuesta al reclamo o queja en un plazo no mayor a <strong>quince (15) días hábiles improrrogables</strong>, mediante notificación al correo electrónico consignado, conforme al D.S. N° 011-2011-PCM.
+              </p>
+            </div>
+
+            <!-- Mensaje de Error en Validación -->
+            <div id="formErrorMessage" class="hidden p-3 rounded-xl bg-[#ba1a1a]/10 border border-[#ba1a1a]/30 text-[#ba1a1a] text-xs font-semibold">
+              Por favor completa todos los campos requeridos marcados con asterisco (*) antes de enviar.
+            </div>
+
+            <!-- Botón de Envío Oficial -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="text-xs text-[#88726e]">
+                Se enviará una copia oficial a: <strong class="text-[#500e05]">{targetEmail}</strong>
+              </div>
+
+              <button
+                id="submitClaimBtn"
+                type="submit"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#500e05] hover:bg-[#6e2417] text-white py-3.5 px-8 rounded-full font-sans font-semibold text-sm transition-all shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              >
+                <span class="material-symbols-outlined text-[18px]">send</span>
+                <span>Enviar reclamo o queja</span>
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script define:vars={{ targetEmail, ISOTELI_PHONE: ISOTELI_CONTACT.phoneRaw }}>
+  const claimForm = document.getElementById('claimForm');
+  const claimSuccessState = document.getElementById('claimSuccessState');
+  const formErrorMessage = document.getElementById('formErrorMessage');
+  const successClaimCode = document.getElementById('successClaimCode');
+  const successClaimDate = document.getElementById('successClaimDate');
+  const successClaimName = document.getElementById('successClaimName');
+  const successClaimType = document.getElementById('successClaimType');
+  const successWaShareBtn = document.getElementById('successWaShareBtn');
+  const printClaimBtn = document.getElementById('printClaimBtn');
+  const registerAnotherBtn = document.getElementById('registerAnotherBtn');
+
+  // Generador de código correlativo único LR-YYYY-XXXXX
+  function generateClaimCode() {
+    const year = new Date().getFullYear();
+    const randomSeq = Math.floor(1000 + Math.random() * 9000);
+    return `LR-${year}-${randomSeq}`;
+  }
+
+  claimForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (!claimForm.checkValidity()) {
+      if (formErrorMessage) {
+        formErrorMessage.classList.remove('hidden');
+      }
+      claimForm.reportValidity();
+      return;
+    }
+
+    if (formErrorMessage) {
+      formErrorMessage.classList.add('hidden');
+    }
+
+    const formData = new FormData(claimForm);
+    const claimCode = generateClaimCode();
+    const submissionDate = new Date().toLocaleString('es-PE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    const docType = formData.get('docType') || '';
+    const docNumber = formData.get('docNumber') || '';
+    const firstName = formData.get('firstName') || '';
+    const lastName = formData.get('lastName') || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    const parentName = formData.get('parentName') || '-';
+    const department = formData.get('department') || 'Arequipa';
+    const province = formData.get('province') || 'Arequipa';
+    const district = formData.get('district') || '';
+    const address = formData.get('address') || '';
+    const email = formData.get('email') || '';
+    const phone = formData.get('phone') || '';
+
+    const claimType = formData.get('claimType') || 'Reclamo';
+    const itemCategory = formData.get('itemCategory') || 'Producto';
+    const orderNumber = formData.get('orderNumber') || 'Sin número';
+    const incidentDate = formData.get('incidentDate') || '';
+    const claimedAmount = formData.get('claimedAmount') ? `S/ ${formData.get('claimedAmount')}` : 'No especificado';
+    const productDescription = formData.get('productDescription') || '';
+    const claimDetail = formData.get('claimDetail') || '';
+    const expectedSolution = formData.get('expectedSolution') || '';
+
+    // Preparar el cuerpo oficial para el correo a ventas@isoteli.com
+    const emailSubject = `Hoja de Reclamación Virtual [${claimCode}] - ${fullName}`;
+    const emailBody = `=====================================================
+HOJA DE RECLAMACIÓN VIRTUAL - ISOTELI FLORES Y DETALLES
+Conforme a la Ley N° 29571 y D.S. N° 011-2011-PCM
+=====================================================
+
+CÓDIGO DE RECLAMACIÓN: ${claimCode}
+FECHA Y HORA: ${submissionDate}
+DESTINO OFICIAL: ${targetEmail}
+
+-----------------------------------------------------
+1. DATOS DEL CONSUMIDOR RECLAMANTE
+-----------------------------------------------------
+- Documento: ${docType} ${docNumber}
+- Nombres y Apellidos: ${fullName}
+- Apoderado / Tutor (si es menor): ${parentName}
+- Departamento / Provincia / Distrito: ${department} / ${province} / ${district}
+- Dirección de Domicilio: ${address}
+- Correo Electrónico: ${email}
+- Teléfono / Celular: ${phone}
+
+-----------------------------------------------------
+2. DETALLE DE LA RECLAMACIÓN O QUEJA
+-----------------------------------------------------
+- Tipo: ${claimType.toUpperCase()}
+- Objeto contratado: ${itemCategory.toUpperCase()}
+- N° de Pedido: ${orderNumber}
+- Fecha del Incidente: ${incidentDate}
+- Monto Reclamado: ${claimedAmount}
+- Descripción del Producto o Servicio:
+  ${productDescription}
+
+- Detalle de los Hechos (Reclamo o Queja):
+  ${claimDetail}
+
+- Pedido / Pretensión Concreta del Consumidor:
+  ${expectedSolution}
+
+-----------------------------------------------------
+3. GARANTÍAS Y DECLARACIÓN
+-----------------------------------------------------
+- El consumidor aceptó la Política de Protección de Datos Personales (Ley N° 29733).
+- Declaración de veracidad de datos aceptada.
+- Plazo legal de respuesta: Máximo 15 días hábiles conforme al D.S. N° 011-2011-PCM.
+=====================================================`;
+
+    // 1. Enviar el correo abriendo el cliente con destino explícito a ventas@isoteli.com
+    const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+    // Lanzar mailto en segundo plano
+    const mailLink = document.createElement('a');
+    mailLink.href = mailtoUrl;
+    mailLink.style.display = 'none';
+    document.body.appendChild(mailLink);
+    mailLink.click();
+    document.body.removeChild(mailLink);
+
+    // 2. Actualizar la tarjeta de confirmación en pantalla
+    if (successClaimCode) successClaimCode.textContent = claimCode;
+    if (successClaimDate) successClaimDate.textContent = submissionDate;
+    if (successClaimName) successClaimName.textContent = `${fullName} (${docType}: ${docNumber})`;
+    if (successClaimType) successClaimType.textContent = `${claimType} (${itemCategory})`;
+
+    // 3. Enlace directo a WhatsApp oficial con resumen
+    if (successWaShareBtn) {
+      const waMsg = `Hola ISOTELI, he registrado la Hoja de Reclamación Virtual *${claimCode}* a nombre de *${fullName}* (Tipo: ${claimType} - ${itemCategory}) enviada a ${targetEmail}. Deseo dar seguimiento a mi solicitud.`;
+      successWaShareBtn.href = `https://wa.me/${ISOTELI_PHONE}?text=${encodeURIComponent(waMsg)}`;
+    }
+
+    // 4. Mostrar pantalla de éxito y ocultar formulario
+    claimForm.classList.add('hidden');
+    claimSuccessState?.classList.remove('hidden');
+    claimSuccessState?.classList.add('flex');
+
+    // Desplazar la vista al mensaje de confirmación
+    claimSuccessState?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Botón para imprimir o guardar como PDF
+  printClaimBtn?.addEventListener('click', () => {
+    window.print();
+  });
+
+  // Botón para formular otra reclamación
+  registerAnotherBtn?.addEventListener('click', () => {
+    claimForm?.reset();
+    claimSuccessState?.classList.add('hidden');
+    claimSuccessState?.classList.remove('flex');
+    claimForm?.classList.remove('hidden');
+    claimForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>
+
+<style>
+  @media print {
+    /* Ocultar elementos globales innecesarios al imprimir la Hoja de Reclamación */
+    header,
+    footer,
+    aside,
+    button,
+    #successWaShareBtn,
+    #registerAnotherBtn {
+      display: none !important;
+    }
+
+    #claimSuccessState {
+      border: 2px solid #500e05 !important;
+      box-shadow: none !important;
+      padding: 1.5rem !important;
+    }
+  }
+</style>

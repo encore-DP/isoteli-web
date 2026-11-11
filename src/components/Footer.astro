@@ -153,17 +153,25 @@ const footerWhatsappUrl = buildWhatsAppUrl('Hola ISOTELI, deseo realizar una con
       </div>
     </div>
 
-    <!-- Barra Inferior de Derechos Reservados -->
-    <div class="pt-space-md border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
-      <p>© {currentYear} ISOTELI Flores y Detalles. Todos los derechos reservados. Arequipa, Perú.</p>
-      <div class="flex items-center gap-space-md">
-        <a class="hover:text-primary transition-colors" href="/nosotros#cobertura-distrital">
+    <!-- Barra Inferior de Derechos Reservados y Enlaces Institucionales -->
+    <div class="pt-space-md border-t border-outline-variant/30 flex flex-col items-center justify-center gap-3 font-body-sm text-body-sm text-on-surface-variant text-center pb-12 sm:pb-6">
+      <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        <a class="hover:text-primary transition-colors py-1" href="/nosotros#cobertura-distrital">
           Cobertura &amp; Límites Distritales
         </a>
-        <a class="hover:text-primary transition-colors" href="/contacto">
+        <span class="hidden sm:inline text-outline-variant/60" aria-hidden="true">•</span>
+        <a class="hover:text-primary transition-colors py-1" href="/contacto">
           Atención al Cliente
         </a>
+        <span class="hidden sm:inline text-outline-variant/60" aria-hidden="true">•</span>
+        <a class="hover:text-primary transition-colors inline-flex items-center gap-1.5 font-medium text-primary hover:underline py-1" href="/libro-de-reclamaciones">
+          <span class="material-symbols-outlined text-[18px]" aria-hidden="true">menu_book</span>
+          <span>Libro de Reclamaciones</span>
+        </a>
       </div>
+      <p class="text-xs text-on-surface-variant/80">
+        © {currentYear} ISOTELI Flores y Detalles. Todos los derechos reservados. Arequipa, Perú.
+      </p>
     </div>
   </div>
 </footer>
