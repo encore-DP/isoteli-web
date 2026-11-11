@@ -14,6 +14,10 @@ import {
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getBreadcrumbSchema } from '../lib/seo-schema';
 
+// Imágenes optimizadas para el Banner de ancho completo (Escritorio / Móvil)
+import bannerNosotrosImg from '../assets/images/banner_nosotros.jpg';
+import verticalBannerNosotrosImg from '../assets/images/vertical_banner_nosotros.jpg';
+
 const breadcrumbSchema = getBreadcrumbSchema([
   { name: 'Inicio', path: '/' },
   { name: 'Sobre Nosotros', path: '/nosotros' },
@@ -94,89 +98,75 @@ const studioImageUrl =
   schema={breadcrumbSchema}
 >
   <div class="flex flex-col w-full">
-    <!-- ================= SECCIÓN HERO EDITORIAL: MANIFIESTO BOTÁNICO ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pt-10 pb-space-lg" data-aos="fade-up">
-      <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-6 md:p-14 lg:p-16 border border-outline-variant/30">
-        <!-- Arco Orgánico Decorativo -->
-        <svg
-          class="absolute -right-16 -top-16 w-80 h-80 text-primary-fixed/50 pointer-events-none"
-          fill="currentColor"
-          viewBox="0 0 200 200"
-          aria-hidden="true"
-        >
-          <path
-            d="M42.7,-62.9C53.9,-54.6,60.8,-40.4,66.8,-25.9C72.8,-11.4,78,3.5,74.9,17.2C71.8,30.9,60.4,43.5,47.4,52.3C34.4,61.1,19.8,66.2,4.8,68.4C-10.2,70.6,-25.7,69.9,-39.2,62.8C-52.7,55.7,-64.2,42.3,-70.6,26.7C-76.9,11.2,-78.2,-6.6,-73.1,-22.3C-67.9,-38.1,-56.3,-51.7,-42.6,-59.4C-28.9,-67.2,-13,-69.1,1.8,-71.9C16.6,-74.6,31.4,-71.2,42.7,-62.9Z"
-            transform="translate(100 100)"></path>
-        </svg>
+    <!-- ================= BANNER HERO 100% ANCHO Y ALTO DE PANTALLA ================= -->
+    <section
+      class="relative w-full overflow-hidden select-none min-h-[540px] sm:min-h-[580px] md:min-h-[calc(100vh-152px)] h-[calc(100dvh-164px)] sm:h-[calc(100dvh-150px)] md:h-[calc(100dvh-152px)] flex items-center justify-center"
+      data-no-aos="true"
+      aria-label="Sobre Nosotros - Atelier Floral ISOTELI en Arequipa"
+    >
+      <!-- Imagen de fondo que ocupa el 100% del alto y ancho: Móvil (vertical) / Escritorio (horizontal) -->
+      <picture class="absolute inset-0 w-full h-full z-0 pointer-events-none">
+        <source media="(max-width: 767px)" srcset={verticalBannerNosotrosImg.src} />
+        <source media="(min-width: 768px)" srcset={bannerNosotrosImg.src} />
+        <img
+          src={bannerNosotrosImg.src}
+          alt="Atelier floral artesanal en Arequipa con rosas frescas color durazno, eucalipto y arquitectura de sillar iluminada por luz natural - ISOTELI"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          class="w-full h-full object-cover object-center"
+        />
+      </picture>
 
-        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-7 flex flex-col gap-4" data-aos="fade-right" data-aos-delay="100">
-            <div class="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md tracking-wider font-semibold">
-              <span class="material-symbols-outlined icon-filled text-[15px]" aria-hidden="true">spa</span>
-              <span>ATELIER FLORAL EN AREQUIPA</span>
-            </div>
+      <!-- Degradado de contraste para legibilidad de textos centrados -->
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/60 sm:bg-black/45 z-10 pointer-events-none"
+        aria-hidden="true"
+      ></div>
 
-            <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary tracking-tight">
-              Nuestra Historia &amp; <br class="hidden sm:inline" />
-              <span class="italic font-normal text-on-surface">Pasión Botánica en Arequipa</span>
-            </h1>
+      <!-- Contenido Centrado del Banner -->
+      <div class="relative z-20 w-full max-w-4xl mx-auto px-margin-mobile md:px-margin py-8 sm:py-12 md:py-16 flex flex-col justify-center items-center text-center">
+        <!-- Insignia centrada con animación fade-up -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-[#ffdad3] border border-white/20 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-3 sm:mb-4 shadow-sm slide-fade-up anim-delay-1">
+          <span class="material-symbols-outlined text-[16px] text-[#f48b77]" aria-hidden="true">spa</span>
+          <span>ATELIER FLORAL EN AREQUIPA</span>
+        </div>
 
-            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
-              Cultivando momentos inolvidables en el corazón de la Ciudad Blanca. En ISOTELI tejemos la calidez del sillar volcánico, el sol eterno de Arequipa y la sensibilidad floral contemporánea en cada pétalo.
-            </p>
+        <!-- Título principal centrado con animación fade-up -->
+        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase leading-tight drop-shadow-md slide-fade-up anim-delay-2">
+          Nuestra Historia &amp; <br class="hidden sm:inline" />
+          <span class="italic font-normal text-[#ffdad3]">Pasión Botánica</span>
+        </h1>
 
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <a
-                class="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-6 py-3 rounded-full font-label-lg text-label-lg shadow-sm transition-all transform hover:-translate-y-0.5"
-                href={buildWhatsAppUrl('Hola ISOTELI, me gustaría hacer un pedido o cotizar un detalle')}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <span>Hablemos con un Florista</span>
-                <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
-              </a>
-              <a
-                class="inline-flex items-center gap-2 bg-secondary-container hover:bg-surface text-secondary border border-secondary/30 px-6 py-3 rounded-full font-label-lg text-label-lg shadow-sm transition-colors"
-                href="/catalogo"
-              >
-                <span>Explorar Catálogo</span>
-              </a>
-            </div>
-          </div>
+        <!-- Párrafo descriptivo centrado con animación fade-up -->
+        <p class="mt-3 sm:mt-4 font-sans text-sm sm:text-base md:text-lg text-[#ffdad3]/95 font-normal leading-relaxed max-w-2xl drop-shadow-sm slide-fade-up anim-delay-3">
+          Cultivando momentos inolvidables en el corazón de la Ciudad Blanca. En ISOTELI tejemos la calidez del sillar volcánico, el sol eterno de Arequipa y la sensibilidad floral contemporánea en cada pétalo.
+        </p>
 
-          <div class="lg:col-span-5 relative pb-8 lg:pb-0" data-aos="fade-left" data-aos-delay="200">
-            <div class="relative mx-auto max-w-md lg:max-w-none">
-              <div class="overflow-hidden rounded-xl bg-surface shadow-md aspect-[16/10] relative">
-                <img
-                  class="w-full h-full object-cover object-center"
-                  src={heroImageUrl}
-                  alt="Atelier floral artesanal en Arequipa con rosas frescas color durazno, eucalipto y arquitectura de sillar iluminada por luz natural"
-                  loading="eager"
-                  onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-on-surface/75 via-on-surface/20 to-transparent"></div>
-                <div class="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 text-on-primary">
-                  <p class="font-label-md text-[11px] sm:text-label-md uppercase tracking-wider text-primary-fixed">
-                    Atelier ISOTELI • Valle de Chilina &amp; Arequipa
-                  </p>
-                  <p class="font-headline-sm text-sm sm:text-headline-sm font-semibold leading-snug">
-                    Flores cosechadas con reverencia al paisaje andino.
-                  </p>
-                </div>
-              </div>
+        <!-- Métrica destacada centrada con animación fade-up -->
+        <div class="mt-3 sm:mt-4 inline-flex items-center gap-2 text-xs sm:text-sm text-white/90 bg-black/30 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/10 slide-fade-up anim-delay-3">
+          <span class="material-symbols-outlined text-[16px] text-[#25D366]" aria-hidden="true">verified</span>
+          <span>+6 Años elevando celebraciones en Arequipa</span>
+        </div>
 
-              <!-- Tarjeta Métrica Flotante -->
-              <div class="absolute -bottom-6 -left-3 sm:-left-6 bg-surface p-4 rounded-lg shadow-md flex items-center gap-3 border border-outline-variant/30" data-aos="zoom-in" data-aos-delay="300">
-                <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
-                  <span class="material-symbols-outlined text-[24px]" aria-hidden="true">verified</span>
-                </div>
-                <div class="flex flex-col">
-                  <span class="font-headline-sm text-headline-sm text-primary font-bold leading-none">+6 Años</span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">Elevando celebraciones en Arequipa</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Botones CTA centrados con animación fade-down -->
+        <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 slide-fade-down anim-delay-4">
+          <a
+            href={buildWhatsAppUrl('Hola ISOTELI, me gustaría hacer un pedido o cotizar un detalle')}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 bg-[#500e05] hover:bg-[#6e2417] text-white border border-[#ffb4a6]/40 font-sans text-sm sm:text-base font-semibold px-7 sm:px-8 py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98]"
+          >
+            <WhatsAppIcon class="w-4 h-4 text-[#25D366]" />
+            <span>Hablemos con un Florista</span>
+          </a>
+          <a
+            href="/catalogo"
+            class="inline-flex items-center justify-center gap-2 bg-white/95 hover:bg-white text-[#500e05] border border-white/40 font-sans text-sm sm:text-base font-semibold px-7 sm:px-8 py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98]"
+          >
+            <span>Explorar Catálogo</span>
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+          </a>
         </div>
       </div>
     </section>
@@ -458,4 +448,65 @@ const studioImageUrl =
     </section>
   </div>
 </Layout>
+
+<style>
+  /* ==========================================================================
+     ANIMACIONES EDITORIALES HERO (FADE UP EN TEXTOS Y FADE DOWN EN BOTONES)
+     ========================================================================== */
+  @keyframes heroFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes heroFadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-fade-up {
+    opacity: 0;
+    animation: heroFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: opacity, transform;
+  }
+
+  .slide-fade-down {
+    opacity: 0;
+    animation: heroFadeDown 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: opacity, transform;
+  }
+
+  .anim-delay-1 {
+    animation-delay: 80ms;
+  }
+  .anim-delay-2 {
+    animation-delay: 200ms;
+  }
+  .anim-delay-3 {
+    animation-delay: 340ms;
+  }
+  .anim-delay-4 {
+    animation-delay: 480ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide-fade-up,
+    .slide-fade-down {
+      transform: none !important;
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
+</style>
 

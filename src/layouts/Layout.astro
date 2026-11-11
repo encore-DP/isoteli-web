@@ -134,8 +134,14 @@ const jsonLdString = JSON.stringify(jsonLdGraph);
       import AOS from 'aos';
 
       const initAOS = () => {
-        // Garantizar que todas las secciones y segmentos principales tengan animación de entrada
+        // Garantizar animación de entrada, omitiendo contenedores con posición sticky para no romper el layout
         document.querySelectorAll('main section, footer').forEach((sec) => {
+          if (
+            sec.hasAttribute('data-no-aos') ||
+            sec.querySelector('#filterSidebar, .lg\\:sticky, [class*="sticky"]')
+          ) {
+            return;
+          }
           if (!sec.hasAttribute('data-aos')) {
             sec.setAttribute('data-aos', 'fade-up');
           }

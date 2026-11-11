@@ -44,26 +44,76 @@ const validPrices = products
 const catalogMinPrice = validPrices.length > 0 ? Math.floor(Math.min(...validPrices)) : 20;
 const catalogMaxPrice = validPrices.length > 0 ? Math.ceil(Math.max(...validPrices)) : 300;
 
-// Categorías con conteos dinámicos
-const categoryCounts = FLORIST_CATEGORIES.map((cat) => ({
-  ...cat,
-  count: products.filter((p) => p.categorySlug === cat.slug).length,
-})).filter((cat) => cat.count > 0);
+// Paleta de colores floral (según imagen de referencia)
+const COLOR_DEFINITIONS = [
+  { slug: 'rojo', label: 'Rojo', bgClass: 'bg-[#D32F2F]' },
+  { slug: 'rosado', label: 'Rosado', bgClass: 'bg-[#F48FB1]' },
+  { slug: 'blanco', label: 'Blanco', bgClass: 'bg-[#FFFFFF] border border-[#ECD9CC]' },
+  { slug: 'amarillo', label: 'Amarillo', bgClass: 'bg-[#FBC02D]' },
+  { slug: 'naranja', label: 'Naranja', bgClass: 'bg-[#FB8C00]' },
+  { slug: 'lila', label: 'Lila', bgClass: 'bg-[#BA68C8]' },
+] as const;
 
-// Incluir cualquier otra categoría de WordPress que contenga productos
-products.forEach((p) => {
-  if (p.categorySlug && !FLORIST_CATEGORIES.some((c) => c.slug === p.categorySlug)) {
-    if (!categoryCounts.some((c) => c.slug === p.categorySlug)) {
-      const count = products.filter((item) => item.categorySlug === p.categorySlug).length;
-      categoryCounts.push({
-        slug: p.categorySlug as any,
-        label: p.categoryLabel || p.categorySlug,
-        shortLabel: p.categoryLabel || p.categorySlug,
-        count,
-      });
+function extractColors(text: string): string[] {
+  const t = text.toLowerCase();
+  const colors: string[] = [];
+  if (/rojo|roja|amor|pasi[oó]n|fresas|deluxe|san valent[ií]n/.test(t)) colors.push('rojo');
+  if (/rosa|rosad|pastel|princesa|tierno|amorosa|encapsulado/.test(t)) colors.push('rosado');
+  if (/blanco|blanca|lirio|pureza|margarita|orqu[ií]dea|cl[aá]sico/.test(t)) colors.push('blanco');
+  if (/amarillo|girasol|sol|rayo|alegr[ií]a|vibrante/.test(t)) colors.push('amarillo');
+  if (/naranja|durazno|oto[nñ]o|melocot[oó]n|tulip[aá]n/.test(t)) colors.push('naranja');
+  if (/lila|morado|violeta|lavanda|sutil/.test(t)) colors.push('lila');
+
+  if (colors.length === 0) {
+    if (t.includes('globo') || t.includes('parante')) {
+      colors.push('blanco', 'rosado');
+    } else {
+      colors.push('rosado', 'rojo');
     }
   }
-});
+  return colors;
+}
+
+const colorCounts = COLOR_DEFINITIONS.map((c) => ({
+  ...c,
+  count: products.filter((p) =>
+    extractColors(`${p.name} ${p.shortDescription} ${p.categoryLabel}`).includes(c.slug)
+  ).length,
+}));
+
+// Detección de tipos de flor y colecciones según la referencia
+function extractFlowerTypes(prod: any): string[] {
+  const t = `${prod.name} ${prod.shortDescription} ${prod.categoryLabel}`.toLowerCase();
+  const types: string[] = [];
+  if (/rosa/.test(t)) types.push('rosas');
+  if (/girasol/.test(t)) types.push('girasoles');
+  if (/eterna|eterno/.test(t)) types.push('eternas');
+  if (/tulip[aá]n/.test(t)) types.push('tulipanes');
+  if (/orqu[ií]dea/.test(t)) types.push('orquideas');
+  if (/hortensia/.test(t)) types.push('hortensias');
+  if (/clavel/.test(t)) types.push('claveles');
+  if (/gerbera/.test(t)) types.push('gerberas');
+  if (/caja|box/.test(t)) types.push('cajas-y-boxes');
+  if (/globo|bouquet|parante/.test(t)) types.push('globos-y-bouquets');
+  return types;
+}
+
+const FLOWER_DEFINITIONS = [
+  { slug: 'rosas', label: 'Rosas' },
+  { slug: 'girasoles', label: 'Girasoles' },
+  { slug: 'cajas-y-boxes', label: 'Cajas & Boxes' },
+  { slug: 'globos-y-bouquets', label: 'Globos & Bouquets' },
+  { slug: 'eternas', label: 'Eternas' },
+  { slug: 'tulipanes', label: 'Tulipanes' },
+  { slug: 'claveles', label: 'Claveles' },
+  { slug: 'hortensias', label: 'Hortensias' },
+  { slug: 'gerberas', label: 'Gerberas' },
+] as const;
+
+const flowerCounts = FLOWER_DEFINITIONS.map((f) => ({
+  ...f,
+  count: products.filter((p) => extractFlowerTypes(p).includes(f.slug)).length,
+})).filter((f) => f.count > 0);
 ---
 
 <Layout
@@ -101,25 +151,26 @@ products.forEach((p) => {
     </section>
 
     <!-- ================= SECCIÓN PRINCIPAL: FILTROS A LA IZQUIERDA Y CATÁLOGO A LA DERECHA ================= -->
-    <section class="w-full px-margin-mobile md:px-margin mb-space-xl" data-aos="fade-up">
+    <!-- data-no-aos="true" evita que AOS aplique 'transform: translateZ(0)' que rompe el sticky -->
+    <section id="catalogMainSection" class="w-full px-margin-mobile md:px-margin mb-space-xl" data-no-aos="true">
       <!-- Botón móvil para desplegar filtros en pantallas pequeñas -->
       <div class="lg:hidden mb-5 flex items-center justify-between gap-3">
         <button
           id="mobileFilterToggleBtn"
           type="button"
-          class="flex-1 inline-flex items-center justify-center gap-2 bg-white/95 hover:bg-[#FAF4EE] text-[#500e05] border border-[#ECD9CC] py-2.5 px-4 rounded-xl font-label-md text-label-md font-semibold transition-colors shadow-xs"
+          class="flex-1 inline-flex items-center justify-center gap-2 bg-white/95 hover:bg-[#FAF4EE] text-[#500e05] border border-[#ECD9CC] py-2.5 px-4 rounded-xl font-label-md text-label-md font-semibold transition-colors shadow-2xs"
           aria-expanded="false"
           aria-controls="filterSidebar"
         >
           <span class="material-symbols-outlined text-[20px]" aria-hidden="true">tune</span>
-          <span>Filtrar y Buscar</span>
+          <span>Filtrar</span>
           <span id="activeFiltersBadge" class="hidden px-2 py-0.5 text-xs bg-[#500e05] text-white rounded-full font-bold"></span>
         </button>
 
         <div class="relative shrink-0">
           <select
             id="sortSelectorMobile"
-            class="appearance-none bg-white/95 text-[#500e05] font-body-sm text-sm py-2.5 pl-3 pr-8 rounded-xl border border-[#ECD9CC] font-semibold focus:outline-none focus:ring-1 focus:ring-[#500e05] cursor-pointer shadow-xs"
+            class="appearance-none bg-white/95 text-[#500e05] font-body-sm text-sm py-2.5 pl-3 pr-8 rounded-xl border border-[#ECD9CC] font-semibold focus:outline-none focus:ring-1 focus:ring-[#500e05] cursor-pointer shadow-2xs"
             aria-label="Ordenar productos"
           >
             <option value="featured">Destacados</option>
@@ -135,18 +186,16 @@ products.forEach((p) => {
 
       <div class="flex flex-col lg:flex-row items-start gap-8 lg:gap-10 w-full">
         <!-- ================= BARRA LATERAL DE FILTROS (IZQUIERDA EN DESKTOP) ================= -->
+        <!-- lg:top-[172px] garantiza distancia libre bajo la cabecera fija de ~152px sin quedar tapada -->
         <aside
           id="filterSidebar"
-          class="hidden lg:block w-full lg:w-72 xl:w-80 shrink-0 bg-white/95 rounded-2xl p-5 sm:p-6 shadow-sm border border-[#ECD9CC] lg:sticky lg:top-[168px] lg:max-h-[calc(100vh-188px)] lg:overflow-y-auto scroll-mt-[175px] z-20"
+          class="hidden lg:block w-full lg:w-72 xl:w-76 shrink-0 bg-white/95 rounded-2xl p-5 sm:p-6 shadow-xs border border-[#ECD9CC] lg:sticky lg:top-[172px] lg:max-h-[calc(100vh-190px)] lg:overflow-y-auto scroll-mt-[190px] z-20"
         >
-          <!-- Encabezado de la barra lateral -->
+          <!-- Encabezado de la barra lateral (idéntico a la imagen de referencia) -->
           <div class="flex items-center justify-between pb-3.5 border-b border-[#ECD9CC]/70">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[22px] text-[#500e05]" aria-hidden="true">tune</span>
-              <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#500e05] tracking-tight">
-                Filtrar
-              </h2>
-            </div>
+            <h2 class="font-serif text-2xl font-bold text-[#500e05] tracking-tight">
+              Filtrar
+            </h2>
             <button
               id="resetFiltersBtn"
               type="button"
@@ -158,19 +207,14 @@ products.forEach((p) => {
 
           <!-- 1. FILTRO DE PRECIO (BARRA CON PRECIO MÍNIMO Y MÁXIMO) -->
           <div class="py-4 border-b border-[#ECD9CC]/70">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest">
-                Precio (S/)
-              </span>
-              <span id="priceActiveIndicator" class="text-[11px] font-medium text-[#6e2417]">
-                Rango completo
-              </span>
-            </div>
+            <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest block mb-2">
+              Precio (S/)
+            </span>
 
             <!-- Slider Dual de Rango -->
-            <div class="relative w-full pt-3 pb-1">
+            <div class="relative w-full pt-2 pb-1">
               <!-- Barra base de fondo -->
-              <div class="relative h-2 w-full rounded-full bg-[#ECD9CC]/80">
+              <div class="relative h-1.5 w-full rounded-full bg-[#ECD9CC]/80">
                 <!-- Barra activa coloreada -->
                 <div
                   id="sliderProgress"
@@ -180,7 +224,7 @@ products.forEach((p) => {
               </div>
 
               <!-- Inputs Range superpuestos -->
-              <div class="relative h-2 -top-2">
+              <div class="relative h-1.5 -top-1.5">
                 <input
                   type="range"
                   id="rangeMin"
@@ -204,19 +248,104 @@ products.forEach((p) => {
               </div>
             </div>
 
-            <!-- Etiquetas de valores Mín. y Máx. exactas como en la imagen de referencia -->
-            <div class="flex items-center justify-between text-xs font-semibold text-[#500e05] mt-3">
-              <span class="bg-[#FAF4EE] px-2.5 py-1 rounded-lg border border-[#ECD9CC] shadow-2xs">
-                Mín. S/ <span id="displayMinPrice">{catalogMinPrice}</span>
-              </span>
-              <span class="bg-[#FAF4EE] px-2.5 py-1 rounded-lg border border-[#ECD9CC] shadow-2xs">
-                Máx. S/ <span id="displayMaxPrice">{catalogMaxPrice}</span>
-              </span>
+            <!-- Etiquetas de valores Mín. y Máx. exactas como en la referencia -->
+            <div class="flex items-center justify-between text-xs font-medium text-[#55423f] mt-2.5">
+              <span>Mín. <strong class="text-[#500e05]">S/ <span id="displayMinPrice">{catalogMinPrice}</span></strong></span>
+              <span>Máx. <strong class="text-[#500e05]">S/ <span id="displayMaxPrice">{catalogMaxPrice}</span></strong></span>
             </div>
           </div>
 
-          <!-- 2. BUSCADOR INTEGRADO EN BARRA LATERAL -->
+          <!-- 2. TIPO DE FLOR / CATEGORÍA (IDÉNTICO A LA REFERENCIA) -->
           <div class="py-4 border-b border-[#ECD9CC]/70">
+            <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest block mb-2.5">
+              Tipo de Flor
+            </span>
+
+            <div id="flowerTypeListContainer" class="flex flex-col gap-0.5" role="group" aria-label="Filtrar por tipo de flor">
+              <!-- Opción: Todos los arreglos -->
+              <button
+                type="button"
+                data-flower-filter="all"
+                class="flower-filter-item w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer group text-left bg-[#FAF4EE] text-[#500e05] font-semibold"
+              >
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="flower-checkbox w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors bg-[#500e05] border-[#500e05] text-white">
+                    <span class="material-symbols-outlined text-[13px] leading-none" aria-hidden="true">check</span>
+                  </div>
+                  <span class="truncate">Todos</span>
+                </div>
+                <span class="flower-count text-[11px] text-[#6e2417] font-semibold shrink-0 ml-1">
+                  ({products.length})
+                </span>
+              </button>
+
+              <!-- Tipos de Flor Dinámicos -->
+              {
+                flowerCounts.map((f, index) => (
+                  <button
+                    type="button"
+                    data-flower-filter={f.slug}
+                    class:list={[
+                      'flower-filter-item w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer group text-left hover:bg-[#FAF4EE] text-[#402d29] hover:text-[#500e05]',
+                      index >= 6 && 'extra-flower-item hidden',
+                    ]}
+                  >
+                    <div class="flex items-center gap-2.5 min-w-0">
+                      <div class="flower-checkbox w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors border-[#ECD9CC] bg-white group-hover:border-[#500e05]/60">
+                        <span class="material-symbols-outlined text-[13px] leading-none hidden" aria-hidden="true">check</span>
+                      </div>
+                      <span class="truncate">{f.label}</span>
+                    </div>
+                    <span class="flower-count text-[11px] text-[#88726e] group-hover:text-[#6e2417] shrink-0 ml-1">
+                      ({f.count})
+                    </span>
+                  </button>
+                ))
+              }
+
+              {
+                flowerCounts.length > 6 && (
+                  <button
+                    id="toggleMoreFlowersBtn"
+                    type="button"
+                    class="text-xs font-semibold text-[#500e05] hover:underline text-left py-1 px-2 mt-1 cursor-pointer"
+                  >
+                    Ver más ({flowerCounts.length - 6})
+                  </button>
+                )
+              }
+            </div>
+          </div>
+
+          <!-- 3. COLOR (IDÉNTICO A LA REFERENCIA) -->
+          <div class="py-4 border-b border-[#ECD9CC]/70">
+            <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest block mb-2.5">
+              Color
+            </span>
+
+            <div class="flex flex-col gap-0.5" role="group" aria-label="Filtrar por color">
+              {
+                colorCounts.map((c) => (
+                  <button
+                    type="button"
+                    data-color-filter={c.slug}
+                    class="color-filter-item w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer group text-left hover:bg-[#FAF4EE] text-[#402d29] hover:text-[#500e05]"
+                  >
+                    <div class="flex items-center gap-2.5 min-w-0">
+                      <span class:list={['w-3.5 h-3.5 rounded-full shrink-0 shadow-2xs transition-transform group-hover:scale-110', c.bgClass]}></span>
+                      <span class="truncate">{c.label}</span>
+                    </div>
+                    <span class="color-count text-[11px] text-[#88726e] group-hover:text-[#6e2417] shrink-0 ml-1">
+                      ({c.count})
+                    </span>
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- 4. BUSCADOR INTEGRADO EN BARRA LATERAL -->
+          <div class="pt-4">
             <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest block mb-2">
               Buscar Arreglo
             </span>
@@ -244,77 +373,6 @@ products.forEach((p) => {
             </div>
           </div>
 
-          <!-- 3. CATEGORÍAS CON CHECKBOXES Y CONTEOS (COMO EN LA IMAGEN DE REFERENCIA) -->
-          <div class="py-4 border-b border-[#ECD9CC]/70">
-            <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest block mb-3">
-              Tipo de Arreglo / Flor
-            </span>
-
-            <div class="flex flex-col gap-1" role="group" aria-label="Filtrar por categoría">
-              <!-- Opción: Todos -->
-              <button
-                type="button"
-                data-category-filter="all"
-                class="category-filter-item w-full flex items-center justify-between p-2 rounded-xl text-xs sm:text-sm font-medium transition-colors cursor-pointer group text-left bg-[#FAF4EE] text-[#500e05] font-semibold border border-[#ECD9CC]"
-              >
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="cat-checkbox w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors bg-[#500e05] border-[#500e05] text-white">
-                    <span class="material-symbols-outlined text-[13px] leading-none" aria-hidden="true">check</span>
-                  </div>
-                  <span class="truncate">Todos los arreglos</span>
-                </div>
-                <span class="cat-count text-[11px] text-[#6e2417] font-semibold shrink-0 ml-1">
-                  ({products.length})
-                </span>
-              </button>
-
-              <!-- Categorías dinámicas -->
-              {
-                categoryCounts.map((cat) => (
-                  <button
-                    type="button"
-                    data-category-filter={cat.slug}
-                    class="category-filter-item w-full flex items-center justify-between p-2 rounded-xl text-xs sm:text-sm font-medium transition-colors cursor-pointer group text-left hover:bg-[#FAF4EE] text-[#402d29] hover:text-[#500e05] border border-transparent"
-                  >
-                    <div class="flex items-center gap-2.5 min-w-0">
-                      <div class="cat-checkbox w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors border-[#ECD9CC] bg-white group-hover:border-[#500e05]/60">
-                        <span class="material-symbols-outlined text-[13px] leading-none hidden" aria-hidden="true">check</span>
-                      </div>
-                      <span class="truncate">{cat.shortLabel || cat.label}</span>
-                    </div>
-                    <span class="cat-count text-[11px] text-outline group-hover:text-[#6e2417] shrink-0 ml-1">
-                      ({cat.count})
-                    </span>
-                  </button>
-                ))
-              }
-            </div>
-          </div>
-
-          <!-- 4. ORDENAR POR (DESKTOP) -->
-          <div class="pt-4">
-            <span class="text-[11px] font-bold text-[#500e05]/80 uppercase tracking-widest block mb-2">
-              Ordenar Por
-            </span>
-            <div class="relative">
-              <select
-                id="sortSelector"
-                class="w-full appearance-none bg-[#FAF4EE]/70 hover:bg-[#FAF4EE] text-[#500e05] font-body-sm text-sm py-2 pl-3 pr-8 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] cursor-pointer shadow-2xs font-semibold"
-              >
-                <option value="featured">Destacados</option>
-                <option value="price-asc">Precio: Menor a Mayor</option>
-                <option value="price-desc">Precio: Mayor a Menor</option>
-                <option value="popular">Más Populares</option>
-              </select>
-              <span
-                class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#500e05] text-[18px]"
-                aria-hidden="true"
-              >
-                expand_more
-              </span>
-            </div>
-          </div>
-
           <!-- Botón de Cierre en Móvil -->
           <div class="pt-4 lg:hidden border-t border-[#ECD9CC]/70 mt-4">
             <button
@@ -329,20 +387,44 @@ products.forEach((p) => {
 
         <!-- ================= CATÁLOGO Y GRILLA (DERECHA EN DESKTOP) ================= -->
         <div class="flex-1 w-full min-w-0">
-          <!-- Barra superior de estado y filtros activos -->
+          <!-- Barra superior de estado, filtros activos y ordenar por (desktop) -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[#ECD9CC]/60">
-            <div class="flex items-center gap-2">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
               <p class="font-body-md text-sm sm:text-base text-on-surface-variant">
                 Mostrando <strong id="visibleProductsCount" class="text-[#500e05]">{products.length}</strong> de <strong class="text-[#500e05]">{products.length}</strong> arreglos
               </p>
             </div>
 
-            <!-- Chips de Filtros Activos -->
-            <div id="activeFilterChips" class="flex flex-wrap items-center gap-2"></div>
+            <!-- Selector de Ordenar Por (Desktop) alineado a la derecha -->
+            <div class="hidden lg:flex items-center gap-2 shrink-0">
+              <label for="sortSelector" class="text-xs font-semibold text-[#500e05]/80 whitespace-nowrap">
+                Ordenar por:
+              </label>
+              <div class="relative">
+                <select
+                  id="sortSelector"
+                  class="appearance-none bg-[#FAF4EE]/70 hover:bg-[#FAF4EE] text-[#500e05] text-xs sm:text-sm py-1.5 pl-3 pr-8 rounded-xl border border-[#ECD9CC] focus:outline-none focus:ring-1 focus:ring-[#500e05] cursor-pointer font-semibold shadow-2xs"
+                >
+                  <option value="featured">Destacados</option>
+                  <option value="price-asc">Precio: Menor a Mayor</option>
+                  <option value="price-desc">Precio: Mayor a Menor</option>
+                  <option value="popular">Más Populares</option>
+                </select>
+                <span
+                  class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#500e05] text-[18px]"
+                  aria-hidden="true"
+                >
+                  expand_more
+                </span>
+              </div>
+            </div>
           </div>
 
-          <!-- Grilla de Productos -->
-          <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Chips de Filtros Activos -->
+          <div id="activeFilterChips" class="flex flex-wrap items-center gap-2 mb-4"></div>
+
+          <!-- Grilla de Productos (4 Columnas en Desktop como en la Referencia) -->
+          <div id="catalogGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {products.map((producto) => <ProductCard product={producto} variant="catalog" />)}
           </div>
 
@@ -358,7 +440,7 @@ products.forEach((p) => {
               No encontramos arreglos con los filtros seleccionados
             </h3>
             <p class="font-sans text-sm text-[#55423f] max-w-md mb-6 leading-relaxed">
-              Prueba ampliando el rango de precios, seleccionando otra categoría o limpiando la búsqueda. También podemos diseñar un arreglo totalmente personalizado por WhatsApp.
+              Prueba ampliando el rango de precios, seleccionando otra flor o limpiando la búsqueda. También podemos diseñar un arreglo totalmente personalizado por WhatsApp.
             </p>
             <button
               id="resetFiltersEmptyBtn"
@@ -423,6 +505,18 @@ products.forEach((p) => {
 
 <style>
   /* ==========================================================================
+     PROTECCIÓN CONTRA EL ERROR DE CORTE POR LA CABECERA FIJA
+     Garantiza que la sección y barra lateral nunca se rompan por transforms
+     ========================================================================== */
+  #catalogMainSection {
+    transform: none !important;
+  }
+
+  #filterSidebar {
+    transform: none !important;
+  }
+
+  /* ==========================================================================
      ESTILOS NATIVOS PARA EL SLIDER DUAL DE PRECIOS (ZERO-DEPENDENCY)
      ========================================================================== */
   .dual-range-input {
@@ -443,46 +537,46 @@ products.forEach((p) => {
     -webkit-appearance: none;
     appearance: none;
     pointer-events: auto;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background-color: #500e05;
-    border: 3px solid #ffffff;
-    box-shadow: 0 1px 4px rgba(80, 14, 5, 0.35);
+    background-color: #ffffff;
+    border: 2.5px solid #500e05;
+    box-shadow: 0 1px 4px rgba(80, 14, 5, 0.3);
     cursor: pointer;
     transition: transform 0.15s ease, background-color 0.15s ease;
   }
 
   .dual-range-input::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-    background-color: #6e2417;
+    transform: scale(1.25);
+    background-color: #FAF4EE;
   }
 
   .dual-range-input::-webkit-slider-thumb:active {
-    transform: scale(1.25);
-    background-color: #380a04;
+    transform: scale(1.3);
+    background-color: #ECD9CC;
   }
 
   .dual-range-input::-moz-range-thumb {
     pointer-events: auto;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background-color: #500e05;
-    border: 3px solid #ffffff;
-    box-shadow: 0 1px 4px rgba(80, 14, 5, 0.35);
+    background-color: #ffffff;
+    border: 2.5px solid #500e05;
+    box-shadow: 0 1px 4px rgba(80, 14, 5, 0.3);
     cursor: pointer;
     transition: transform 0.15s ease, background-color 0.15s ease;
   }
 
   .dual-range-input::-moz-range-thumb:hover {
-    transform: scale(1.2);
-    background-color: #6e2417;
+    transform: scale(1.25);
+    background-color: #FAF4EE;
   }
 
   .dual-range-input::-moz-range-thumb:active {
-    transform: scale(1.25);
-    background-color: #380a04;
+    transform: scale(1.3);
+    background-color: #ECD9CC;
   }
 
   /* Scrollbar estilizado para la barra lateral de filtros */
@@ -513,13 +607,15 @@ products.forEach((p) => {
   const clearSearchBtn = document.getElementById('clearSearchBtn') as HTMLButtonElement | null;
   const sortSelector = document.getElementById('sortSelector') as HTMLSelectElement | null;
   const sortSelectorMobile = document.getElementById('sortSelectorMobile') as HTMLSelectElement | null;
-  const categoryFilterItems = document.querySelectorAll<HTMLButtonElement>('.category-filter-item');
+  const flowerFilterItems = document.querySelectorAll<HTMLButtonElement>('.flower-filter-item');
+  const colorFilterItems = document.querySelectorAll<HTMLButtonElement>('.color-filter-item');
+  const toggleMoreFlowersBtn = document.getElementById('toggleMoreFlowersBtn');
+  const extraFlowerItems = document.querySelectorAll<HTMLElement>('.extra-flower-item');
   const rangeMin = document.getElementById('rangeMin') as HTMLInputElement | null;
   const rangeMax = document.getElementById('rangeMax') as HTMLInputElement | null;
   const sliderProgress = document.getElementById('sliderProgress') as HTMLElement | null;
   const displayMinPrice = document.getElementById('displayMinPrice') as HTMLElement | null;
   const displayMaxPrice = document.getElementById('displayMaxPrice') as HTMLElement | null;
-  const priceActiveIndicator = document.getElementById('priceActiveIndicator') as HTMLElement | null;
   const visibleProductsCount = document.getElementById('visibleProductsCount') as HTMLElement | null;
   const activeFilterChips = document.getElementById('activeFilterChips') as HTMLElement | null;
   const productGrid = document.getElementById('catalogGrid');
@@ -537,10 +633,27 @@ products.forEach((p) => {
   const maxRange = rangeMax ? parseFloat(rangeMax.max) : 300;
 
   // Estados de filtrado activos
-  let currentCategory = 'all';
+  let currentFlowerType = 'all';
+  let currentColor = 'all';
   let currentQuery = '';
   let currentMinPrice = minRange;
   let currentMaxPrice = maxRange;
+
+  // Toggle de 'Ver más' flores
+  let areExtraFlowersVisible = false;
+  toggleMoreFlowersBtn?.addEventListener('click', () => {
+    areExtraFlowersVisible = !areExtraFlowersVisible;
+    extraFlowerItems.forEach((el) => {
+      if (areExtraFlowersVisible) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    });
+    toggleMoreFlowersBtn.textContent = areExtraFlowersVisible
+      ? 'Ver menos'
+      : `Ver más (${extraFlowerItems.length})`;
+  });
 
   // Actualiza la visualización del slider dual de precios
   function updateSlider(source?: 'min' | 'max') {
@@ -573,30 +686,22 @@ products.forEach((p) => {
     sliderProgress.style.left = `${percentMin}%`;
     sliderProgress.style.right = `${100 - percentMax}%`;
 
-    if (priceActiveIndicator) {
-      if (minVal > minRange || maxVal < maxRange) {
-        priceActiveIndicator.textContent = `S/ ${minVal.toFixed(0)} - S/ ${maxVal.toFixed(0)}`;
-      } else {
-        priceActiveIndicator.textContent = 'Rango completo';
-      }
-    }
-
     filterAndSort();
   }
 
-  // Actualiza el aspecto de selección de la categoría en la lista
-  function setActiveCategory(targetCat: string) {
-    currentCategory = targetCat;
-    categoryFilterItems.forEach((item) => {
-      const cat = item.getAttribute('data-category-filter');
-      const isMatch = cat === targetCat;
-      const checkbox = item.querySelector('.cat-checkbox');
-      const checkIcon = item.querySelector('.cat-checkbox span');
-      const countEl = item.querySelector('.cat-count');
+  // Selección de Tipo de Flor
+  function setActiveFlower(targetFlower: string) {
+    currentFlowerType = targetFlower;
+    flowerFilterItems.forEach((item) => {
+      const slug = item.getAttribute('data-flower-filter');
+      const isMatch = slug === targetFlower;
+      const checkbox = item.querySelector('.flower-checkbox');
+      const checkIcon = item.querySelector('.flower-checkbox span');
+      const countEl = item.querySelector('.flower-count');
 
       if (isMatch) {
-        item.classList.add('bg-[#FAF4EE]', 'text-[#500e05]', 'font-semibold', 'border-[#ECD9CC]');
-        item.classList.remove('border-transparent', 'text-[#402d29]');
+        item.classList.add('bg-[#FAF4EE]', 'text-[#500e05]', 'font-semibold');
+        item.classList.remove('text-[#402d29]');
         if (checkbox) {
           checkbox.classList.add('bg-[#500e05]', 'border-[#500e05]', 'text-white');
           checkbox.classList.remove('bg-white', 'border-[#ECD9CC]');
@@ -604,11 +709,11 @@ products.forEach((p) => {
         if (checkIcon) checkIcon.classList.remove('hidden');
         if (countEl) {
           countEl.classList.add('text-[#6e2417]', 'font-semibold');
-          countEl.classList.remove('text-outline');
+          countEl.classList.remove('text-[#88726e]');
         }
       } else {
-        item.classList.remove('bg-[#FAF4EE]', 'text-[#500e05]', 'font-semibold', 'border-[#ECD9CC]');
-        item.classList.add('border-transparent', 'text-[#402d29]');
+        item.classList.remove('bg-[#FAF4EE]', 'text-[#500e05]', 'font-semibold');
+        item.classList.add('text-[#402d29]');
         if (checkbox) {
           checkbox.classList.remove('bg-[#500e05]', 'border-[#500e05]', 'text-white');
           checkbox.classList.add('bg-white', 'border-[#ECD9CC]');
@@ -616,7 +721,33 @@ products.forEach((p) => {
         if (checkIcon) checkIcon.classList.add('hidden');
         if (countEl) {
           countEl.classList.remove('text-[#6e2417]', 'font-semibold');
-          countEl.classList.add('text-outline');
+          countEl.classList.add('text-[#88726e]');
+        }
+      }
+    });
+  }
+
+  // Selección de Color
+  function setActiveColor(targetColor: string) {
+    currentColor = currentColor === targetColor ? 'all' : targetColor;
+    colorFilterItems.forEach((item) => {
+      const slug = item.getAttribute('data-color-filter');
+      const isMatch = slug === currentColor;
+      const countEl = item.querySelector('.color-count');
+
+      if (isMatch) {
+        item.classList.add('bg-[#FAF4EE]', 'text-[#500e05]', 'font-semibold', 'ring-1', 'ring-[#500e05]/30');
+        item.classList.remove('text-[#402d29]');
+        if (countEl) {
+          countEl.classList.add('text-[#6e2417]', 'font-semibold');
+          countEl.classList.remove('text-[#88726e]');
+        }
+      } else {
+        item.classList.remove('bg-[#FAF4EE]', 'text-[#500e05]', 'font-semibold', 'ring-1', 'ring-[#500e05]/30');
+        item.classList.add('text-[#402d29]');
+        if (countEl) {
+          countEl.classList.remove('text-[#6e2417]', 'font-semibold');
+          countEl.classList.add('text-[#88726e]');
         }
       }
     });
@@ -629,20 +760,39 @@ products.forEach((p) => {
 
     let activeFilterCount = 0;
 
-    // Chip de categoría activa
-    if (currentCategory !== 'all') {
+    // Chip de flor activa
+    if (currentFlowerType !== 'all') {
       activeFilterCount++;
-      const matchedBtn = Array.from(categoryFilterItems).find(
-        (b) => b.getAttribute('data-category-filter') === currentCategory
+      const matchedBtn = Array.from(flowerFilterItems).find(
+        (b) => b.getAttribute('data-flower-filter') === currentFlowerType
       );
-      const catLabel = matchedBtn?.querySelector('span.truncate')?.textContent?.trim() || currentCategory;
+      const label = matchedBtn?.querySelector('span.truncate')?.textContent?.trim() || currentFlowerType;
 
       const chip = document.createElement('span');
       chip.className =
         'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF4EE] text-[#500e05] border border-[#ECD9CC] shadow-2xs';
-      chip.innerHTML = `<span>Categoría: ${catLabel}</span><button type="button" class="cursor-pointer hover:text-black focus:outline-none" aria-label="Quitar filtro de categoría"><span class="material-symbols-outlined text-[14px]">close</span></button>`;
+      chip.innerHTML = `<span>Flor: ${label}</span><button type="button" class="cursor-pointer hover:text-black focus:outline-none" aria-label="Quitar filtro de flor"><span class="material-symbols-outlined text-[14px]">close</span></button>`;
       chip.querySelector('button')?.addEventListener('click', () => {
-        setActiveCategory('all');
+        setActiveFlower('all');
+        filterAndSort();
+      });
+      activeFilterChips.appendChild(chip);
+    }
+
+    // Chip de color activo
+    if (currentColor !== 'all') {
+      activeFilterCount++;
+      const matchedBtn = Array.from(colorFilterItems).find(
+        (b) => b.getAttribute('data-color-filter') === currentColor
+      );
+      const label = matchedBtn?.querySelector('span.truncate')?.textContent?.trim() || currentColor;
+
+      const chip = document.createElement('span');
+      chip.className =
+        'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF4EE] text-[#500e05] border border-[#ECD9CC] shadow-2xs';
+      chip.innerHTML = `<span>Color: ${label}</span><button type="button" class="cursor-pointer hover:text-black focus:outline-none" aria-label="Quitar filtro de color"><span class="material-symbols-outlined text-[14px]">close</span></button>`;
+      chip.querySelector('button')?.addEventListener('click', () => {
+        setActiveColor('all');
         filterAndSort();
       });
       activeFilterChips.appendChild(chip);
@@ -696,14 +846,24 @@ products.forEach((p) => {
 
     products.forEach((item) => {
       const itemCategory = item.getAttribute('data-category') || '';
+      const itemFlowerTypes = (item.getAttribute('data-flower-types') || '').split(',');
+      const itemColors = (item.getAttribute('data-colors') || '').split(',');
       const itemTitle = (item.getAttribute('data-title') || '').toLowerCase();
       const itemPrice = parseFloat(item.getAttribute('data-price') || '0');
 
-      const matchesCategory = currentCategory === 'all' || itemCategory === currentCategory;
+      const matchesFlower =
+        currentFlowerType === 'all' ||
+        itemFlowerTypes.includes(currentFlowerType) ||
+        itemCategory === currentFlowerType;
+
+      const matchesColor =
+        currentColor === 'all' ||
+        itemColors.includes(currentColor);
+
       const matchesQuery = currentQuery === '' || itemTitle.includes(currentQuery.toLowerCase());
       const matchesPrice = itemPrice >= currentMinPrice && itemPrice <= currentMaxPrice;
 
-      if (matchesCategory && matchesQuery && matchesPrice) {
+      if (matchesFlower && matchesColor && matchesQuery && matchesPrice) {
         item.classList.remove('hidden');
         item.classList.add('flex');
         visibleCount++;
@@ -754,11 +914,20 @@ products.forEach((p) => {
   rangeMin?.addEventListener('input', () => updateSlider('min'));
   rangeMax?.addEventListener('input', () => updateSlider('max'));
 
-  // Event Listeners de Categorías
-  categoryFilterItems.forEach((btn) => {
+  // Event Listeners de Flores
+  flowerFilterItems.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const targetCat = btn.getAttribute('data-category-filter') || 'all';
-      setActiveCategory(targetCat);
+      const targetFlower = btn.getAttribute('data-flower-filter') || 'all';
+      setActiveFlower(targetFlower);
+      filterAndSort();
+    });
+  });
+
+  // Event Listeners de Colores
+  colorFilterItems.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetColor = btn.getAttribute('data-color-filter') || 'all';
+      setActiveColor(targetColor);
       filterAndSort();
     });
   });
@@ -794,7 +963,8 @@ products.forEach((p) => {
 
   // Restablecer todos los filtros
   function resetAllFilters() {
-    currentCategory = 'all';
+    currentFlowerType = 'all';
+    currentColor = 'all';
     currentQuery = '';
     currentMinPrice = minRange;
     currentMaxPrice = maxRange;
@@ -807,7 +977,8 @@ products.forEach((p) => {
     if (sortSelector) sortSelector.value = 'featured';
     if (sortSelectorMobile) sortSelectorMobile.value = 'featured';
 
-    setActiveCategory('all');
+    setActiveFlower('all');
+    setActiveColor('all');
     updateSlider();
     sortProducts('featured');
     filterAndSort();
@@ -832,18 +1003,20 @@ products.forEach((p) => {
   applyMobileFiltersBtn?.addEventListener('click', () => {
     filterSidebar?.classList.add('hidden');
     mobileFilterToggleBtn?.setAttribute('aria-expanded', 'false');
-    // Desplazamiento suave hacia la grilla
     productGrid?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // Soporte para filtro directo por hash o query (?categoria=...)
-  const initialQueryCat = new URLSearchParams(window.location.search).get('categoria') || '';
+  // Soporte para filtro directo por hash o query (?categoria=... o ?flor=...)
+  const initialQueryCat =
+    new URLSearchParams(window.location.search).get('categoria') ||
+    new URLSearchParams(window.location.search).get('flor') ||
+    '';
   const initialHash = window.location.hash.replace('#', '') || initialQueryCat;
   if (
     initialHash &&
-    Array.from(categoryFilterItems).some((b) => b.getAttribute('data-category-filter') === initialHash)
+    Array.from(flowerFilterItems).some((b) => b.getAttribute('data-flower-filter') === initialHash)
   ) {
-    setActiveCategory(initialHash);
+    setActiveFlower(initialHash);
   }
 
   // Manejo de foco y desplazamiento si se accede por el enlace de búsqueda del navbar
