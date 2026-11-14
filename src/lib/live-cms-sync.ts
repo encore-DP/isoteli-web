@@ -84,7 +84,7 @@ export function renderProductCardHtml(
                   data-var-price="${escapeHtml(v.formattedPrice)}"
                   data-var-numeric="${String(v.numericPrice)}"
                   class="px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer border ${btnCls}"
-                >${escapeHtml(v.label)} · ${escapeHtml(v.formattedPrice)}</button>`;
+                >${escapeHtml(v.label)}</button>`;
               })
               .join('')}
           </div>
