@@ -129,25 +129,19 @@ const studioImageUrl =
         <!-- Insignia centrada con animación fade-up -->
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-[#ffdad3] border border-white/20 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-3 sm:mb-4 shadow-sm slide-fade-up anim-delay-1">
           <span class="material-symbols-outlined text-[16px] text-[#f48b77]" aria-hidden="true">spa</span>
-          <span>ATELIER FLORAL EN AREQUIPA</span>
+          <span>FLORERIA ESPECIALIZADA - AREQUIPA</span>
         </div>
 
         <!-- Título principal centrado con animación fade-up -->
         <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase leading-tight drop-shadow-md slide-fade-up anim-delay-2">
-          Nuestra Historia &amp; <br class="hidden sm:inline" />
-          <span class="italic font-normal text-[#ffdad3]">Pasión Botánica</span>
+          Nuestra Historia<br class="hidden sm:inline" />
         </h1>
 
         <!-- Párrafo descriptivo centrado con animación fade-up -->
         <p class="mt-3 sm:mt-4 font-sans text-sm sm:text-base md:text-lg text-[#ffdad3]/95 font-normal leading-relaxed max-w-2xl drop-shadow-sm slide-fade-up anim-delay-3">
-          Cultivando momentos inolvidables en el corazón de la Ciudad Blanca. En ISOTELI tejemos la calidez del sillar volcánico, el sol eterno de Arequipa y la sensibilidad floral contemporánea en cada pétalo.
+          Desde el corazón de Arequipa, en ISOTELI diseñamos arreglos florales que hablan por ti. Nos enfocamos en la frescura, la armonía visual y esos pequeños detalles que transforman un día cualquiera en un momento inolvidable.
         </p>
 
-        <!-- Métrica destacada centrada con animación fade-up -->
-        <div class="mt-3 sm:mt-4 inline-flex items-center gap-2 text-xs sm:text-sm text-white/90 bg-black/30 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/10 slide-fade-up anim-delay-3">
-          <span class="material-symbols-outlined text-[16px] text-[#25D366]" aria-hidden="true">verified</span>
-          <span>+6 Años elevando celebraciones en Arequipa</span>
-        </div>
 
         <!-- Botones CTA centrados con animación fade-down -->
         <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 slide-fade-down anim-delay-4">
@@ -192,12 +186,9 @@ const studioImageUrl =
             </p>
           </div>
 
-          <div class="mt-8 pt-6 border-t border-outline-variant/30 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">volunteer_activism</span>
-              <span class="font-label-lg text-label-lg text-primary font-semibold">Compromiso, Calidad y Calidez</span>
-            </div>
-            <span class="font-headline-sm text-headline-sm text-secondary italic">Arequipa</span>
+          <div class="mt-8 pt-6 border-t border-outline-variant/30 flex items-center justify-center gap-2 text-center">
+            <span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">volunteer_activism</span>
+            <span class="font-label-lg text-label-lg text-primary font-semibold">Compromiso, Calidad y Calidez</span>
           </div>
         </article>
 
@@ -211,22 +202,14 @@ const studioImageUrl =
             <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-secondary">
               Florería Reconocida e Innovadora
             </h2>
-            <blockquote class="font-headline-sm text-headline-sm italic text-on-surface leading-snug">
-              {ISOTELI_VISION.quote}
-            </blockquote>
             <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              {ISOTELI_VISION.body}
+              {`${ISOTELI_VISION.quote.replace(/^[“"]|[”"]$/g, '').replace(/\.$/, '')}, ${ISOTELI_VISION.body.charAt(0).toLowerCase()}${ISOTELI_VISION.body.slice(1)}`}
             </p>
           </div>
 
-          <div class="mt-8 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">language</span>
-            </div>
-            <div>
-              <p class="font-label-lg text-label-lg text-secondary font-bold">Tienda Virtual &amp; Cobertura Digital</p>
-              <p class="font-body-sm text-body-sm text-on-surface-variant">Videollamadas personalizadas y despacho seguro</p>
-            </div>
+          <div class="mt-8 pt-6 border-t border-secondary/20 flex items-center justify-center gap-2 text-center">
+            <span class="material-symbols-outlined text-secondary text-[22px]" aria-hidden="true">language</span>
+            <span class="font-label-lg text-label-lg text-secondary font-semibold">Tienda Virtual</span>
           </div>
         </article>
       </div>

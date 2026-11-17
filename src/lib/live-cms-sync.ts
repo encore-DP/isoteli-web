@@ -655,6 +655,18 @@ export async function syncProductDetailPage(onFormatHydrated?: (price: number, f
   const catLabel = document.getElementById('detail-cat-label');
   if (catLabel) catLabel.textContent = `• ${product.categoryLabel}`;
 
+  const freshBadge = document.getElementById('detail-fresh-flowers-badge');
+  if (freshBadge) {
+    const catText = `${product.categorySlug} ${product.categoryLabel}`.toLowerCase();
+    const isFresh =
+      catText.includes('box') ||
+      catText.includes('caja') ||
+      catText.includes('ramo') ||
+      catText.includes('buchon') ||
+      catText.includes('buchón');
+    freshBadge.classList.toggle('hidden', !isFresh);
+  }
+
   const titleEl = document.getElementById('detail-title');
   if (titleEl) titleEl.textContent = product.name;
 

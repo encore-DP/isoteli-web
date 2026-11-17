@@ -41,20 +41,16 @@ const botanicalList = product.botanicalItems ?? [
   'Tarjeta caligrafiada a mano y empaque exclusivo ISOTELI',
 ];
 
-const colorPalettes = [
-  { name: 'Rosas Pastel & Nude', short: 'Pastel & Nude', swatchClass: 'bg-[#E5B5A1]' },
-  { name: 'Rosas Rojas de Pasión', short: 'Rojas Pasión', swatchClass: 'bg-[#B22222]' },
-  {
-    name: 'Rosas Blancas Puras',
-    short: 'Blancas Puras',
-    swatchClass: 'bg-[#FAF9F6] border border-outline/30',
-  },
-  {
-    name: 'Mix Silvestre Andino',
-    short: 'Mix Silvestre',
-    swatchClass: 'bg-gradient-to-tr from-amber-600 to-[#c2652a]',
-  },
-] as const;
+const showFreshFlowersBadge = (() => {
+  const catText = `${product.categorySlug} ${product.categoryLabel}`.toLowerCase();
+  return (
+    catText.includes('box') ||
+    catText.includes('caja') ||
+    catText.includes('ramo') ||
+    catText.includes('buchon') ||
+    catText.includes('buchón')
+  );
+})();
 
 const addonsList = [
   { id: 'addon-iberica-35', name: 'La Ibérica Corazón 35g', subtitle: 'Chocolate arequipeño', price: 9 },
@@ -124,7 +120,10 @@ const supportWhatsappUrl = buildWhatsAppUrl(
               onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
               class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
-            <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
+            <div
+              id="detail-fresh-flowers-badge"
+              class:list={['absolute top-4 left-4 flex flex-col gap-2 z-10', !showFreshFlowersBadge && 'hidden']}
+            >
               <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-on-secondary font-label text-body-sm font-medium shadow-sm">
                 <span class="material-symbols-outlined text-[15px]" aria-hidden="true">eco</span>
                 <span>100% Flores Frescas del Día</span>
@@ -210,22 +209,15 @@ const supportWhatsappUrl = buildWhatsAppUrl(
         </div>
 
         <!-- Indicador Dinámico de Precio -->
-        <div class="bg-surface-container rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm border border-outline-variant/60">
+        <div class="bg-surface-container rounded-2xl p-5 flex items-center justify-between gap-3 shadow-sm border border-outline-variant/60">
           <div>
             <span class="text-body-sm text-on-surface-variant block">Precio final de confección:</span>
             <div class="flex items-baseline gap-2 mt-0.5">
-              <span id="price-display" class="font-headline text-4xl sm:text-5xl font-bold text-primary">
+              <span id="price-display" class="font-sans text-3xl sm:text-4xl font-bold text-primary">
                 {defaultOption.formattedPrice}
               </span>
               <span class="text-body-sm text-on-surface-variant font-medium">PEN</span>
             </div>
-          </div>
-          <div class="flex flex-col sm:items-end">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-body-sm font-medium">
-              <span class="material-symbols-outlined text-[16px] text-primary" aria-hidden="true">location_on</span>
-              <span>Tarifa oficial Arequipa</span>
-            </span>
-            <span class="text-body-sm text-outline mt-1">Stock fresco garantizado hoy</span>
           </div>
         </div>
 
@@ -281,38 +273,10 @@ const supportWhatsappUrl = buildWhatsAppUrl(
           </div>
         </div>
 
-        <!-- Paso 2: Paleta de Flores -->
+        <!-- Paso 2: Complementos Adicionales (Cross-selling) -->
         <div class="flex flex-col gap-3">
           <div class="flex justify-between items-center">
-            <span class="font-semibold text-on-surface text-body-md">2. Paleta de Flores:</span>
-            <span id="color-label" class="text-body-sm text-primary font-medium">
-              {colorPalettes[0].name}
-            </span>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            {
-              colorPalettes.map((palette, idx) => (
-                <button
-                  type="button"
-                  data-color-btn
-                  data-color-name={palette.name}
-                  class:list={[
-                    'flex items-center gap-2.5 p-3 rounded-xl bg-surface-container hover:bg-surface-container-high transition-all text-left cursor-pointer',
-                    idx === 0 && 'ring-2 ring-primary',
-                  ]}
-                >
-                  <span class:list={['w-4 h-4 rounded-full shrink-0 shadow-inner', palette.swatchClass]} />
-                  <span class="text-body-sm font-medium text-on-surface truncate">{palette.short}</span>
-                </button>
-              ))
-            }
-          </div>
-        </div>
-
-        <!-- Paso 3: Complementos Adicionales (Cross-selling) -->
-        <div class="flex flex-col gap-3">
-          <div class="flex justify-between items-center">
-            <span class="font-semibold text-on-surface text-body-md">3. Complementos Especiales:</span>
+            <span class="font-semibold text-on-surface text-body-md">2. Complementos Especiales:</span>
             <span class="text-body-sm text-outline">Puedes marcar varios</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -340,13 +304,13 @@ const supportWhatsappUrl = buildWhatsAppUrl(
 
         </div>
 
-        <!-- Paso 4: Dedicatoria -->
+        <!-- Paso 3: Dedicatoria -->
         <div class="flex flex-col gap-2">
           <label
             for="dedication-text"
             class="font-semibold text-on-surface text-body-md flex items-center justify-between"
           >
-            <span>4. Dedicatoria para la Tarjeta de Obsequio:</span>
+            <span>3. Dedicatoria para la Tarjeta de Obsequio:</span>
             <span class="text-body-sm text-outline font-normal">Máx. 250 caracteres</span>
           </label>
           <textarea
@@ -542,7 +506,6 @@ const supportWhatsappUrl = buildWhatsAppUrl(
 
     let basePrice = Number.parseFloat(root.dataset.basePrice || '0');
     let selectedFormat = root.dataset.baseFormat || 'Clásico';
-    let selectedColor = 'Rosas Pastel & Nude';
     const addons = new Map<string, number>();
 
     const dateInput = document.getElementById('delivery-date') as HTMLInputElement | null;
@@ -601,18 +564,6 @@ const supportWhatsappUrl = buildWhatsAppUrl(
           if (thumbBtn.dataset.thumbAlt) mainImg.alt = thumbBtn.dataset.thumbAlt;
         }
       }
-    });
-
-    // Selector de paleta de color
-    const colorBtns = root.querySelectorAll<HTMLButtonElement>('[data-color-btn]');
-    colorBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        colorBtns.forEach((b) => b.classList.remove('ring-2', 'ring-primary'));
-        btn.classList.add('ring-2', 'ring-primary');
-        selectedColor = btn.dataset.colorName || '';
-        const lbl = document.getElementById('color-label');
-        if (lbl) lbl.textContent = selectedColor;
-      });
     });
 
     // Checkboxes de complementos
@@ -674,7 +625,6 @@ const supportWhatsappUrl = buildWhatsAppUrl(
         `¡Hola ISOTELI Florería! Deseo realizar el siguiente pedido:\n\n` +
         `• *Producto:* ${currentProductName}\n` +
         `• *Formato:* ${selectedFormat}\n` +
-        `• *Paleta Floral:* ${selectedColor}\n` +
         `• *Complementos:* ${addonEntries.length > 0 ? addonEntries.join(', ') : 'Ninguno'}\n` +
         `• *Distrito:* ${district}\n` +
         `• *Fecha:* ${dateVal}\n` +
