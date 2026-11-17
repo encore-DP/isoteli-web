@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import logoImg from '../assets/logo/logo.png';
+import logoImg from '../assets/logo/logo_horizontal.png';
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import WhatsAppIcon from './WhatsAppIcon.astro';
 
@@ -30,15 +30,15 @@ const directWhatsappUrl = buildWhatsAppUrl(
 <!-- ================= BARRA DE NAVEGACIÓN PRINCIPAL ================= -->
 <div class="h-25 w-full px-margin-mobile md:px-margin flex items-center justify-between gap-gutter">
   <!-- Logotipo oficial optimizado con Astro Assets -->
-  <div class="flex items-center gap-space-sm">
+  <div class="flex items-center gap-space-sm shrink-0">
     <a href="/" class="flex items-center focus:outline-none" aria-label="Ir al inicio de ISOTELI Florería">
       <Image
         src={logoImg}
         alt="Logotipo oficial de ISOTELI Flores y Detalles Arequipa"
-        width={175}
-        height={125}
+        width={600}
+        height={128}
         loading="eager"
-        class="h-20 w-auto object-contain"
+        class="h-8 sm:h-10 md:h-11 w-auto object-contain"
       />
     </a>
   </div>
