@@ -79,53 +79,21 @@ const atelierGallery = [
 >
   <div class="flex flex-col w-full">
     <!-- ================= CABECERA EDITORIAL Y FRANJA DE GARANTÍAS ================= -->
-    <section class="relative w-full px-margin-mobile md:px-margin mt-5 pt-5 pb-space-lg overflow-hidden" data-aos="fade-up">
+    <section class="relative w-full px-margin-mobile md:px-margin pt-4 sm:pt-6 pb-6 sm:pb-8 overflow-hidden" data-aos="fade-up">
       <div class="absolute -top-32 right-10 w-96 h-96 rounded-full bg-primary-fixed/50 blur-3xl pointer-events-none -z-10"></div>
       <div class="absolute top-48 -left-20 w-80 h-80 rounded-full bg-secondary-container/60 blur-3xl pointer-events-none -z-10"></div>
 
-      <!-- Cintilla de Confianza Superior -->
-      <div class="w-full bg-surface-container-low rounded-lg p-space-sm mb-space-lg shadow-sm border border-outline-variant/25">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter-mobile md:gap-gutter">
-          {
-            assurancePills.map((pill, idx) => (
-              <div
-                class="flex items-center gap-space-xs p-2 rounded-DEFAULT bg-surface-container-lowest/80 backdrop-blur-sm border border-outline-variant/30"
-                data-aos="fade-up"
-                data-aos-delay={idx * 75}
-              >
-                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary shrink-0">
-                  <span class="material-symbols-outlined text-[20px]" aria-hidden="true">
-                    {pill.icon}
-                  </span>
-                </div>
-                <div class="flex flex-col min-w-0">
-                  <span class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold truncate">
-                    {pill.title}
-                  </span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant truncate">
-                    {pill.subtitle}
-                  </span>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-
       <!-- Título Principal Editorial -->
-      <div class="max-w-4xl mx-auto text-center flex flex-col items-center gap-space-sm mb-space-lg" data-aos="fade-up">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-fixed text-primary font-label-md text-label-md uppercase tracking-widest shadow-sm">
-          <span class="material-symbols-outlined icon-filled text-[15px]" aria-hidden="true">favorite</span>
-          <span>Floreria Especializada • Arequipa</span>
-        </div>
-
-        <h1 class="font-display-hero text-display-hero-mobile md:text-display-hero text-primary tracking-tight leading-tight">
-          <span class="block text-primary font-label-md text-xs sm:text-sm uppercase tracking-widest font-semibold mb-2">Florería en Arequipa • Pedidos &amp; Consultas</span>
+      <div class="max-w-6xl mx-auto text-center flex flex-col items-center gap-2" data-aos="fade-up">
+        <span class="block text-primary font-label-md text-xs sm:text-sm uppercase tracking-widest font-semibold">
+          Florería en Arequipa • Pedidos &amp; Consultas
+        </span>
+        <h1 class="font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold text-primary tracking-tight leading-tight">
           Hablemos de Flores para tus <span class="italic font-light text-on-surface">Momentos Especiales</span>
         </h1>
 
-        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-center leading-relaxed">
-          Estamos listos para asesorarte con un diseño floral a medida, coordinar tu entrega express en Arequipa o planificar la ambientación escenográfica de tu próximo gran evento.
+        <p class="font-body-md sm:font-body-lg text-sm sm:text-base text-on-surface-variant max-w-4xl text-center leading-relaxed mt-0.5">
+          Asesoramos tu diseño floral a medida, coordinamos tu entrega express en Arequipa y planificamos la ambientación de tu próximo evento.
         </p>
       </div>
     </section>
