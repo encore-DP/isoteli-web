@@ -12,6 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.6",
     "@tailwindcss/vite": "^4.3.3",
     "aos": "^2.3.4",
     "astro": "^7.4.4",

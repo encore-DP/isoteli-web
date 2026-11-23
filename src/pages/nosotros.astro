@@ -14,9 +14,15 @@ import {
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getBreadcrumbSchema } from '../lib/seo-schema';
 
+import { getImage } from 'astro:assets';
 // Imágenes optimizadas para el Banner de ancho completo (Escritorio / Móvil)
 import bannerNosotrosImg from '../assets/images/banner_nosotros.jpg';
 import verticalBannerNosotrosImg from '../assets/images/vertical_banner_nosotros.jpg';
+
+const [optBannerNosotros, optVerticalBannerNosotros] = await Promise.all([
+  getImage({ src: bannerNosotrosImg, format: 'webp', quality: 80 }),
+  getImage({ src: verticalBannerNosotrosImg, format: 'webp', quality: 80 }),
+]);
 
 const breadcrumbSchema = getBreadcrumbSchema([
   { name: 'Inicio', path: '/' },
@@ -93,8 +99,8 @@ const studioImageUrl =
 ---
 
 <Layout
-  title="Sobre Nosotros | Florería ISOTELI en Arequipa"
-  description="Conoce a ISOTELI: atelier floral en Arequipa dedicado a crear momentos inolvidables con flores frescas, diseño botánico de autor y entregas puntuales."
+  title="Sobre Nosotros | Florería y Eventos en Arequipa | ISOTELI"
+  description="Conoce a ISOTELI Flores y Detalles: florería virtual y decoración de eventos en Arequipa con flores frescas, puntualidad y entregas en toda la ciudad."
   schema={breadcrumbSchema}
 >
   <div class="flex flex-col w-full">
@@ -106,10 +112,10 @@ const studioImageUrl =
     >
       <!-- Imagen de fondo que ocupa el 100% del alto y ancho: Móvil (vertical) / Escritorio (horizontal) -->
       <picture class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-        <source media="(max-width: 767px)" srcset={verticalBannerNosotrosImg.src} />
-        <source media="(min-width: 768px)" srcset={bannerNosotrosImg.src} />
+        <source media="(max-width: 767px)" srcset={optVerticalBannerNosotros.src} />
+        <source media="(min-width: 768px)" srcset={optBannerNosotros.src} />
         <img
-          src={bannerNosotrosImg.src}
+          src={optBannerNosotros.src}
           alt="Atelier floral artesanal en Arequipa con rosas frescas color durazno, eucalipto y arquitectura de sillar iluminada por luz natural - ISOTELI"
           loading="eager"
           fetchpriority="high"
@@ -134,7 +140,7 @@ const studioImageUrl =
 
         <!-- Título principal centrado con animación fade-up -->
         <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase leading-tight drop-shadow-md slide-fade-up anim-delay-2">
-          Nuestra Historia<br class="hidden sm:inline" />
+          Nuestra Historia en Arequipa
         </h1>
 
         <!-- Párrafo descriptivo centrado con animación fade-up -->
@@ -155,7 +161,7 @@ const studioImageUrl =
             <span>Hablemos con un Florista</span>
           </a>
           <a
-            href="/catalogo"
+            href="/catalogo/"
             class="inline-flex items-center justify-center gap-2 bg-white/95 hover:bg-white text-[#500e05] border border-white/40 font-sans text-sm sm:text-base font-semibold px-7 sm:px-8 py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98]"
           >
             <span>Explorar Catálogo</span>

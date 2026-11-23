@@ -2,7 +2,8 @@
  * ==========================================================================
  * UTILIDADES DE SEO Y DATOS ESTRUCTURADOS (JSON-LD) PARA GOOGLE
  * Implementa esquemas Schema.org de Florist, LocalBusiness, WebSite,
- * BreadcrumbList y Product orientados al posicionamiento local en Arequipa.
+ * Service, CollectionPage, ContactPage, BreadcrumbList y Product
+ * orientados al posicionamiento local en Arequipa, Perú.
  * ==========================================================================
  */
 
@@ -10,6 +11,24 @@ import { ISOTELI_CONTACT } from '../data/business';
 import type { CatalogProduct } from './wp-graphql';
 
 export const SITE_URL = 'https://isoteli.com';
+export const DEFAULT_OG_IMAGE = '/images/og-isoteli-arequipa.jpg';
+
+function normalizePathUrl(pathOrUrl: string): string {
+  if (pathOrUrl.startsWith('http')) return pathOrUrl;
+  const clean = pathOrUrl === '/' ? '/' : `${pathOrUrl.replace(/\/$/, '')}/`;
+  return `${SITE_URL}${clean}`;
+}
+
+/**
+ * Normaliza una URL de imagen para Schema/OpenGraph asegurando formato rasterizado
+ * (evita .svg que Google Rich Results y WhatsApp rechazan).
+ */
+export function resolveSeoImageUrl(imageUrl?: string | null): string {
+  if (!imageUrl || /\.svg(?:$|\?)/i.test(imageUrl)) {
+    return `${SITE_URL}${DEFAULT_OG_IMAGE}`;
+  }
+  return imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`;
+}
 
 /**
  * Esquema principal de Florist / LocalBusiness para Arequipa, Perú.
@@ -26,21 +45,25 @@ export function getFloristSchema(): Record<string, any> {
       'ISOTELI Flores & Detalles',
     ],
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon.svg`,
-    image: `${SITE_URL}/images/placeholder-floral.svg`,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/images/logo-isoteli.png`,
+    },
+    image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
     description:
-      'Atelier y florería virtual en Arequipa especializada en ramos de rosas, cajas florales, bouquets y ambientación de eventos con entrega a domicilio el mismo día.',
+      'Florería virtual y servicio de decoración de eventos en Arequipa especializada en ramos de rosas, girasoles, cajas florales, globos con helio y regalos con entrega a domicilio el mismo día.',
     telephone: `+${ISOTELI_CONTACT.phoneRaw}`,
-    priceRange: 'S/ 20 - S/ 300',
+    email: ISOTELI_CONTACT.emails.ventas,
+    priceRange: 'S/ 20 - S/ 500',
     currenciesAccepted: 'PEN',
-    paymentAccepted: 'Efectivo, Transferencia bancaria, Yape, Plin',
+    paymentAccepted: 'Efectivo, Transferencia bancaria, Tarjeta de Crédito/Débito, Yape, Plin',
     hasMap: ISOTELI_CONTACT.googleMapsUrl,
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Urb. Santa María de Lambramani A15',
       addressLocality: 'José Luis Bustamante y Rivero',
       addressRegion: 'Arequipa',
-      postalCode: '04001',
+      postalCode: '04002',
       addressCountry: 'PE',
     },
     geo: {
@@ -70,15 +93,17 @@ export function getFloristSchema(): Record<string, any> {
       },
     ],
     areaServed: [
-      { '@type': 'AdministrativeArea', name: 'Arequipa' },
+      { '@type': 'City', name: 'Arequipa' },
       { '@type': 'AdministrativeArea', name: 'José Luis Bustamante y Rivero' },
       { '@type': 'AdministrativeArea', name: 'Yanahuara' },
       { '@type': 'AdministrativeArea', name: 'Cayma' },
+      { '@type': 'AdministrativeArea', name: 'Cercado de Arequipa' },
       { '@type': 'AdministrativeArea', name: 'Cerro Colorado' },
       { '@type': 'AdministrativeArea', name: 'Miraflores' },
-      { '@type': 'AdministrativeArea', name: 'Cercado Arequipa' },
       { '@type': 'AdministrativeArea', name: 'Alto Selva Alegre' },
+      { '@type': 'AdministrativeArea', name: 'Mariano Melgar' },
       { '@type': 'AdministrativeArea', name: 'Paucarpata' },
+      { '@type': 'AdministrativeArea', name: 'Socabaya' },
       { '@type': 'AdministrativeArea', name: 'Sachaca' },
       { '@type': 'AdministrativeArea', name: 'Tiabaya' },
       { '@type': 'AdministrativeArea', name: 'Hunter' },
@@ -99,14 +124,76 @@ export function getWebSiteSchema(): Record<string, any> {
     '@type': 'WebSite',
     '@id': `${SITE_URL}/#website`,
     url: SITE_URL,
-    name: 'ISOTELI Florería & Decoración Arequipa',
+    name: 'ISOTELI Florería & Decoración de Eventos Arequipa',
     publisher: { '@id': `${SITE_URL}/#florist` },
     inLanguage: 'es-PE',
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${SITE_URL}/catalogo?q={search_term_string}`,
+      target: `${SITE_URL}/catalogo/?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
+  };
+}
+
+/**
+ * Esquema CollectionPage para el catálogo de florería y regalos en Arequipa.
+ */
+export function getCatalogPageSchema(totalProducts: number): Record<string, any> {
+  return {
+    '@type': 'CollectionPage',
+    '@id': `${SITE_URL}/catalogo/#webpage`,
+    url: `${SITE_URL}/catalogo/`,
+    name: 'Catálogo de Flores, Ramos, Cajas y Regalos en Arequipa | ISOTELI',
+    description: `Catálogo en línea de ${totalProducts} arreglos florales, ramos de rosas, girasoles, cajas florales y detalles a domicilio en Arequipa.`,
+    isPartOf: { '@id': `${SITE_URL}/#website` },
+    about: { '@id': `${SITE_URL}/#florist` },
+    inLanguage: 'es-PE',
+  };
+}
+
+/**
+ * Esquema Service + OfferCatalog para la página de Decoración de Eventos en Arequipa.
+ */
+export function getEventsServiceSchema(): Record<string, any> {
+  return {
+    '@type': 'Service',
+    '@id': `${SITE_URL}/eventos/#service`,
+    url: `${SITE_URL}/eventos/`,
+    name: 'Decoración de Eventos con Globos y Flores en Arequipa',
+    serviceType: 'Decoración de Eventos y Ambientación',
+    provider: { '@id': `${SITE_URL}/#florist` },
+    areaServed: {
+      '@type': 'City',
+      name: 'Arequipa',
+    },
+    description:
+      'Servicio de decoración con globos, paneles temáticos, arreglos florales y ambientación en Arequipa para cumpleaños, bautizos, revelación de género, primera comunión y pedidas de mano.',
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Servicios de Decoración de Eventos ISOTELI Arequipa',
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Decoración de Cumpleaños con Globos en Arequipa' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Decoración de Bautizos en Arequipa' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Decoración para Revelación de Género en Arequipa' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Decoración de Primera Comunión en Arequipa' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Decoración para Pedidas de Mano en Arequipa' } },
+      ],
+    },
+  };
+}
+
+/**
+ * Esquema ContactPage para pedidos y cobertura distrital en Arequipa.
+ */
+export function getContactPageSchema(): Record<string, any> {
+  return {
+    '@type': 'ContactPage',
+    '@id': `${SITE_URL}/contacto/#webpage`,
+    url: `${SITE_URL}/contacto/`,
+    name: 'Contacto y Pedidos de Flores a Domicilio en Arequipa | ISOTELI',
+    isPartOf: { '@id': `${SITE_URL}/#website` },
+    mainEntity: { '@id': `${SITE_URL}/#florist` },
+    inLanguage: 'es-PE',
   };
 }
 
@@ -125,75 +212,104 @@ export function getBreadcrumbSchema(crumbs: readonly BreadcrumbCrumb[]): Record<
       '@type': 'ListItem',
       position: idx + 1,
       name: crumb.name,
-      item: crumb.path.startsWith('http') ? crumb.path : `${SITE_URL}${crumb.path}`,
+      item: normalizePathUrl(crumb.path),
     })),
   };
 }
 
 /**
- * Esquema Product para páginas individuales de arreglos florales.
+ * Esquema Product para páginas individuales.
+ * Cumple políticas de Google: solo incluye aggregateRating cuando existen
+ * reseñas reales verificadas (> 0) y evita imágenes SVG.
  */
 export function getProductSchema(
   product: CatalogProduct,
   canonicalUrl: string,
+  metaDescription?: string,
 ): Record<string, any> {
-  const safeImg = product.imageUrl?.startsWith('http')
-    ? product.imageUrl
-    : `${SITE_URL}${product.imageUrl || '/images/placeholder-floral.svg'}`;
+  const safeImg = resolveSeoImageUrl(product.imageUrl);
 
-  return {
+  const variationPrices = product.variations
+    .map((v) => v.numericPrice)
+    .filter((p) => typeof p === 'number' && Number.isFinite(p) && p > 0);
+  const hasMultiplePrices =
+    product.productType === 'variable' &&
+    variationPrices.length > 1 &&
+    Math.max(...variationPrices) > Math.min(...variationPrices);
+
+  const baseShipping = {
+    '@type': 'OfferShippingDetails',
+    shippingRate: {
+      '@type': 'MonetaryAmount',
+      value: product.numericPrice >= 99.9 ? 0 : 10,
+      currency: 'PEN',
+    },
+    shippingDestination: {
+      '@type': 'DefinedRegion',
+      addressCountry: 'PE',
+      addressRegion: 'Arequipa',
+    },
+  };
+
+  const returnPolicy = {
+    '@type': 'MerchantReturnPolicy',
+    applicableCountry: 'PE',
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: 1,
+    returnMethod: 'https://schema.org/ReturnInStore',
+  };
+
+  const offers = hasMultiplePrices
+    ? {
+        '@type': 'AggregateOffer',
+        url: canonicalUrl,
+        priceCurrency: 'PEN',
+        lowPrice: Math.min(...variationPrices),
+        highPrice: Math.max(...variationPrices),
+        offerCount: product.variations.length,
+        availability: 'https://schema.org/InStock',
+        seller: { '@id': `${SITE_URL}/#florist` },
+      }
+    : {
+        '@type': 'Offer',
+        url: canonicalUrl,
+        priceCurrency: 'PEN',
+        price: product.numericPrice,
+        priceValidUntil: '2027-12-31',
+        availability: 'https://schema.org/InStock',
+        itemCondition: 'https://schema.org/NewCondition',
+        seller: { '@id': `${SITE_URL}/#florist` },
+        hasMerchantReturnPolicy: returnPolicy,
+        shippingDetails: baseShipping,
+      };
+
+  const schema: Record<string, any> = {
     '@type': 'Product',
     '@id': `${canonicalUrl}#product`,
     name: `${product.name} en Arequipa`,
     image: [safeImg],
     description:
+      metaDescription ||
       product.shortDescription ||
-      `Arreglo floral ${product.name} elaborado con flores frescas en Arequipa por ISOTELI. Entrega a domicilio el mismo día.`,
+      `${product.name} con entrega a domicilio en Arequipa por ISOTELI Flores y Detalles.`,
     sku: product.slug,
     category: product.categoryLabel,
     brand: {
       '@type': 'Brand',
       name: 'ISOTELI',
     },
-    offers: {
-      '@type': 'Offer',
-      url: canonicalUrl,
-      priceCurrency: 'PEN',
-      price: product.numericPrice,
-      priceValidUntil: '2027-12-31',
-      availability: 'https://schema.org/InStock',
-      itemCondition: 'https://schema.org/NewCondition',
-      seller: {
-        '@id': `${SITE_URL}/#florist`,
-      },
-      hasMerchantReturnPolicy: {
-        '@type': 'MerchantReturnPolicy',
-        applicableCountry: 'PE',
-        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
-        merchantReturnDays: 1,
-        returnMethod: 'https://schema.org/ReturnInStore',
-      },
-      shippingDetails: {
-        '@type': 'OfferShippingDetails',
-        shippingRate: {
-          '@type': 'MonetaryAmount',
-          value: product.numericPrice >= 99.9 ? 0 : 10,
-          currency: 'PEN',
-        },
-        shippingDestination: {
-          '@type': 'DefinedRegion',
-          addressCountry: 'PE',
-          addressRegion: 'Arequipa',
-        },
-      },
-    },
-    aggregateRating: {
+    offers,
+  };
+
+  if (product.reviewCount > 0 && product.rating > 0 && !product.id.startsWith('fb-')) {
+    schema.aggregateRating = {
       '@type': 'AggregateRating',
-      ratingValue: product.rating || 5.0,
-      reviewCount: product.reviewCount || 10,
+      ratingValue: product.rating,
+      reviewCount: product.reviewCount,
       bestRating: 5,
       worstRating: 1,
-    },
-  };
-}
+    };
+  }
 
+  return schema;
+}

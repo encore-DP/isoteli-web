@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import type { CatalogProduct, ServicePack } from '../lib/wp-graphql';
 import WhatsAppIcon from './WhatsAppIcon.astro';
@@ -12,6 +13,22 @@ import bannerFloresEternasImg from '../assets/images/banner_floreseternas.jpg';
 import verticalBannerCatalogoImg from '../assets/images/vertical_banner_catalogo.jpg';
 import verticalBannerDecoracionImg from '../assets/images/vertical_banner_decoracion.jpg';
 import verticalBannerFloresEternasImg from '../assets/images/vertical_banner_floreseternas.jpg';
+
+const [
+  optBannerCatalogo,
+  optVerticalCatalogo,
+  optBannerDecoracion,
+  optVerticalDecoracion,
+  optBannerFlores,
+  optVerticalFlores,
+] = await Promise.all([
+  getImage({ src: bannerCatalogoImg, format: 'webp', quality: 80 }),
+  getImage({ src: verticalBannerCatalogoImg, format: 'webp', quality: 80 }),
+  getImage({ src: bannerDecoracionImg, format: 'webp', quality: 80 }),
+  getImage({ src: verticalBannerDecoracionImg, format: 'webp', quality: 80 }),
+  getImage({ src: bannerFloresEternasImg, format: 'webp', quality: 80 }),
+  getImage({ src: verticalBannerFloresEternasImg, format: 'webp', quality: 80 }),
+]);
 
 export interface Props {
   products?: readonly CatalogProduct[];
@@ -57,10 +74,10 @@ const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/
       >
         <!-- Imagen que ocupa el 100% del alto y ancho: Móvil (vertical) / Escritorio (horizontal) -->
         <picture class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-          <source media="(max-width: 767px)" srcset={verticalBannerCatalogoImg.src} />
-          <source media="(min-width: 768px)" srcset={bannerCatalogoImg.src} />
+          <source media="(max-width: 767px)" srcset={optVerticalCatalogo.src} />
+          <source media="(min-width: 768px)" srcset={optBannerCatalogo.src} />
           <img
-            src={bannerCatalogoImg.src}
+            src={optBannerCatalogo.src}
             alt="Colección botánica de rosas frescas y flores a domicilio en Arequipa - ISOTELI"
             loading="eager"
             fetchpriority="high"
@@ -77,12 +94,14 @@ const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/
 
         <!-- Contenido Centrado del Slide -->
         <div class="relative z-20 w-full h-full max-w-4xl mx-auto px-margin-mobile md:px-margin py-8 sm:py-12 md:py-16 flex flex-col justify-between items-center text-center flex-1">
-          <div class="flex flex-col items-center justify-center text-center gap-4 sm:gap-6 my-auto max-w-2xl">s
+          <div class="flex flex-col items-center justify-center text-center gap-4 sm:gap-6 my-auto max-w-2xl">
             <!-- Título y Subtítulo centrados con animación fade-up -->
             <div class="flex flex-col items-center gap-2 sm:gap-3 slide-fade-up anim-delay-2">
               <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase leading-tight drop-shadow-md">
-                <span class="sr-only">Florería en Arequipa • Envíos a Domicilio - </span>
-                NUESTROS DESTACADOS
+                <span class="block font-sans text-xs sm:text-sm uppercase tracking-[0.22em] text-[#ffdad3] font-semibold mb-2">
+                  Florería en Arequipa • Envíos a Domicilio
+                </span>
+                <span>NUESTROS DESTACADOS</span>
               </h1>
               <p class="font-sans text-base sm:text-lg md:text-xl text-[#ffdad3] font-normal leading-relaxed drop-shadow-sm max-w-xl">
                 Detalles que enamoran
@@ -92,7 +111,7 @@ const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/
             <!-- Botón CTA centrado con animación fade-down -->
             <div class="pt-2 sm:pt-4 flex items-center justify-center slide-fade-down anim-delay-3">
               <a
-                href="/catalogo"
+                href="/catalogo/"
                 class="inline-flex items-center justify-center gap-2 bg-[#500e05] hover:bg-[#6e2417] text-white border border-[#ffb4a6]/40 font-sans text-sm sm:text-base font-semibold px-8 py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98]"
               >
                 <span>Ver catálogo</span>
@@ -113,10 +132,10 @@ const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/
       >
         <!-- Imagen que ocupa el 100% del alto y ancho: Móvil (vertical) / Escritorio (horizontal) -->
         <picture class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-          <source media="(max-width: 767px)" srcset={verticalBannerDecoracionImg.src} />
-          <source media="(min-width: 768px)" srcset={bannerDecoracionImg.src} />
+          <source media="(max-width: 767px)" srcset={optVerticalDecoracion.src} />
+          <source media="(min-width: 768px)" srcset={optBannerDecoracion.src} />
           <img
-            src={bannerDecoracionImg.src}
+            src={optBannerDecoracion.src}
             alt="Montaje de decoración de evento con backing circular, globos, flores naturales y neón en Arequipa"
             loading="lazy"
             decoding="async"
@@ -146,7 +165,7 @@ const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/
             <!-- Botón CTA centrado con animación fade-down -->
             <div class="pt-2 sm:pt-4 flex items-center justify-center slide-fade-down anim-delay-3">
               <a
-                href="/eventos"
+                href="/eventos/"
                 class="inline-flex items-center justify-center gap-2 bg-white hover:bg-[#faf3ec] text-[#500e05] font-sans text-sm sm:text-base font-semibold px-8 py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98]"
               >
                 <span>Ver Paquetes</span>
@@ -168,10 +187,10 @@ const deluxePrice = deluxePack?.formattedPrice?.replace('.00', '').replace(/\s+/
       >
         <!-- Imagen que ocupa el 100% del alto y ancho: Móvil (vertical) / Escritorio (horizontal) -->
         <picture class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-          <source media="(max-width: 767px)" srcset={verticalBannerFloresEternasImg.src} />
-          <source media="(min-width: 768px)" srcset={bannerFloresEternasImg.src} />
+          <source media="(max-width: 767px)" srcset={optVerticalFlores.src} />
+          <source media="(min-width: 768px)" srcset={optBannerFlores.src} />
           <img
-            src={bannerFloresEternasImg.src}
+            src={optBannerFlores.src}
             alt="Ramos y creaciones de flores eternas hechas a mano con cinta de raso en Arequipa"
             loading="lazy"
             decoding="async"

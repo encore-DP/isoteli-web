@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ProductDetailView from '../../components/ProductDetailView.astro';
 import { getCatalogProducts, type CatalogProduct } from '../../lib/wp-graphql';
-import { getProductSchema, getBreadcrumbSchema, SITE_URL } from '../../lib/seo-schema';
+import { getProductSchema, getBreadcrumbSchema, resolveSeoImageUrl, SITE_URL } from '../../lib/seo-schema';
 
 export async function getStaticPaths() {
   const { products } = await getCatalogProducts();
@@ -30,16 +30,43 @@ interface Props {
 
 const { product, relatedProducts } = Astro.props;
 
-const canonicalUrl = `${SITE_URL}/producto/${product.slug}`;
-const pageTitle = `${product.name} en Arequipa | Florería ISOTELI`;
-const pageDescription = `Compra ${product.name} en Arequipa desde ${product.formattedPrice}. Arreglo floral fresco para toda ocasión con entrega a domicilio hoy mismo. ¡Pide por WhatsApp!`;
+const canonicalUrl = `${SITE_URL}/producto/${product.slug}/`;
+
+// Título SEO optimizado (≤ 60 caracteres)
+const fullSeoTitle = `${product.name} en Arequipa | Florería ISOTELI`;
+const mediumSeoTitle = `${product.name} en Arequipa | ISOTELI`;
+const pageTitle =
+  fullSeoTitle.length <= 60
+    ? fullSeoTitle
+    : mediumSeoTitle.length <= 60
+      ? mediumSeoTitle
+      : `${product.name.slice(0, 49).trim()} | ISOTELI`;
+
+// Meta descripción adaptada semánticamente a la categoría real (≤ 155 caracteres)
+function buildProductMetaDescription(p: CatalogProduct): string {
+  const prefix = `Pide ${p.name} en Arequipa desde ${p.formattedPrice}.`;
+  let detail = 'Arreglo floral fresco con entrega a domicilio el mismo día.';
+  if (p.categorySlug === 'globos-y-bouquets') {
+    detail = 'Bouquet personalizado con globos y entrega a domicilio hoy mismo.';
+  } else if (p.categorySlug === 'chocolates') {
+    detail = 'Regalo con chocolates selectos y entrega a domicilio hoy mismo.';
+  } else if (p.categorySlug === 'peluches-y-detalles') {
+    detail = 'Detalle sorpresa a domicilio en Arequipa el mismo día.';
+  } else if (p.categorySlug === 'cajas-y-boxes') {
+    detail = 'Box floral exclusivo con flores frescas y envío hoy a domicilio.';
+  }
+  const full = `${prefix} ${detail} ¡Cotiza por WhatsApp!`;
+  return full.length <= 155 ? full : `${prefix} ${detail}`.slice(0, 155);
+}
+
+const pageDescription = buildProductMetaDescription(product);
+const seoOgImage = resolveSeoImageUrl(product.imageUrl);
 
 const productSchemas = [
-  getProductSchema(product, canonicalUrl),
+  getProductSchema(product, canonicalUrl, pageDescription),
   getBreadcrumbSchema([
     { name: 'Inicio', path: '/' },
-    { name: 'Catálogo', path: '/catalogo' },
-    { name: product.categoryLabel, path: '/catalogo' },
+    { name: 'Catálogo Floral', path: '/catalogo' },
     { name: product.name, path: `/producto/${product.slug}` },
   ]),
 ];
@@ -49,10 +76,9 @@ const productSchemas = [
 <Layout
   title={pageTitle}
   description={pageDescription}
-  ogImage={product.imageUrl}
+  ogImage={seoOgImage}
   canonicalPath={`/producto/${product.slug}`}
   schema={productSchemas}
 >
   <ProductDetailView product={product} relatedProducts={relatedProducts} />
 </Layout>
-

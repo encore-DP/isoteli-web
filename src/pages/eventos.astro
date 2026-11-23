@@ -4,17 +4,26 @@ import TrustStrip from '../components/TrustStrip.astro';
 import ServicePackCard from '../components/ServicePackCard.astro';
 import FurnitureRentalItem from '../components/FurnitureRentalItem.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { Image } from 'astro:assets';
 import { ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import { getServicesAndRentals } from '../lib/wp-graphql';
-import { getBreadcrumbSchema } from '../lib/seo-schema';
+import { getBreadcrumbSchema, getEventsServiceSchema } from '../lib/seo-schema';
+import eventoCumpleanosImg from '../assets/images/eventos/cumpleaños.jpg';
+import eventoBautizoImg from '../assets/images/eventos/bautizo.jpg';
+import eventoGeneroImg from '../assets/images/eventos/genero.jpg';
+import eventoComunionImg from '../assets/images/eventos/primera_comunion.jpg';
+import eventoPedidaImg from '../assets/images/eventos/pedida_de_mano.jpg';
 
 const { classicPacks, thematicPacks, rentals } = await getServicesAndRentals();
 
-const breadcrumbSchema = getBreadcrumbSchema([
-  { name: 'Inicio', path: '/' },
-  { name: 'Servicios de Decoración', path: '/servicios' },
-]);
+const eventSchemas = [
+  getEventsServiceSchema(),
+  getBreadcrumbSchema([
+    { name: 'Inicio', path: '/' },
+    { name: 'Decoración de Eventos', path: '/eventos' },
+  ]),
+];
 
 // Separación visual para el mosaico panorámico de Línea Temática (Fila 2: 2 tarjetas; Fila 3: panorámica)
 const thematicRowPacks = thematicPacks.filter((p) => p.variant !== 'panoramic');
@@ -77,8 +86,7 @@ const occasionServices = [
     ],
     ctaLabel: 'Cotizar Cumpleaños',
     waText: 'Hola ISOTELI, quisiera cotizar la decoración para Cumpleaños',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAxvs2M_DTUsTbJw9mQEhU1bApDVNi8dx1LAHh-JPGuzAgvK-t-TWbuwLtRMbfN_xxVLZD5cVvdTXob75yV3W5h-492c_q9ee6-CN5EeIejapcNfVAxfbBpSXOe-p73Vh0qjvmB_WiiJVfkuSoAN-Qlst1fIOpU2yGzpyvRCO85PeYyCeeDnhOl7SpwnGKA39gyutJfhlw-Gd3PKXjMBy9_uqX8NT7llxAJgj_F-_eE1Jm_BQczWZd6iw',
+    image: eventoCumpleanosImg,
     alt: 'Decoración floral y arcos orgánicos de globos para cumpleaños en Arequipa',
   },
   {
@@ -95,8 +103,7 @@ const occasionServices = [
     ],
     ctaLabel: 'Cotizar Bautizo',
     waText: 'Hola ISOTELI, quisiera cotizar la decoración para Bautizo',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCMJP-jdxndFW-HJqDVt_dtKrB_FeWq_l9y3qHdr0uFTpxUVHWVQRNscyuDNu_RBkFMGI1xt35XWb88DeULr0SCOni8Lu8ZweItJwrPRTRNl23SwkIiFtz65b0GlQFdV1a_qdoK7237V6L2fnl_qr2Mzstg2KfoRzMqSIUoebTk6eIldZIWEns3iq_AMNkucovxe7UhdX0CAGIn2pAiWWMcna1gm8puQqlhnAxDW8nGcrGgEmmvlsWclQ',
+    image: eventoBautizoImg,
     alt: 'Ambientación de bautizo con flores blancas y detalles ceremoniales en Arequipa',
   },
   {
@@ -113,8 +120,7 @@ const occasionServices = [
     ],
     ctaLabel: 'Cotizar Revelación de Género',
     waText: 'Hola ISOTELI, deseo cotizar Revelación de Género',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBwmAKYi-h19ERTOeoAOQexPvQ3uvS_RyRH17Zbta1QN8mafA1WDiLRSvLbPCLsCABVZUVWaQ1ovzqKN6tX3YHR04etP96o06bYBfId2JgLmM3weix92uLRjriuW5tdq9a91792BLvEiwIAKel2sGavVibMljGLqwvc6es6esHQ3AShImpOh83QRNQoeXzKYpIlUgp9LzyzzaQQQRLUVOUdQIwRLmzJe_x-oUWZM4mRDD783Y9DMc_Dqw',
+    image: eventoGeneroImg,
     alt: 'Escenografía en tonos pastel y cubos decorativos para revelación de género',
   },
   {
@@ -131,8 +137,7 @@ const occasionServices = [
     ],
     ctaLabel: 'Cotizar Primera Comunión',
     waText: 'Hola ISOTELI, quisiera cotizar Primera Comunión',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCwTtcABj-oAI3DSAAEnE724neyGExfsJyY2VFDcAzbpqHok_h9ohpSuI81eyn0Wkdobqrtx5V-vEpe6e1OfJmRCnV6F4fdP_JAXRo8jpEo_KNvIrvMtXvvks1AS2CneSMXEs9x4Q-tKHPxkNmRYqhTNmyzmiAj7hbrY5EbDucTnHYgn4JmvhNQ7MUcEqRpEslRjQh2vZMn9wtn6TNEzK4cXvd7uaiNZRXMW96SPlwe0BHDp3jXD28-Vg',
+    image: eventoComunionImg,
     alt: 'Decoración campestre elegante con flores frescas para Primera Comunión',
   },
   {
@@ -149,17 +154,16 @@ const occasionServices = [
     ],
     ctaLabel: 'Planear Pedida de Mano',
     waText: 'Hola ISOTELI, deseo planear una Pedida de Mano',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuANowrAYOkPWH3716QIQ35SreMEuzZjjymf5oLpf8whs1kzINRMwt9COWb7HRB0fu9ry_h6dJupWtbT5aB8b6OaK1na5x6ZL53TvL5Z5pviA33ffbVTpF1hyBjkbdR7SvN2orPVS23dZpaktDgTwOUXLJ5lYVGl4ToPQHEfeClcU502LWBhBAVl_eV0u3WR2MB0AtOEJMygGUSu6YQ7-fSEbTJwV1pWBFvpNwZ7lFNAfgvxc_S0A6WBtg',
+    image: eventoPedidaImg,
     alt: 'Escenografía romántica con pétalos y velas para pedida de mano en Arequipa',
   },
 ] as const;
 ---
 
 <Layout
-  title="Decoración de Eventos en Arequipa | Packs ISOTELI"
-  description="Servicio de decoración de eventos y ambientación floral en Arequipa: cumpleaños, bautizos y pedidas. Packs completos y alquiler de mobiliario. ¡Cotiza ya!"
-  schema={breadcrumbSchema}
+  title="Decoración de Eventos y Globos en Arequipa | ISOTELI"
+  description="Decoración con globos y flores en Arequipa para cumpleaños, bautizos, revelación de género, primera comunión y pedidas de mano. Montaje a domicilio."
+  schema={eventSchemas}
 >
   <div class="flex flex-col w-full">
     <!-- ================= FRANJA SUPERIOR DE GARANTÍAS DE EVENTOS ================= -->
@@ -169,7 +173,7 @@ const occasionServices = [
       id="catalogo-servicios"
       data-no-aos="true"
     >
-      <!-- Título fijo (sticky) centrado arriba mientras se recorren todos los ítems -->
+      <!-- Elementos fijos (sticky) sobre todos los ítems: título superior y barra de navegación lateral -->
       <div class="sticky top-[164px] sm:top-[150px] md:top-[152px] z-30 h-0 overflow-visible pointer-events-none">
         <div
           id="events-sticky-title"
@@ -179,11 +183,33 @@ const occasionServices = [
           data-aos-once="false"
         >
           <h1 class="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-white tracking-tight leading-tight drop-shadow-lg slide-fade-down">
-            Servicios de Diseño y Ambientación
+            Decoración de Eventos y Ambientación en Arequipa
           </h1>
           <p class="font-sans text-xs sm:text-base md:text-lg text-[#ffdad3]/95 mt-1.5 sm:mt-2 max-w-2xl drop-shadow-sm slide-fade-up anim-delay-1">
             Estructuras de diseño escalables y personalizadas para cada tipo de celebración.
           </p>
+        </div>
+
+        <!-- Barra de navegación vertical fija sobre los ítems en el extremo derecho -->
+        <div
+          class="service-vertical-dots pointer-events-auto absolute right-3 sm:right-5 md:right-6 top-[calc((100dvh-164px)/2)] sm:top-[calc((100dvh-150px)/2)] md:top-[calc((100dvh-152px)/2)] -translate-y-1/2 z-30 flex flex-col items-center gap-3"
+          aria-label="Navegación vertical de eventos"
+        >
+          {occasionServices.map((dotSrv, dotIdx) => (
+            <a
+              href={`#evento-banner-${dotSrv.category}`}
+              data-dot-index={String(dotIdx)}
+              title={dotSrv.title}
+              aria-label={`Ir a ${dotSrv.title}`}
+              aria-current={dotIdx === 0 ? 'true' : undefined}
+              class:list={[
+                'service-dot-link rounded-full transition-all duration-300 border border-white/40',
+                dotIdx === 0
+                  ? 'w-3 h-8 bg-white shadow-[0_0_12px_rgba(255,255,255,0.6)]'
+                  : 'w-2.5 h-2.5 bg-white/35 hover:bg-white/75',
+              ]}
+            />
+          ))}
         </div>
       </div>
 
@@ -196,12 +222,11 @@ const occasionServices = [
               data-category={srv.category}
             >
               <!-- Imagen de fondo en tamaño completo de pantalla -->
-              <img
+              <Image
                 class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105 z-0"
                 alt={srv.alt}
                 loading={idx === 0 ? 'eager' : 'lazy'}
                 src={srv.image}
-                onerror={`this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';`}
               />
 
               <!-- Degradado vertical de arriba a abajo -->
@@ -285,160 +310,11 @@ const occasionServices = [
                   </div>
                 </div>
               </div>
-
-              <!-- Controlador vertical de ítems pegado cerca del extremo derecho de la pantalla -->
-              <div
-                class="service-vertical-dots absolute right-3 sm:right-5 md:right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-3"
-                aria-label="Navegación vertical de eventos"
-              >
-                {occasionServices.map((dotSrv, dotIdx) => (
-                  <a
-                    href={`#evento-banner-${dotSrv.category}`}
-                    title={dotSrv.title}
-                    aria-label={`Ir a ${dotSrv.title}`}
-                    class:list={[
-                      'rounded-full transition-all duration-300 border border-white/40',
-                      dotIdx === idx
-                        ? 'w-3 h-8 bg-white shadow-[0_0_12px_rgba(255,255,255,0.6)]'
-                        : 'w-2.5 h-2.5 bg-white/35 hover:bg-white/75',
-                    ]}
-                  />
-                ))}
-              </div>
             </article>
           ))
         }
       </div>
     </section>    
-
-
-    <!-- ================= PACKS DE DECORACIÓN (WOOCOMMERCE: SERVICIOS-DECORACION) ================= -->
-    <section
-      class="w-full py-space-xl bg-surface-container-low/70 border-y border-outline-variant/30"
-      id="paquetes-decoracion"
-      data-aos="fade-up"
-    >
-      <div class="w-full px-margin-mobile md:px-margin">
-        <!-- Encabezado y Pestañas de Línea Clásica / Temática -->
-        <div class="max-w-4xl mx-auto text-center mb-10" data-aos="fade-up">
-          <h2 class="font-headline-lg text-headline-lg text-primary font-bold mt-1">
-            Planes &amp; Paquetes de Decoración de Eventos
-          </h2>
-          <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl mx-auto">
-            Soluciones completas y escalables para Cumpleaños, Bautizos, Revelación de Género, Primera Comunión y Pedidas de Mano.
-          </p>
-
-          <div class="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full bg-surface-container text-primary font-label-md text-label-md border border-outline-variant/30 font-semibold shadow-sm">
-          <!--  <span class="material-symbols-outlined text-[17px] text-secondary" aria-hidden="true">info</span>
-            <span>Incluye mobiliario y accesorios • No incluye movilidad</span> -->
-          </div>
-
-          <!-- Filtro rápido por Línea de Paquetes -->
-          {
-            thematicPacks.length > 0 && (
-              <div class="flex flex-wrap items-center justify-center gap-2 mt-6">
-                <button
-                  type="button"
-                  data-pack-line-btn="all"
-                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-sm transition-colors cursor-pointer"
-                >
-                  Todas las Líneas ({classicPacks.length + thematicPacks.length})
-                </button>
-                <button
-                  type="button"
-                  data-pack-line-btn="linea-clasica"
-                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-                >
-                  Línea Clásica ({classicPacks.length})
-                </button>
-                <button
-                  type="button"
-                  data-pack-line-btn="linea-tematica-infantil"
-                  class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-                >
-                  Línea Temática Infantil / Baby ({thematicPacks.length})
-                </button>
-              </div>
-            )
-          }
-        </div>
-
-        <!-- Mosaico Modular Dinámico: Línea Clásica y Línea Temática Infantil -->
-        <div class="max-w-7xl mx-auto flex flex-col gap-4">
-          <!-- Subcategoría: linea-clasica -->
-          <div data-pack-group="linea-clasica" class="grid grid-cols-1 md:grid-cols-12 gap-4">
-            {classicPacks.map((pack) => <ServicePackCard pack={pack} />)}
-          </div>
-
-          <!-- Subcategoría: linea-tematica-infantil -->
-          <div data-pack-group="linea-tematica-infantil" class="flex flex-col gap-4">
-            {
-              thematicRowPacks.length > 0 && (
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {thematicRowPacks.map((pack) => (
-                    <ServicePackCard pack={pack} />
-                  ))}
-                </div>
-              )
-            }
-            {
-              thematicPanoramicPacks.length > 0 && (
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {thematicPanoramicPacks.map((pack) => (
-                    <ServicePackCard pack={pack} />
-                  ))}
-                </div>
-              )
-            }
-          </div>
-        </div>
-
-        <!-- ================= ALQUILER DE MOBILIARIO (WOOCOMMERCE: ALQUILER-DE-MOBILIARIO) ================= -->
-        <div class="mt-14 max-w-7xl mx-auto" id="alquiler-mobiliario">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-2 border-b border-outline-variant/30">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary text-[24px]" aria-hidden="true">chair</span>
-              <h3 class="font-headline-sm text-headline-sm text-primary font-bold">
-                Alquiler de Mobiliario y Accesorios Individuales
-              </h3>
-            </div>
-            <span class="text-body-sm text-on-surface-variant font-medium">
-              Precios unitarios o por juego
-            </span>
-          </div>
-
-          <div id="rentalsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {rentals.map((rental) => <FurnitureRentalItem item={rental} />)}
-
-            <!-- Tarjeta Estática Final de Llamada a la Acción para Combinar Mobiliario -->
-            <div
-              data-static-rental-cta
-              class="bg-primary-fixed/40 p-4 rounded-lg border border-primary/20 flex items-center justify-between gap-3"
-            >
-              <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary text-[24px] shrink-0" aria-hidden="true">info</span>
-                <div>
-                  <span class="font-semibold text-primary block text-[14px]">
-                    ¿Deseas combinar mobiliario?
-                  </span>
-                  <span class="text-[12px] text-on-surface-variant">
-                    Cotizamos paquetes a medida por WhatsApp
-                  </span>
-                </div>
-              </div>
-              <a
-                class="px-3.5 py-1.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md tracking-wider font-semibold transition-colors shrink-0"
-                href={buildWhatsAppUrl('Hola ISOTELI, deseo alquilar y combinar mobiliario adicional para mi evento')}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Consultar
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- ================= METODOLOGÍA ISOTELI EN 4 PASOS ================= 
     <section class="w-full bg-surface py-space-xl px-margin-mobile md:px-margin border-b border-outline-variant/30" data-aos="fade-up">
@@ -490,7 +366,7 @@ const occasionServices = [
     </section> -->
 
     <!-- ================= GALERÍA DE MONTAJES REALIZADOS EN AREQUIPA ================= -->
-    <section class="w-full px-margin-mobile md:px-margin py-space-xl" data-aos="fade-up">
+    <section id="galeria-montajes" class="w-full px-margin-mobile md:px-margin py-space-xl scroll-mt-[164px] sm:scroll-mt-[150px] md:scroll-mt-[152px]" data-aos="fade-up">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8" data-aos="fade-up">
           <div>
@@ -648,23 +524,59 @@ const occasionServices = [
   });
 
   // Control de scroll por pantalla completa para los banners verticales de eventos + AOS
+  const catalogSectionEl = document.getElementById('catalogo-servicios');
   const banners = Array.from(document.querySelectorAll<HTMLElement>('.service-card'));
-  const nextSectionEl = document.getElementById('paquetes-decoracion');
+  const dotLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.service-dot-link'));
+  const nextSectionEl = (() => {
+    let el = catalogSectionEl?.nextElementSibling as HTMLElement | null;
+    while (el && el.tagName !== 'SECTION') {
+      el = el.nextElementSibling as HTMLElement | null;
+    }
+    return el;
+  })();
   const headerEl = document.querySelector<HTMLElement>('header');
   let isSnapScrolling = false;
   let snapUnlockTimer: number | undefined;
 
   const getHeaderHeight = () => (headerEl ? headerEl.getBoundingClientRect().height : 152);
 
+  const updateActiveDot = (activeIndex: number) => {
+    if (activeIndex < 0) return;
+    dotLinks.forEach((dot, i) => {
+      const isActive = i === activeIndex;
+      dot.classList.toggle('w-3', isActive);
+      dot.classList.toggle('h-8', isActive);
+      dot.classList.toggle('bg-white', isActive);
+      dot.classList.toggle('shadow-[0_0_12px_rgba(255,255,255,0.6)]', isActive);
+      dot.classList.toggle('w-2.5', !isActive);
+      dot.classList.toggle('h-2.5', !isActive);
+      dot.classList.toggle('bg-white/35', !isActive);
+      dot.classList.toggle('hover:bg-white/75', !isActive);
+      if (isActive) {
+        dot.setAttribute('aria-current', 'true');
+      } else {
+        dot.removeAttribute('aria-current');
+      }
+    });
+  };
+
   const scrollToBanner = (targetEl: HTMLElement) => {
     if (isSnapScrolling) return;
     isSnapScrolling = true;
     window.clearTimeout(snapUnlockTimer);
 
+    const targetBannerIdx = banners.indexOf(targetEl);
+    if (targetBannerIdx !== -1) {
+      updateActiveDot(targetBannerIdx);
+    }
+
     const hHeight = getHeaderHeight();
     const targetTop = Math.max(0, targetEl.getBoundingClientRect().top + window.scrollY - hHeight);
 
-    const aosEls = targetEl.querySelectorAll<HTMLElement>('[data-aos]');
+    const aosEls = [
+      ...(targetEl.hasAttribute('data-aos') ? [targetEl] : []),
+      ...Array.from(targetEl.querySelectorAll<HTMLElement>('[data-aos]')),
+    ];
     aosEls.forEach((el) => el.classList.remove('aos-animate'));
 
     window.scrollTo({
@@ -700,6 +612,19 @@ const occasionServices = [
 
     return bestVisible > 60 ? bestIdx : -1;
   };
+
+  let scrollSyncRaf = 0;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (scrollSyncRaf) return;
+      scrollSyncRaf = window.requestAnimationFrame(() => {
+        scrollSyncRaf = 0;
+        updateActiveDot(getActiveBannerIndex());
+      });
+    },
+    { passive: true }
+  );
 
   // Clic en controlador lateral derecho
   document.querySelectorAll<HTMLAnchorElement>('.service-vertical-dots a').forEach((link) => {

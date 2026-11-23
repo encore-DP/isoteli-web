@@ -1,7 +1,8 @@
 # ==========================================================================
 # CONFIGURACIÓN APACHE / LITESPEED PARA CPANEL COMPARTIDO - ISOTELI
-# Permite rutas dinámicas /producto/<nuevo-slug> para productos creados en
-# WordPress Headless después de ejecutar `npm run build` sin errores 404.
+# 1. Fuerza dominio canónico HTTPS sin www (https://isoteli.com)
+# 2. Redirección 301 de rutas heredadas (/servicios -> /eventos)
+# 3. Fallback dinámico para nuevos productos creados en WordPress Headless
 # ==========================================================================
 
 AddDefaultCharset UTF-8
@@ -9,6 +10,14 @@ AddDefaultCharset UTF-8
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # Redirección 301 canónica: HTTP -> HTTPS y www -> sin www
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://isoteli.com%{REQUEST_URI} [R=301,L]
+
+  # Redirección 301 de ruta legada /servicios hacia /eventos
+  RewriteRule ^servicios/?$ /eventos [R=301,L]
 
   # Si el producto fue creado en WordPress después del build estático,
   # sirve internamente la plantilla /detalle-producto/index.html conservando la URL
@@ -26,4 +35,3 @@ AddDefaultCharset UTF-8
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>
-

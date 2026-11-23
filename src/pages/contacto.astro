@@ -3,18 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import { AREQUIPA_DISTRICTS, ISOTELI_CONTACT, buildWhatsAppUrl } from '../data/business';
 import { PLACEHOLDER_IMAGE } from '../data/fallback-store';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
-import { getBreadcrumbSchema } from '../lib/seo-schema';
+import { getBreadcrumbSchema, getContactPageSchema } from '../lib/seo-schema';
 
-const breadcrumbSchema = getBreadcrumbSchema([
-  { name: 'Inicio', path: '/' },
-  { name: 'Contacto & Pedidos', path: '/contacto' },
-]);
+const contactSchemas = [
+  getContactPageSchema(),
+  getBreadcrumbSchema([
+    { name: 'Inicio', path: '/' },
+    { name: 'Contacto & Pedidos', path: '/contacto' },
+  ]),
+];
 
 const assurancePills = [
   { icon: 'schedule', title: 'Mismo Día', subtitle: 'Entrega de 1h a 3h según disponibilidad' },
   { icon: 'local_florist', title: 'Flores Frescas', subtitle: 'Selección botánica del día' },
   { icon: 'verified', title: 'Foto Previa', subtitle: 'Control de calidad al 100%' },
-  { icon: 'payments', title: 'Pagos Fáciles', subtitle: 'Transferencia, Yape y Plin, Tarjeta de Debito/Credio' },
+  { icon: 'payments', title: 'Pagos Fáciles', subtitle: 'Transferencia, Yape, Plin y Tarjeta de Débito/Crédito' },
 ] as const;
 
 const faqItems = [
@@ -73,9 +76,9 @@ const atelierGallery = [
 ---
 
 <Layout
-  title="Contacto y Pedidos | Florería en Arequipa | ISOTELI"
-  description="Pide tus flores a domicilio en Arequipa al WhatsApp +51 904 803 219. Entregas en 1h a 3h, fotos previas y atención personalizada. ¡Escríbenos hoy mismo!"
-  schema={breadcrumbSchema}
+  title="Contacto y Delivery de Flores en Arequipa | ISOTELI"
+  description="Pide flores a domicilio o cotiza eventos en Arequipa al WhatsApp +51 904 803 219. Cobertura en Yanahuara, Cayma, JLByR y Cercado. ¡Escríbenos!"
+  schema={contactSchemas}
 >
   <div class="flex flex-col w-full">
     <!-- ================= CABECERA EDITORIAL Y FRANJA DE GARANTÍAS ================= -->
@@ -89,7 +92,7 @@ const atelierGallery = [
           Florería en Arequipa • Pedidos &amp; Consultas
         </span>
         <h1 class="font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold text-primary tracking-tight leading-tight">
-          Hablemos de Flores para tus <span class="italic font-light text-on-surface">Momentos Especiales</span>
+          Contacto y Pedidos de Flores en <span class="italic font-light text-on-surface">Arequipa</span>
         </h1>
 
         <p class="font-body-md sm:font-body-lg text-sm sm:text-base text-on-surface-variant max-w-4xl text-center leading-relaxed mt-0.5">
@@ -99,7 +102,7 @@ const atelierGallery = [
     </section>
 
     <!-- ================= SECCIÓN PRINCIPAL: MAPA DE COBERTURA + FORMULARIO DE COTIZACIÓN ================= -->
-    <section class="w-full px-margin-mobile md:px-margin pb-space-xl" data-aos="fade-up">
+    <section id="mapa-cobertura" class="w-full px-margin-mobile md:px-margin pb-space-xl scroll-mt-[164px] sm:scroll-mt-[150px] md:scroll-mt-[152px]" data-aos="fade-up">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
         <!-- COLUMNA IZQUIERDA: Mapa de Ubicación y Radio de Cobertura en Arequipa -->
         <div class="lg:col-span-6 flex flex-col h-full" data-aos="fade-right">

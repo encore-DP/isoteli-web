@@ -4,14 +4,17 @@ import TrustStrip from '../components/TrustStrip.astro';
 import ProductCard from '../components/ProductCard.astro';
 import { FLORIST_CATEGORIES } from '../data/fallback-store';
 import { getCatalogProducts } from '../lib/wp-graphql';
-import { getBreadcrumbSchema } from '../lib/seo-schema';
+import { getBreadcrumbSchema, getCatalogPageSchema } from '../lib/seo-schema';
 
 const { products } = await getCatalogProducts();
 
-const breadcrumbSchema = getBreadcrumbSchema([
-  { name: 'Inicio', path: '/' },
-  { name: 'Catálogo Floral', path: '/catalogo' },
-]);
+const catalogSchemas = [
+  getCatalogPageSchema(products.length),
+  getBreadcrumbSchema([
+    { name: 'Inicio', path: '/' },
+    { name: 'Catálogo Floral', path: '/catalogo' },
+  ]),
+];
 
 const catalogTrustItems = [
   {
@@ -117,9 +120,9 @@ const flowerCounts = FLOWER_DEFINITIONS.map((f) => ({
 ---
 
 <Layout
-  title="Arreglos Florales y Ramos en Arequipa | Catálogo ISOTELI"
-  description="Catálogo de arreglos florales, ramos de rosas y cajas de flores a domicilio en Arequipa. Entrega hoy mismo en 1h a 3h. ¡Pide tu arreglo por WhatsApp!"
-  schema={breadcrumbSchema}
+  title="Catálogo de Flores, Ramos y Boxes en Arequipa | ISOTELI"
+  description="Compra ramos de rosas, girasoles, cajas florales, globos y packs de regalo con delivery en Arequipa hoy mismo. Tarjeta personalizada incluida. ¡Pide hoy!"
+  schema={catalogSchemas}
 >
   <div class="flex flex-col w-full">
     <!-- ================= CABECERA EDITORIAL DEL CATÁLOGO ================= -->
@@ -130,7 +133,7 @@ const flowerCounts = FLOWER_DEFINITIONS.map((f) => ({
           <span>Colección Botánica &amp; Arte Floral en Arequipa</span>
         </div>
         <h1 class="font-headline text-headline-lg text-primary tracking-tight font-bold">
-          Arreglos Florales y Ramos de Rosas en Arequipa
+          Catálogo de Arreglos Florales, Ramos y Regalos en Arequipa
         </h1>
         <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
           Explora nuestras creaciones florales frescas, detalles y complementos listos para emocionar y transformar cada instante en la Ciudad Blanca.
@@ -492,6 +495,29 @@ const flowerCounts = FLOWER_DEFINITIONS.map((f) => ({
           >
             ¡Gracias por unirte al Club Floral ISOTELI! Menciona el código <strong>BIENVENIDOISOTELI</strong> en WhatsApp.
           </p>
+        </div>
+      </div>
+    </section>
+    <!-- ================= GUÍA SEO DE COBERTURA Y ARREGLOS EN AREQUIPA ================= -->
+    <section class="w-full px-margin-mobile md:px-margin mb-space-xl" data-aos="fade-up">
+      <div class="bg-surface-container-low rounded-2xl p-6 sm:p-8 border border-[#ECD9CC]/70">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <div>
+            <h2 class="font-headline text-xl sm:text-2xl font-bold text-primary mb-2">
+              Envío de Flores, Ramos y Regalos a Domicilio en Arequipa
+            </h2>
+            <p class="font-body-sm text-sm text-on-surface-variant leading-relaxed">
+              En <strong>ISOTELI Flores y Detalles</strong> elaboramos ramos de rosas frescas, ramos buchones, girasoles, tulipanes en caja, boxes florales, desayunos sorpresa, bouquets de globos con helio y packs con chocolates La Ibérica o peluches. Cada pedido incluye tarjeta dedicatoria caligrafiada y confirmación fotográfica previa al despacho.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-sans text-sm sm:text-base font-bold text-primary mb-2">
+              Cobertura Express Hoy Mismo (1h a 3h) en Arequipa
+            </h3>
+            <p class="font-body-sm text-sm text-on-surface-variant leading-relaxed">
+              Realizamos entregas el mismo día en <strong>José Luis Bustamante y Rivero</strong>, <strong>Yanahuara</strong>, <strong>Cayma</strong>, <strong>Cercado de Arequipa</strong>, <strong>Cerro Colorado</strong>, <strong>Miraflores</strong>, <strong>Alto Selva Alegre</strong>, <strong>Mariano Melgar</strong>, <strong>Paucarpata</strong>, <strong>Socabaya</strong>, <strong>Sachaca</strong>, <strong>Hunter</strong> y <strong>Sabandía</strong>, con <strong>delivery gratis en pedidos mayores a S/ 99.90</strong>.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -1001,17 +1027,25 @@ const flowerCounts = FLOWER_DEFINITIONS.map((f) => ({
     productGrid?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // Soporte para filtro directo por hash o query (?categoria=... o ?flor=...)
-  const initialQueryCat =
-    new URLSearchParams(window.location.search).get('categoria') ||
-    new URLSearchParams(window.location.search).get('flor') ||
-    '';
+  // Soporte para filtro directo por hash o query (?q=..., ?categoria=... o ?flor=...)
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialSearchQuery = (urlParams.get('q') || '').trim();
+  if (initialSearchQuery && searchInput) {
+    searchInput.value = initialSearchQuery;
+    currentQuery = initialSearchQuery;
+    clearSearchBtn?.classList.remove('hidden');
+  }
+
+  const initialQueryCat = urlParams.get('categoria') || urlParams.get('flor') || '';
   const initialHash = window.location.hash.replace('#', '') || initialQueryCat;
   if (
     initialHash &&
     Array.from(flowerFilterItems).some((b) => b.getAttribute('data-flower-filter') === initialHash)
   ) {
     setActiveFlower(initialHash);
+  }
+  if (initialSearchQuery || initialHash) {
+    filterAndSort();
   }
 
   // Manejo de foco y desplazamiento si se accede por el enlace de búsqueda del navbar

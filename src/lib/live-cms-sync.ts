@@ -55,7 +55,7 @@ export function renderProductCardHtml(
     : `Hola ISOTELI, deseo ordenar el producto: ${product.name} (${product.formattedPrice})`;
 
   const whatsappUrl = buildWhatsAppUrl(initialWhatsAppMessage);
-  const productHref = `/producto/${encodeURIComponent(product.slug)}`;
+  const productHref = `/producto/${encodeURIComponent(product.slug)}/`;
   const safeImage = product.imageUrl || PLACEHOLDER_IMAGE;
 
   const badgeHtml = product.badge
@@ -132,10 +132,14 @@ export function renderProductCardHtml(
           <span class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold">${escapeHtml(
             product.categoryLabel
           )}</span>
-          <span class="font-body-sm text-body-sm text-on-surface flex items-center gap-1">
+          ${
+            product.reviewCount > 0 && product.rating > 0
+              ? `<span class="font-body-sm text-body-sm text-on-surface flex items-center gap-1">
             <span class="material-symbols-outlined icon-filled text-[14px] text-primary" aria-hidden="true">star</span>
             ${product.rating.toFixed(1)} (${product.reviewCount})
-          </span>
+          </span>`
+              : ''
+          }
         </div>
 
         <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface group-hover:text-primary transition-colors mb-1">
@@ -444,7 +448,7 @@ export async function syncHomePage(): Promise<void> {
     ]);
     collectionsGrid.innerHTML = highlights
       .map((item, idx) => {
-        const href = `/producto/${encodeURIComponent(item.slug)}`;
+        const href = `/producto/${encodeURIComponent(item.slug)}/`;
         const safeImg = item.imageUrl || PLACEHOLDER_IMAGE;
         const priceLabel = item.pricePrefix
           ? `${item.pricePrefix} ${item.formattedPrice}`
@@ -647,7 +651,7 @@ export async function syncProductDetailPage(onFormatHydrated?: (price: number, f
   const bcCat = document.getElementById('detail-breadcrumb-cat') as HTMLAnchorElement | null;
   if (bcCat) {
     bcCat.textContent = product.categoryLabel;
-    bcCat.href = `/catalogo#${product.categorySlug}`;
+    bcCat.href = `/catalogo/#${product.categorySlug}`;
   }
   const bcName = document.getElementById('detail-breadcrumb-name');
   if (bcName) bcName.textContent = product.name;

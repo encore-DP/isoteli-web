@@ -89,12 +89,12 @@ const supportWhatsappUrl = buildWhatsAppUrl(
         <span>Inicio</span>
       </a>
       <span class="text-outline/40">/</span>
-      <a class="hover:text-primary transition-colors" href="/catalogo">Catálogo Floral</a>
+      <a class="hover:text-primary transition-colors" href="/catalogo/">Catálogo Floral</a>
       <span class="text-outline/40">/</span>
       <a
         id="detail-breadcrumb-cat"
         class="hover:text-primary transition-colors"
-        href={`/catalogo#${product.categorySlug}`}
+        href={`/catalogo/#${product.categorySlug}`}
       >
         {product.categoryLabel}
       </a>
@@ -192,20 +192,29 @@ const supportWhatsappUrl = buildWhatsAppUrl(
             {product.shortDescription}
           </p>
 
-          <div class="mt-4 flex items-center gap-3 flex-wrap">
-            <div class="flex items-center text-primary" aria-label={`Valoración ${product.rating} de 5 estrellas`}>
-              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
-              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
-              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
-              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
-              <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
-            </div>
-            <span class="font-semibold text-on-surface text-body-sm">{product.rating.toFixed(1)}</span>
-            <span class="text-outline text-body-sm">/ 5.0</span>
-            <span class="text-on-surface-variant text-body-sm">
-              ({product.reviewCount} valoraciones verificadas en Arequipa)
-            </span>
-          </div>
+          {
+            product.reviewCount > 0 && product.rating > 0 ? (
+              <div class="mt-4 flex items-center gap-3 flex-wrap">
+                <div class="flex items-center text-primary" aria-label={`Valoración ${product.rating} de 5 estrellas`}>
+                  <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+                  <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+                  <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+                  <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+                  <span class="material-symbols-outlined icon-filled text-[18px]" aria-hidden="true">star</span>
+                </div>
+                <span class="font-semibold text-on-surface text-body-sm">{product.rating.toFixed(1)}</span>
+                <span class="text-outline text-body-sm">/ 5.0</span>
+                <span class="text-on-surface-variant text-body-sm">
+                  ({product.reviewCount} valoraciones verificadas en Arequipa)
+                </span>
+              </div>
+            ) : (
+              <div class="mt-4 flex items-center gap-2 text-body-sm text-on-surface-variant flex-wrap">
+                <span class="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">verified</span>
+                <span>Diseño artesanal en Arequipa • Foto previa antes del envío</span>
+              </div>
+            )
+          }
         </div>
 
         <!-- Indicador Dinámico de Precio -->
@@ -444,7 +453,7 @@ const supportWhatsappUrl = buildWhatsAppUrl(
             </div>
             <a
               class="inline-flex items-center gap-1.5 text-primary font-semibold text-body-sm hover:underline"
-              href="/catalogo"
+              href="/catalogo/"
             >
               <span>Ver todo el catálogo</span>
               <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>

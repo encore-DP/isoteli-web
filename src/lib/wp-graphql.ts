@@ -364,8 +364,37 @@ async function fetchWPGraphQL<TData>(
 
 function resolveFloristCategory(
   categories: readonly WPCategoryNode[],
-  productName: string
+  productName: string,
+  productSlug = ''
 ): { slug: FloristCategorySlug; label: string } {
+  const combined = `${productName} ${productSlug}`.toLowerCase();
+
+  // Detección prioritaria de categorías específicas cuando WooCommerce asigna una categoría genérica
+  for (const cat of categories) {
+    const mappedSlug = FLORIST_CATEGORY_ALIAS_MAP[cat.slug.toLowerCase()];
+    if (mappedSlug && mappedSlug !== 'ramos-y-buchones') {
+      const canonical = FLORIST_CATEGORIES.find((fc) => fc.slug === mappedSlug);
+      return {
+        slug: mappedSlug,
+        label: canonical?.label ?? (cat.name || 'Arreglo Floral'),
+      };
+    }
+  }
+
+  // Inferencia semántica por nombre/slug para evitar clasificar cajas, globos, desayunos o packs como "Ramos"
+  if (/box|caja|sombrerera/.test(combined)) {
+    return { slug: 'cajas-y-boxes', label: 'Cajas & Boxes ISOTELI' };
+  }
+  if (/globo|bouquet|buquet|helio|burbuja/.test(combined)) {
+    return { slug: 'globos-y-bouquets', label: 'Globos & Bouquets' };
+  }
+  if (/chocolate|ib[eé]rica|ferrero|bomb[oó]n|trufa/.test(combined)) {
+    return { slug: 'chocolates', label: 'Chocolates & Detalles' };
+  }
+  if (/peluche|oso|osito|detalle|desayuno|torta|graduaci[oó]n|nacimiento|baby|pack/.test(combined)) {
+    return { slug: 'peluches-y-detalles', label: 'Detalles & Packs Especiales' };
+  }
+
   for (const cat of categories) {
     const mappedSlug = FLORIST_CATEGORY_ALIAS_MAP[cat.slug.toLowerCase()];
     if (mappedSlug) {
@@ -377,27 +406,12 @@ function resolveFloristCategory(
     }
   }
 
-  // Si solo tiene asignada la categoría padre 'floreria-y-regalos', inferimos subcategoría por nombre
-  const lower = productName.toLowerCase();
-  if (/box|caja|sombrerera/.test(lower)) {
-    return { slug: 'cajas-y-boxes', label: 'Cajas & Boxes' };
-  }
-  if (/globo|bouquet|helio|burbuja/.test(lower)) {
-    return { slug: 'globos-y-bouquets', label: 'Globos & Bouquets' };
-  }
-  if (/chocolate|ib[eé]rica|ferrero|bomb[oó]n|trufa/.test(lower)) {
-    return { slug: 'chocolates', label: 'Chocolates' };
-  }
-  if (/peluche|oso|osito|detalle/.test(lower)) {
-    return { slug: 'peluches-y-detalles', label: 'Peluches & Detalles' };
-  }
-
-  return { slug: 'ramos-y-buchones', label: 'Ramos & Buchones' };
+  return { slug: 'ramos-y-buchones', label: 'Ramos de Flores & Buchones' };
 }
 
 function mapWPProductToCatalog(node: WPProductNode, index: number): CatalogProduct {
   const categories = node.productCategories?.nodes ?? [];
-  const resolvedCat = resolveFloristCategory(categories, node.name);
+  const resolvedCat = resolveFloristCategory(categories, node.name, node.slug);
 
   const isVariable = node.__typename === 'VariableProduct';
   const rawVariations = isVariable ? (node.variations?.nodes ?? []) : [];
@@ -459,8 +473,8 @@ function mapWPProductToCatalog(node: WPProductNode, index: number): CatalogProdu
     formattedPrice: formatPenPrice(baseNumeric, node.price),
     numericPrice: baseNumeric,
     pricePrefix: hasRange ? 'Desde' : undefined,
-    rating: node.averageRating && node.averageRating > 0 ? node.averageRating : 5.0,
-    reviewCount: node.reviewCount && node.reviewCount > 0 ? node.reviewCount : 24 + index * 5,
+    rating: node.averageRating && node.averageRating > 0 ? node.averageRating : 0,
+    reviewCount: node.reviewCount && node.reviewCount > 0 ? node.reviewCount : 0,
     popularity: node.featured ? 98 : Math.max(75, 95 - index * 2),
     variations,
   };
